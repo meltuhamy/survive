@@ -61,7 +61,7 @@ mouseSquarey = 0
 
 playerx = 0
 playery = 0
-playerspeed = 0.5
+playerspeed = 0.8
 
 scrollx = 0.0
 scrollxvel = 0.0
@@ -71,8 +71,6 @@ scrollyvel = 0.0
 scrollyacc = 0.0
 scrollRegion = 0.15
 scrollAccConst = 0.12
-
-
 
 playerMovingLeft = false
 playerMovingUp = false
@@ -122,12 +120,15 @@ $(document).ready ->
 
 
 window.onload = =>
+  # Create the stage
   window.stage = new Kinetic.Stage(
     container: "container"
     width: canvasWidth
     height: canvasHeight
   )
+  # Map layer
   window.mapLayer = new Kinetic.Layer()
+  # Hover select layer
   window.hoverSelectLayer = new Kinetic.Layer()
   window.hoverSelectBox = new Kinetic.Rect(
     fill: 'yellow'
@@ -136,8 +137,23 @@ window.onload = =>
     alpha: 0.6
   )
   window.hoverSelectLayer.add window.hoverSelectBox
+  # Debug text layer
+  window.debugLayer = new Kinetic.Layer()
+  window.debugText = new Kinetic.Text(
+    x: 10,
+    y: 10,
+    text: "Simple Text",
+    fontSize: 12,
+    fontFamily: "Calibri",
+    textFill: "green",
+    align: "left",
+    verticalAlign: "middle"
+  )
+  window.debugLayer.add window.debugText
   window.stage.add window.mapLayer
   window.stage.add window.hoverSelectLayer
+  window.stage.add window.debugLayer
+  
 
 
 ###
@@ -163,7 +179,6 @@ class Player
     @playerImage.onload = => @imgReady = true
     @playerImage.src = "sprite.png"
   imgReady: false
-
 player = new Player()
 
 
@@ -179,19 +194,29 @@ render = =>
     for x in [0...numcols]
       if (tileArray[map0[gridIndex(x,y)]].tileReady)
         mapContext.drawImage tileArray[map0[gridIndex(x,y)]].tileImage, x*25-scrollx, y*25-scrolly
-  window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
-  window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
+  #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
+  #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
   window.hoverSelectLayer.draw()
   #console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
   mapContext.drawImage player.playerImage, playerx-scrollx, playery-scrolly if player.imgReady
   if playerMovingLeft 
     playerx = playerx - playerspeed
-  if playerMovingRight 
+  else if playerMovingRight 
     playerx = playerx + playerspeed
+  else
+    playerx = Math.floor((playerx+12.5)/25)*25
+  
   if playerMovingUp 
     playery = playery - playerspeed
-  if playerMovingDown 
+  else if playerMovingDown 
     playery = playery + playerspeed
+  else 
+    playery = Math.floor((playery+12.5)/25)*25
+    
+  window.hoverSelectBox.setX Math.floor((playerx+12.5)/25)*25 - Math.floor(scrollx)
+  window.hoverSelectBox.setY Math.floor((playery+12.5)/25)*25 - Math.floor(scrolly)
+  debugText.setText("playerx = #{playerx}, playery = #{playery}")
+  window.debugLayer.draw()
 
 
 ###
