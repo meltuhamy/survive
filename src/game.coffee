@@ -79,20 +79,29 @@ Initialisation events
 
 $(document).ready ->
   $('#container').mousemove (evt) ->
-    offset = $(@).offset(); 
-    mousex = Math.floor(evt.pageX - offset.left);  
-    mousey = Math.floor(evt.pageY - offset.top);
-    console.log("x,y : #{mousex},#{mousey}")
+    offset = $(@).offset() 
+    mousex = Math.floor(evt.pageX - offset.left)
+    mousey = Math.floor(evt.pageY - offset.top)
+    #console.log("x,y : #{mousex},#{mousey}")
 
 
-window.onload = ->
+window.onload = =>
   window.stage = new Kinetic.Stage(
     container: "container"
     width: canvasWidth
     height: canvasHeight
   )
   window.mapLayer = new Kinetic.Layer()
-  window.stage.add mapLayer
+  window.hoverSelectLayer = new Kinetic.Layer()
+  window.hoverSelectBox = new Kinetic.Rect(
+    fill: 'yellow'
+    width: 25
+    height: 25
+    alpha: 0.6
+  )
+  window.hoverSelectLayer.add window.hoverSelectBox
+  window.stage.add window.mapLayer
+  window.stage.add window.hoverSelectLayer
 
 
 ###
@@ -111,20 +120,22 @@ tileArray = {}
 for currentFile in [0...files.length]
     tileArray[currentFile] = new Tile(files[currentFile])
 
-
-
 ###
 Drawing to canvas
 ###
 
-render = ->
+render = =>
   mapContext = window.mapLayer.getContext()
-  mapContext.fillStyle = "#000000";
-  mapContext.fillRect(0,0,canvasWidth,canvasHeight);
+  mapContext.fillStyle = "#000000"
+  mapContext.fillRect(0,0,canvasWidth,canvasHeight)
   for y in [0...numrows]
     for x in [0...numcols]
       if (tileArray[map0[gridIndex(x,y)]].tileReady)
         mapContext.drawImage tileArray[map0[gridIndex(x,y)]].tileImage, x*25-scrollx, y*25-scrolly
+  window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
+  window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
+  window.hoverSelectLayer.draw()
+  console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
 
 
 ###
@@ -132,7 +143,7 @@ Updating game logic
 ###
 
 update = (modifier) -> updateScroll()
-updateScroll = ->
+updateScroll = =>
    scrollxvel = scrollxvel * 0.92
    scrollyvel = scrollyvel * 0.92
    scrollx += scrollxvel
@@ -173,8 +184,8 @@ updateScroll = ->
       scrollyacc = 0
    else 
     scrolly = -(canvasHeight-fullHeight)/2
-   mouseSquarex = Math.floor((scrollx + mousex) / 25)
-   mouseSquarey = Math.floor((scrolly + mousey) / 25)
+   mouseSquarex = Math.floor(mousex / 25)
+   mouseSquarey = Math.floor(mousey / 25)
 
 
 ###
@@ -189,5 +200,3 @@ main = ->
   then_ = now
 then_ = Date.now()
 setInterval main, 1
-
-
