@@ -1,4 +1,4 @@
-
+  
 map0 = [0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
         0, 0, 0, 2, 2, 2, 2, 2, 4, 0,
@@ -59,16 +59,25 @@ mousey = 0
 mouseSquarex = 0
 mouseSquarey = 0
 
+playerx = 0
+playery = 0
+
 scrollx = 0.0
 scrollxvel = 0.0
 scrollxacc = 0.0
-
 scrolly = 0.0
 scrollyvel = 0.0
 scrollyacc = 0.0
-
 scrollRegion = 0.15
 scrollAccConst = 0.12
+
+
+
+playerMovingLeft = false
+playerMovingUp = false
+playerMovingRight = false
+playerMovingDown = false
+
 
 gridIndex = (x,y) -> y*numcols + x
 
@@ -82,7 +91,29 @@ $(document).ready ->
     offset = $(@).offset() 
     mousex = Math.floor(evt.pageX - offset.left)
     mousey = Math.floor(evt.pageY - offset.top)
-    #console.log("x,y : #{mousex},#{mousey}")
+    #console.log("x,y : #{mousex},#{mousey}")     
+  $('#container').keyup (evt) ->
+    playerMovingLeft = false if (evt.keyCode == 37)
+    playerMovingUp = false if (evt.keyCode == 38)
+    playerMovingRight = false if (evt.keyCode == 39)
+    playerMovingDown = false if (evt.keyCode == 40)
+  $('#container').keydown (evt) ->
+    if (evt.keyCode == 37) # push left
+      playerMovingUp = false
+      playerMovingRight = false
+      playerMovingDown = false
+    if (evt.keyCode == 38) # push up
+      playerMovingLeft = false
+      playerMovingRight = false
+      playerMovingDown = false
+    if (evt.keyCode == 39) # push right
+      playerMovingLeft = false
+      playerMovingUp = false
+      playerMovingDown = false
+    if (evt.keyCode == 40) # push down
+      playerMovingLeft = false
+      playerMovingUp = false
+      playerMovingRight = false
 
 
 window.onload = =>
@@ -119,6 +150,17 @@ class Tile
 tileArray = {}
 for currentFile in [0...files.length]
     tileArray[currentFile] = new Tile(files[currentFile])
+    
+
+class Player
+  constructor: -> 
+    @playerImage = new Image()
+    @playerImage.onload = => @imgReady = true
+    @playerImage.src = "sprite.png"
+  imgReady: false
+
+player = new Player()
+
 
 ###
 Drawing to canvas
@@ -135,7 +177,16 @@ render = =>
   window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
   window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
   window.hoverSelectLayer.draw()
-  console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
+  #console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
+  mapContext.drawImage player.playerImage, playerx-scrollx, playery-scrolly if player.imgReady
+  if playerMovingLeft 
+    playerx = playerx - 0.1
+  if playerMovingRight 
+    playerx = playerx + 0.1
+  if playerMovingUp 
+    playery = playery - 0.1
+  if playerMovingDown 
+    playery = playery + 0.1
 
 
 ###
