@@ -48,8 +48,8 @@ map0 = [0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
 numrows = 15
 numcols = 30
 
-canvasWidth = 400
-canvasHeight = 200
+canvasWidth = 800
+canvasHeight = 700
 
 fullWidth = 25*numcols
 fullHeight = 25*numrows
@@ -61,6 +61,7 @@ mouseSquarey = 0
 
 playerx = 0
 playery = 0
+playerspeed = 0.5
 
 scrollx = 0.0
 scrollxvel = 0.0
@@ -91,26 +92,30 @@ $(document).ready ->
     offset = $(@).offset() 
     mousex = Math.floor(evt.pageX - offset.left)
     mousey = Math.floor(evt.pageY - offset.top)
-    #console.log("x,y : #{mousex},#{mousey}")     
-  $('#container').keyup (evt) ->
+    #console.log("x,y : #{mousex},#{mousey}")
+  $(document.documentElement).keyup (evt) ->
     playerMovingLeft = false if (evt.keyCode == 37)
     playerMovingUp = false if (evt.keyCode == 38)
     playerMovingRight = false if (evt.keyCode == 39)
     playerMovingDown = false if (evt.keyCode == 40)
-  $('#container').keydown (evt) ->
+  $(document.documentElement).keydown (evt) ->
     if (evt.keyCode == 37) # push left
+      playerMovingLeft = true
       playerMovingUp = false
       playerMovingRight = false
       playerMovingDown = false
     if (evt.keyCode == 38) # push up
+      playerMovingUp = true
       playerMovingLeft = false
       playerMovingRight = false
       playerMovingDown = false
     if (evt.keyCode == 39) # push right
+      playerMovingRight = true
       playerMovingLeft = false
       playerMovingUp = false
       playerMovingDown = false
     if (evt.keyCode == 40) # push down
+      playerMovingDown = true
       playerMovingLeft = false
       playerMovingUp = false
       playerMovingRight = false
@@ -180,13 +185,13 @@ render = =>
   #console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
   mapContext.drawImage player.playerImage, playerx-scrollx, playery-scrolly if player.imgReady
   if playerMovingLeft 
-    playerx = playerx - 0.1
+    playerx = playerx - playerspeed
   if playerMovingRight 
-    playerx = playerx + 0.1
+    playerx = playerx + playerspeed
   if playerMovingUp 
-    playery = playery - 0.1
+    playery = playery - playerspeed
   if playerMovingDown 
-    playery = playery + 0.1
+    playery = playery + playerspeed
 
 
 ###
