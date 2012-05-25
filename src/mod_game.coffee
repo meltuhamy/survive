@@ -1,5 +1,43 @@
+# Modularised game
 
 # the map array
+
+
+###
+
+|
+v
+array of objects
+|
+v
+long string
+|
+v
+db
+|
+string
+|
+v
+arrayobjects
+
+
+.________________________________________
+| playerid      |  location |  other stuff  |
+----------------------------|------------
+| name            |  "............"     |
+----------------------------|------------
+###
+
+class Map
+	constructor: (@mapArray, @numrows, @numcols) ->
+	mapArray: []
+	numrows: 0
+	numcols: 0
+
+	gridIndex: (x,y) -> y*@numcols + x
+	getElement: (row,col) -> @mapArray[@gridIndex(row,col)]
+	setElement: (row,col,item) -> @mapArray[@gridIndex(row,col)] = item
+
 
 map0 = [0, 3, 4, 0, 0, 0, 0, 0, 4, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
@@ -47,14 +85,16 @@ map0 = [0, 3, 4, 0, 0, 0, 0, 0, 4, 0,
         3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
         3, 0, 0, 0, 0, 3, 0, 4, 0, 0]
 
-numrows = 15
-numcols = 30
+map = new Map(map0, 15, 30)
+
+tileWidth = 25
+tileHeight = 25
 
 canvasWidth = 400
 canvasHeight = 300
 
-fullWidth = 25*numcols
-fullHeight = 25*numrows
+fullWidth = tileWidth*map.numcols
+fullHeight = tileHeight*map.numrows
 
 mousex = 0
 mousey = 0
@@ -78,9 +118,6 @@ playerMovingLeft = false
 playerMovingUp = false
 playerMovingRight = false
 playerMovingDown = false
-
-
-gridIndex = (x,y) -> y*numcols + x
 
 #Initialisation events
 
@@ -148,8 +185,8 @@ window.onload = =>
   window.hoverSelectLayer = new Kinetic.Layer()
   window.hoverSelectBox = new Kinetic.Rect(
     fill: 'yellow'
-    width: 25
-    height: 25
+    width: tileWidth
+    height: tileHeight
     alpha: 0.6
   )
   window.hoverSelectLayer.add window.hoverSelectBox
@@ -210,13 +247,14 @@ render = =>
   mapContext.fillStyle = "#000000" 
   mapContext.fillRect(0,0,canvasWidth,canvasHeight) # fill map black
 
+
   # for every grid location
-  for y in [0...numrows]
-    for x in [0...numcols]
+  for y in [0...map.numrows]
+    for x in [0...map.numcols]
       # if the corresponding tile is loaded
-      if (tileArray[map0[gridIndex(x,y)]].tileReady)
+      if (tileArray[map.getElement(x,y)].tileReady)
         # draw the image on the map in the position relative to map scroll
-        mapContext.drawImage tileArray[map0[gridIndex(x,y)]].tileImage, x*25-scrollx, y*25-scrolly
+        mapContext.drawImage tileArray[map.getElement(x,y)].tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
 
   #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
   #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
@@ -234,7 +272,7 @@ render = =>
     playerx = playerx + playerspeed
   # if player not moving left or right, center it's horizontal position
   else
-    playerx = Math.floor((playerx+12.5)/25)*25
+    playerx = Math.floor((playerx+12.5)/tileWidth)*tileWidth
   
   # if player is moving up or down, update it's stored vertical position
   if playerMovingUp 
@@ -243,12 +281,12 @@ render = =>
     playery = playery + playerspeed
   # if player not moving up or down, center it's vertical position
   else 
-    playery = Math.floor((playery+12.5)/25)*25
+    playery = Math.floor((playery+12.5)/tileHeight)*tileHeight
     
   #update the hover select box position
 
-  window.hoverSelectBox.setX Math.floor((playerx+12.5)/25)*25 - Math.floor(scrollx)
-  window.hoverSelectBox.setY Math.floor((playery+12.5)/25)*25 - Math.floor(scrolly)
+  window.hoverSelectBox.setX Math.floor((playerx+12.5)/tileWidth)*tileWidth - Math.floor(scrollx)
+  window.hoverSelectBox.setY Math.floor((playery+12.5)/tileHeight)*tileHeight - Math.floor(scrolly)
   debugText.setText("playerx = #{playerx}, playery = #{playery}")
   window.debugLayer.draw()
 
@@ -299,8 +337,8 @@ updateScroll = =>
       scrollyacc = 0
    else 
     scrolly = -(canvasHeight-fullHeight)/2
-   mouseSquarex = Math.floor(mousex / 25)
-   mouseSquarey = Math.floor(mousey / 25)
+   mouseSquarex = Math.floor(mousex / tileWidth)
+   mouseSquarey = Math.floor(mousey / tileHeight)
 
 
 ###
