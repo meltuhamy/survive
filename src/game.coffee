@@ -82,9 +82,7 @@ playerMovingDown = false
 
 gridIndex = (x,y) -> y*numcols + x
 
-###
-Initialisation events
-###
+#Initialisation events
 
 
 $(document).ready ->
@@ -105,11 +103,9 @@ $(document).ready ->
     playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
     playerMovingDown = false if (evt.keyCode == 40)     # down arrow key up -> playerMovingDown becomes false
 
-###
-  key down event
-    set corresponding moving boolean to true
-    set all others to false
-###
+  #key down event
+    #set corresponding moving boolean to true
+    #set all others to false
 
   $(document.documentElement).keydown (evt) ->
     if (evt.keyCode == 37) # push left
@@ -211,7 +207,7 @@ player = new Player()
 
 render = =>
   mapContext = window.mapLayer.getContext() # get map
-  mapContext.fillStyle = "#000000"`         
+  mapContext.fillStyle = "#000000" 
   mapContext.fillRect(0,0,canvasWidth,canvasHeight) # fill map black
 
   # for every grid location
