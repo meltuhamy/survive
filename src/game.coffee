@@ -1,4 +1,6 @@
-  
+
+# the map array
+
 map0 = [0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
         0, 0, 0, 2, 2, 2, 2, 2, 4, 0,
@@ -86,16 +88,29 @@ Initialisation events
 
 
 $(document).ready ->
+
+  # mouse move event within 'container' div
+
   $('#container').mousemove (evt) ->
-    offset = $(@).offset() 
-    mousex = Math.floor(evt.pageX - offset.left)
-    mousey = Math.floor(evt.pageY - offset.top)
+    offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset
+    mousex = Math.floor(evt.pageX - offset.left)    # sets mousex var to new mouse position
+    mousey = Math.floor(evt.pageY - offset.top)     # sets mousey var to new mouse position
     #console.log("x,y : #{mousex},#{mousey}")
+
+  # key up event
+
   $(document.documentElement).keyup (evt) ->
-    playerMovingLeft = false if (evt.keyCode == 37)
-    playerMovingUp = false if (evt.keyCode == 38)
-    playerMovingRight = false if (evt.keyCode == 39)
-    playerMovingDown = false if (evt.keyCode == 40)
+    playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
+    playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
+    playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
+    playerMovingDown = false if (evt.keyCode == 40)     # down arrow key up -> playerMovingDown becomes false
+
+###
+  key down event
+    set corresponding moving boolean to true
+    set all others to false
+###
+
   $(document.documentElement).keydown (evt) ->
     if (evt.keyCode == 37) # push left
       playerMovingLeft = true
@@ -119,15 +134,20 @@ $(document).ready ->
       playerMovingRight = false
 
 
+# executes once page has loaded
+
 window.onload = =>
-  # Create the stage
+
+  # Create the kintetic stage
   window.stage = new Kinetic.Stage(
     container: "container"
     width: canvasWidth
     height: canvasHeight
   )
+
   # Map layer
   window.mapLayer = new Kinetic.Layer()
+
   # Hover select layer
   window.hoverSelectLayer = new Kinetic.Layer()
   window.hoverSelectBox = new Kinetic.Rect(
@@ -137,6 +157,7 @@ window.onload = =>
     alpha: 0.6
   )
   window.hoverSelectLayer.add window.hoverSelectBox
+
   # Debug text layer
   window.debugLayer = new Kinetic.Layer()
   window.debugText = new Kinetic.Text(
@@ -149,6 +170,7 @@ window.onload = =>
     align: "left",
     verticalAlign: "middle"
   )
+
   window.debugLayer.add window.debugText
   window.stage.add window.mapLayer
   window.stage.add window.hoverSelectLayer
@@ -157,10 +179,11 @@ window.onload = =>
 
 
 ###
-Loading resources
+    Loading resources
 ###
 
 files = ["grass.png", "fire.png", "hill.png", "stone.png", "water.png"]
+
 class Tile
   constructor: (src) -> 
     @tileImage = new Image()
@@ -169,9 +192,9 @@ class Tile
   tileReady: false
   
 tileArray = {}
+
 for currentFile in [0...files.length]
     tileArray[currentFile] = new Tile(files[currentFile])
-    
 
 class Player
   constructor: -> 
@@ -179,40 +202,55 @@ class Player
     @playerImage.onload = => @imgReady = true
     @playerImage.src = "sprite.png"
   imgReady: false
+
 player = new Player()
 
-
 ###
-Drawing to canvas
+    Drawing to canvas
 ###
 
 render = =>
-  mapContext = window.mapLayer.getContext()
-  mapContext.fillStyle = "#000000"
-  mapContext.fillRect(0,0,canvasWidth,canvasHeight)
+  mapContext = window.mapLayer.getContext() # get map
+  mapContext.fillStyle = "#000000"`         
+  mapContext.fillRect(0,0,canvasWidth,canvasHeight) # fill map black
+
+  # for every grid location
   for y in [0...numrows]
     for x in [0...numcols]
+      # if the corresponding tile is loaded
       if (tileArray[map0[gridIndex(x,y)]].tileReady)
+        # draw the image on the map in the position relative to map scroll
         mapContext.drawImage tileArray[map0[gridIndex(x,y)]].tileImage, x*25-scrollx, y*25-scrolly
+
   #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
   #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
+
   window.hoverSelectLayer.draw()
+
   #console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
+
   mapContext.drawImage player.playerImage, playerx-scrollx, playery-scrolly if player.imgReady
+
+  # if player is moving left or right, update it's stored horizontal position
   if playerMovingLeft 
     playerx = playerx - playerspeed
   else if playerMovingRight 
     playerx = playerx + playerspeed
+  # if player not moving left or right, center it's horizontal position
   else
     playerx = Math.floor((playerx+12.5)/25)*25
   
+  # if player is moving up or down, update it's stored vertical position
   if playerMovingUp 
     playery = playery - playerspeed
   else if playerMovingDown 
     playery = playery + playerspeed
+  # if player not moving up or down, center it's vertical position
   else 
     playery = Math.floor((playery+12.5)/25)*25
     
+  #update the hover select box position
+
   window.hoverSelectBox.setX Math.floor((playerx+12.5)/25)*25 - Math.floor(scrollx)
   window.hoverSelectBox.setY Math.floor((playery+12.5)/25)*25 - Math.floor(scrolly)
   debugText.setText("playerx = #{playerx}, playery = #{playery}")
@@ -220,7 +258,7 @@ render = =>
 
 
 ###
-Updating game logic
+    Updating game logic
 ###
 
 update = (modifier) -> updateScroll()
