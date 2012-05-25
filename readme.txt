@@ -37,14 +37,14 @@ which supports syntax highlighting.
    You can do an alias for this file if you want.
 
 3. Sublime text takes a while to open for the first time.
-   Once it opens, go to Preferences > Browse Packages
+   Once it opens, go to Preferences > Browse Packages. 
+   Create a folder called 'Package Control'
 
 4. Download the package below:
    http://sublime.wbond.net/Package%20Control.sublime-package
 
 5. Open the package using the normal ubuntu file extractor
-   Extract all the files to the folder that opened when you
-   did Preferences > Browse Packages in sublime text.
+   Extract all the files to the 'Package Control' folder.
 
 6. Restart sublime text, then do Preferences -> Package Control
 
