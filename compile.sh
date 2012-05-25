@@ -1,4 +1,2 @@
 #!bin/sh
-
-coffee/bin/coffee -c src/game.coffee
-mv src/game.js lib/game.js
+~/node_modules/coffee-script/bin/coffee -o lib/ -c src/
