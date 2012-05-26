@@ -1,8 +1,8 @@
 tileWidth = 25
 tileHeight = 25
 
-canvasWidth = 400
-canvasHeight = 300
+canvasWidth = 1000
+canvasHeight = 1000
 
 fullWidth = tileWidth*map.numcols
 fullHeight = tileHeight*map.numrows
@@ -176,18 +176,18 @@ render = =>
   mapContext.drawImage player.playerImage, playerx-scrollx, playery-scrolly if player.imgReady
 
   # if player is moving left or right, update it's stored horizontal position
-  if playerMovingLeft 
+  if playerMovingLeft && tileArray[map.getElement(playerSquarex-1,playerSquarey)].walkable
     playerx = playerx - playerspeed
-  else if playerMovingRight 
+  else if playerMovingRight && tileArray[map.getElement(playerSquarex+1,playerSquarey)].walkable
     playerx = playerx + playerspeed
   # if player not moving left or right, center it's horizontal position
   else
     playerx = Math.floor((playerx+12.5)/tileWidth)*tileWidth
   
   # if player is moving up or down, update it's stored vertical position
-  if playerMovingUp 
+  if playerMovingUp && tileArray[map.getElement(playerSquarex,playerSquarey-1)].walkable
     playery = playery - playerspeed
-  else if playerMovingDown 
+  else if playerMovingDown && tileArray[map.getElement(playerSquarex,playerSquarey+1)].walkable
     playery = playery + playerspeed
   # if player not moving up or down, center it's vertical position
   else 
@@ -197,9 +197,14 @@ render = =>
 
   window.hoverSelectBox.setX Math.floor((playerx+12.5)/tileWidth)*tileWidth - Math.floor(scrollx)
   window.hoverSelectBox.setY Math.floor((playery+12.5)/tileHeight)*tileHeight - Math.floor(scrolly)
+  oldplayerSquarex = playerSquarex
+  oldplayerSquarey = playerSquarey
   playerSquarex = Math.floor ((playerx+12.5) / 25);
   playerSquarey = Math.floor ((playery+12.5) / 25);
-  debugText.setText("inventory = #{player.inventory}, playerSquarex = #{playerSquarex}, playerSquarey = #{playerSquarey} ")
+  if(oldplayerSquarex != playerSquarex || oldplayerSquarey != playerSquarey)
+    player.statchange(map.getElement(playerSquarex,playerSquarey))
+  debugText.setText("inventory = #{player.inventory}, playerSquarex = #{playerSquarex}, playerSquarey = #{playerSquarey} \n
+    health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
   window.debugLayer.draw()
 
 
