@@ -1,202 +1,3 @@
-
-class Map
-	constructor: (@mapArray, @numrows, @numcols) ->
-	mapArray: []
-	numrows: 0
-	numcols: 0
-
-	gridIndex: (x,y) -> y*@numcols + x
-	getElement: (row,col) -> @mapArray[@gridIndex(row,col)]
-	setElement: (row,col,item) -> @mapArray[@gridIndex(row,col)] = item
-
-map0 = [0, 3, 4, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 2, 2, 2, 2, 2, 4, 0,
-        0, 0, 0, 2, 1, 4, 4, 4, 2, 0,
-        1, 0, 0, 2, 2, 4, 2, 2, 2, 0,
-        0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
-        0, 0, 3, 3, 0, 0, 4, 0, 0, 0,
-        0, 3, 0, 0, 3, 0, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 2, 2, 2, 2, 2, 4, 0,
-        0, 0, 0, 2, 1, 4, 4, 4, 2, 0,
-        0, 0, 0, 2, 2, 4, 2, 2, 2, 0,
-        0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
-        0, 0, 3, 3, 0, 0, 4, 0, 0, 0,
-        0, 3, 0, 0, 3, 0, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 2, 2, 2, 2, 2, 4, 0,
-        0, 0, 0, 2, 1, 4, 4, 4, 2, 0,
-        0, 0, 0, 2, 2, 4, 2, 2, 2, 0,
-        0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
-        0, 0, 3, 3, 0, 0, 4, 0, 0, 0,
-        0, 3, 0, 0, 3, 0, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 2, 2, 2, 2, 2, 4, 0,
-        0, 0, 0, 2, 1, 4, 4, 4, 2, 0,
-        0, 0, 0, 2, 2, 4, 2, 2, 2, 0,
-        0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
-        0, 0, 3, 3, 0, 0, 4, 0, 0, 0,
-        0, 3, 0, 0, 3, 0, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        0, 0, 0, 2, 2, 4, 2, 2, 2, 0,
-        0, 0, 0, 0, 0, 4, 0, 0, 0, 0,
-        0, 0, 3, 3, 0, 0, 4, 0, 0, 0,
-        0, 3, 0, 0, 3, 0, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0,
-        3, 0, 0, 0, 0, 3, 0, 4, 0, 0]
-
-map = new Map(map0, 15, 30)
-
-
-item0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 2, 0, 1, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 2, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 2, 2, 2, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 2, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 2, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-itemmap = new Map(item0, 15, 30)
-###
-ACTIONS
-###
-class Action
-  constructor: (@actionname, @doFn) ->
-
-class DigTrapAction extends Action
-  constructor: -> super('Dig Trap', (x,y) -> alert("Digging a trap at #{x},#{y}"))
-
-class DrinkWaterAction extends Action
-  constructor: -> super('Drink water', (x,y) -> alert("Drinking water at #{x},#{y}"))
-
-class PickUpItemAction extends Action
-  constructor: -> super('Pick Up Item Action', (x,y) -> alert("I picked up the damned item at #{x}, #{y}. It is a #{itemarray[itemmap.getElement(x,y)]}"))
-
-###
-Map tiles
-###
-class Tile
-  constructor: (src) -> 
-    @tileImage = new Image()
-    @tileImage.onload = => @tileReady = true
-    @tileImage.src = src
-  tileReady: false
-  stamina_cost: 1
-  thirst_cost: 1
-  hunger_cost: 1
-  health_cost: 0
-
-class GrassTile extends Tile
-  constructor: -> super('grass.png')
-  actions: [new DigTrapAction()]
-
-class DeepWaterTile extends Tile
-  constructor: -> 
-    super('water.png')
-    @stamina_cost = Number.MAX_VALUE
-  actions: [new DrinkWaterAction()]
-
-class ShallowWaterTile extends Tile
-  constructor: -> 
-    super('stone.png')
-    @stamina_cost = 3
-  actions: [new DrinkWaterAction()]
-
-class FireTile extends Tile
-  constructor: -> super('fire.png')
-  actions: [new DigTrapAction()]
-
-class HillTile extends Tile
-  constructor: -> super('hill.png')
-  actions: [new DigTrapAction()]
-
-tileArray = [new GrassTile(), new FireTile(), new HillTile(), new ShallowWaterTile(), new DeepWaterTile()]
-
-
-###
-My Player tile
-###
-class Player
-  constructor: -> 
-    @playerImage = new Image()
-    @playerImage.onload = => @imgReady = true
-    @playerImage.src = "sprite.png"
-  imgReady: false
-
-###
-Item tiles
-###
-class Item
-  constructor: (src) -> 
-    @tileImage = new Image()
-    @tileReady = false
-    @tileImage.onload = => @tileReady = true
-    @tileImage.src = src
-
-
-class GreenHelm extends Item
-  constructor: -> super('items/greenhelm.gif')
-  actions: [new PickUpItemAction()]
-  name: 'Green helmet'
-
-class WaterBottle extends Item
-  constructor: -> super('items/waterbottle.gif')
-  actions: [new PickUpItemAction()]
-  name: 'Water bottle'
-
-itemarray = [new GreenHelm(), new WaterBottle()]
-
-###
-###
-
 tileWidth = 25
 tileHeight = 25
 
@@ -205,6 +6,7 @@ canvasHeight = 300
 
 fullWidth = tileWidth*map.numcols
 fullHeight = tileHeight*map.numrows
+
 
 mousex = 0
 mousey = 0
@@ -251,16 +53,16 @@ $(document).ready ->
     #alert ("Key pressed! Value: #{evt.keyCode}") 
     if (evt.keyCode == 87) #w pressed
       tileArray[map.getElement(playerSquarex, playerSquarey-1)].actions[0].doFn(playerSquarex, playerSquarey-1)
-      itemarray[itemmap.getElement(playerSquarex, playerSquarey-1)].actions[0].doFn(playerSquarex, playerSquarey-1)
+      if itemmap.getElement(playerSquarex, playerSquarey-1) != 0 then itemarray[itemmap.getElement(playerSquarex, playerSquarey-1)].actions[0].doFn(playerSquarex, playerSquarey-1)
     if (evt.keyCode == 83) #s
       tileArray[map.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
-      itemarray[itemmap.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
+    if itemmap.getElement(playerSquarex, playerSquarey+1) != 0 then itemarray[itemmap.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
     if (evt.keyCode == 65) #a
       tileArray[map.getElement(playerSquarex-1, playerSquarey)].actions[0].doFn(playerSquarex-1, playerSquarey)
-      itemarray[itemmap.getElement(playerSquarex-1, playerSquarey)].actions[0].doFn(playerSquarex-1, playerSquarey)
+      if itemmap.getElement(playerSquarex-1, playerSquarey) != 0 then itemarray[itemmap.getElement(playerSquarex-1, playerSquarey)].actions[0].doFn(playerSquarex-1, playerSquarey)
     if (evt.keyCode == 68) #d 
       tileArray[map.getElement(playerSquarex+1, playerSquarey)].actions[0].doFn(playerSquarex+1, playerSquarey)
-      itemarray[map.getElement(playerSquarex+1, playerSquarey)].actions[0].doFn(playerSquarex+1, playerSquarey)
+      if itemmap.getElement(playerSquarex+1, playerSquarey) != 0 then itemarray[itemmap.getElement(playerSquarex+1, playerSquarey)].actions[0].doFn(playerSquarex+1, playerSquarey)
     playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
     playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
     playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
@@ -362,7 +164,7 @@ render = =>
       if (tileArray[map.getElement(x,y)].tileReady)
         # draw the image on the map in the position relative to map scroll
         mapContext.drawImage tileArray[map.getElement(x,y)].tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
-        if itemmap.getElement(x,y) != 0 then mapContext.drawImage itemarray[(itemmap.getElement(x,y))-1].tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+        if itemmap.getElement(x,y) != 0 then mapContext.drawImage itemarray[itemmap.getElement(x,y)].tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
 
   #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
   #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
