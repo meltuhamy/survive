@@ -56,7 +56,7 @@ $(document).ready ->
       if itemmap.getElement(playerSquarex, playerSquarey-1) != 0 then itemarray[itemmap.getElement(playerSquarex, playerSquarey-1)].actions[0].doFn(playerSquarex, playerSquarey-1)
     if (evt.keyCode == 83) #s
       tileArray[map.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
-    if itemmap.getElement(playerSquarex, playerSquarey+1) != 0 then itemarray[itemmap.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
+      if itemmap.getElement(playerSquarex, playerSquarey+1) != 0 then itemarray[itemmap.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
     if (evt.keyCode == 65) #a
       tileArray[map.getElement(playerSquarex-1, playerSquarey)].actions[0].doFn(playerSquarex-1, playerSquarey)
       if itemmap.getElement(playerSquarex-1, playerSquarey) != 0 then itemarray[itemmap.getElement(playerSquarex-1, playerSquarey)].actions[0].doFn(playerSquarex-1, playerSquarey)
