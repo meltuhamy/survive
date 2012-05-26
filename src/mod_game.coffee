@@ -199,7 +199,7 @@ render = =>
   window.hoverSelectBox.setY Math.floor((playery+12.5)/tileHeight)*tileHeight - Math.floor(scrolly)
   playerSquarex = Math.floor ((playerx+12.5) / 25);
   playerSquarey = Math.floor ((playery+12.5) / 25);
-  debugText.setText("playerSquarex = #{playerSquarex}, playerSquarey = #{playerSquarey} ")
+  debugText.setText("inventory = #{player.inventory}, playerSquarex = #{playerSquarex}, playerSquarey = #{playerSquarey} ")
   window.debugLayer.draw()
 
 

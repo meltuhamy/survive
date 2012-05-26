@@ -8,9 +8,9 @@ class Map
         getElement: (row,col) -> @mapArray[@gridIndex(row,col)]
         setElement: (row,col,item) -> @mapArray[@gridIndex(row,col)] = item
 
-map0 = [0, 3, 4, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 4, 0,
-        0, 0, 0, 2, 2, 2, 2, 2, 4, 0,
+map0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 2, 1, 4, 4, 4, 2, 0,
         1, 0, 0, 2, 2, 4, 2, 2, 2, 0,
         0, 0, 0, 0, 0, 4, 0, 0, 0, 0,

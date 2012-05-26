@@ -25,7 +25,7 @@ class DeepWaterTile extends Tile
 
 class ShallowWaterTile extends Tile
   constructor: -> 
-    super('stone.png')
+    super('shallowwater.png')
     @stamina_cost = 3
   actions: [new DrinkWaterAction()]
 
@@ -48,6 +48,7 @@ class Player
     @playerImage = new Image()
     @playerImage.onload = => @imgReady = true
     @playerImage.src = "sprite.png"
+    @inventory = []
   imgReady: false
 
 ###
