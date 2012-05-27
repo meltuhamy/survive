@@ -168,6 +168,11 @@ render = =>
         if (filterReady)
             mapContext.drawImage filterImage, x*tileWidth-scrollx, y*tileHeight-scrolly
             if !map.noItem(x,y) then mapContext.drawImage map.getItem(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+            for v in vision2
+              visionx = player.playerSquarex+v.x
+              visiony = player.playerSquarey+v.y 
+              mapContext.drawImage map.getTile(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
+
 
   #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
   #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
