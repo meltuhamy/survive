@@ -12,7 +12,7 @@ class Map
         tileArray: [new GrassTile(), new FireTile(), new HillTile(), new ShallowWaterTile(), new DeepWaterTile()]
         itemArray: [0, new GreenHelm(), new WaterBottle()]
         constructor: (@tileGrid, @itemGrid) ->
-                if @tileGrid.numrows != @itemGrid.numcols then console.log 'Sizes of grids dont match'
+                if @tileGrid.numrows != @itemGrid.numrows or @tileGrid.numcols != @itemGrid.numcols then console.log 'Sizes of grids dont match'
         getTileElement: (row, col) -> @tileGrid.getElement(row,col)
         getItemElement: (row, col) -> @itemGrid.getElement(row,col)
 
@@ -21,6 +21,11 @@ class Map
 
         getTile: (row, col) -> @tileArray[@getTileElement(row,col)]
         getItem: (row, col) -> @itemArray[@getItemElement(row,col)]
+
+        getLeftPixel: (row, col) -> row*25
+        getRightPixel: (row, col) -> (row+1)*25-1
+        getTopPixel: (row, col) -> col*25
+        getBottomPixel: (row, col) -> (col+1)*25-1
 
         removeItem: (row,col) -> @itemGrid.setElement(row,col,0)
         noItem: (row,col) -> @itemGrid.getElement(row,col) == 0
