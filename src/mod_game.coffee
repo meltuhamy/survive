@@ -13,13 +13,6 @@ mousey = 0
 mouseSquarex = 0
 mouseSquarey = 0
 
-playerx = 0
-playery = 0
-playerSquarex = 0
-playerSquarey = 0
-
-playerspeed = 0.8
-
 scrollx = 0.0
 scrollxvel = 0.0
 scrollxacc = 0.0
@@ -52,17 +45,17 @@ $(document).ready ->
   $(document.documentElement).keyup (evt) ->
     #alert ("Key pressed! Value: #{evt.keyCode}") 
     if (evt.keyCode == 87) #w pressed
-      map.getTile(playerSquarex, playerSquarey-1).actions[0].doFn(playerSquarex, playerSquarey-1)
-      if !map.noItem(playerSquarex, playerSquarey-1) then map.getItem(playerSquarex, playerSquarey-1).actions[0].doFn(playerSquarex, playerSquarey-1)
+      map.getTile(player.playerSquarex, player.playerSquarey-1).actions[0].doFn(player.playerSquarex, player.playerSquarey-1)
+      if !map.noItem(player.playerSquarex, player.playerSquarey-1) then map.getItem(player.playerSquarex, player.playerSquarey-1).actions[0].doFn(player.playerSquarex, player.playerSquarey-1)
     if (evt.keyCode == 83) #s
-      map.getTile(playerSquarex, playerSquarey+1).actions[0].doFn(playerSquarex,playerSquarey+1)
-      if !map.noItem(playerSquarex, playerSquarey+1) then map.getItem(playerSquarex, playerSquarey+1).actions[0].doFn(playerSquarex,playerSquarey+1)
+      map.getTile(player.playerSquarex, player.playerSquarey+1).actions[0].doFn(player.playerSquarex,player.playerSquarey+1)
+      if !map.noItem(player.playerSquarex, player.playerSquarey+1) then map.getItem(player.playerSquarex, player.playerSquarey+1).actions[0].doFn(player.playerSquarex,player.playerSquarey+1)
     if (evt.keyCode == 65) #a
-      map.getTile(playerSquarex-1, playerSquarey).actions[0].doFn(playerSquarex-1, playerSquarey)
-      if !map.noItem(playerSquarex-1, playerSquarey) then map.getItem(playerSquarex-1, playerSquarey).actions[0].doFn(playerSquarex-1, playerSquarey)
+      map.getTile(player.playerSquarex-1, player.playerSquarey).actions[0].doFn(player.playerSquarex-1, player.playerSquarey)
+      if !map.noItem(player.playerSquarex-1, player.playerSquarey) then map.getItem(player.playerSquarex-1, player.playerSquarey).actions[0].doFn(player.playerSquarex-1, player.playerSquarey)
     if (evt.keyCode == 68) #d 
-      map.getTile(playerSquarex+1, playerSquarey).actions[0].doFn(playerSquarex+1, playerSquarey)
-      if !map.noItem(playerSquarex+1, playerSquarey) then map.getItem(playerSquarex+1, playerSquarey).actions[0].doFn(playerSquarex+1, playerSquarey)
+      map.getTile(player.playerSquarex+1, player.playerSquarey).actions[0].doFn(player.playerSquarex+1, player.playerSquarey)
+      if !map.noItem(player.playerSquarex+1, player.playerSquarey) then map.getItem(player.playerSquarex+1, player.playerSquarey).actions[0].doFn(player.playerSquarex+1, player.playerSquarey)
     playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
     playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
     playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
@@ -173,39 +166,39 @@ render = =>
 
   #console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
 
-  mapContext.drawImage player.playerImage, playerx-scrollx, playery-scrolly if player.imgReady
+  mapContext.drawImage player.playerImage, player.playerx-scrollx, player.playery-scrolly if player.imgReady
 
   # if player is moving left or right, update it's stored horizontal position
-  if playerMovingLeft && map.getTile(playerSquarex-1,playerSquarey).walkable
-    playerx = playerx - playerspeed
-  else if playerMovingRight && map.getTile(playerSquarex+1,playerSquarey).walkable
-    playerx = playerx + playerspeed
+  if playerMovingLeft && map.getTile(player.playerSquarex-1,player.playerSquarey).walkable
+    player.playerx = player.playerx - player.speed
+  else if playerMovingRight && map.getTile(player.playerSquarex+1,player.playerSquarey).walkable
+    player.playerx = player.playerx + player.speed
   # if player not moving left or right, center it's horizontal position
   else
-    playerx = Math.floor((playerx+12.5)/tileWidth)*tileWidth
+    player.playerx = player.playerSquarex*tileWidth
   
   # if player is moving up or down, update it's stored vertical position
-  if playerMovingUp && map.getTile(playerSquarex,playerSquarey-1).walkable
-    playery = playery - playerspeed
-  else if playerMovingDown && map.getTile(playerSquarex,playerSquarey+1).walkable
-    playery = playery + playerspeed
+  if playerMovingUp && map.getTile(player.playerSquarex,player.playerSquarey-1).walkable
+    player.playery = player.playery - player.speed
+  else if playerMovingDown && map.getTile(player.playerSquarex,player.playerSquarey+1).walkable
+    player.playery = player.playery + player.speed
   # if player not moving up or down, center it's vertical position
   else 
-    playery = Math.floor((playery+12.5)/tileHeight)*tileHeight
+    player.playery = player.playerSquarey*tileHeight
     
   #update the hover select box position
 
-  window.hoverSelectBox.setX Math.floor((playerx+12.5)/tileWidth)*tileWidth - Math.floor(scrollx)
-  window.hoverSelectBox.setY Math.floor((playery+12.5)/tileHeight)*tileHeight - Math.floor(scrolly)
-  oldplayerSquarex = playerSquarex
-  oldplayerSquarey = playerSquarey
-  playerSquarex = Math.floor ((playerx+12.5) / 25);
-  playerSquarey = Math.floor ((playery+12.5) / 25);
-  if(oldplayerSquarex != playerSquarex || oldplayerSquarey != playerSquarey)
-    player.statchange(map.getTile(playerSquarex,playerSquarey))
-  debugText.setText("inventory = #{player.inventory}, playerSquarex = #{playerSquarex}, playerSquarey = #{playerSquarey} \n
+  oldplayerSquarex = player.playerSquarex
+  oldplayerSquarey = player.playerSquarey
+  player.playerSquarex = Math.floor((player.playerx+12.5) / 25);
+  player.playerSquarey = Math.floor((player.playery+12.5) / 25);
+  if(oldplayerSquarex != player.playerSquarex || oldplayerSquarey != player.playerSquarey)
+    player.statchange(map.getTile(player.playerSquarex,player.playerSquarey))
+  debugText.setText("inventory = #{player.inventory}, player.playerSquarex = #{player.playerSquarex}, player.playerSquarey = #{player.playerSquarey} \n
     health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
   window.debugLayer.draw()
+  window.hoverSelectBox.setX player.playerSquarex*tileWidth - Math.floor(scrollx)
+  window.hoverSelectBox.setY player.playerSquarey*tileHeight - Math.floor(scrolly)
 
 
 ###
