@@ -2,7 +2,7 @@ tileWidth = 25
 tileHeight = 25
 
 canvasWidth = 900
-canvasHeight = 600
+canvasHeight = 700
 
 fullWidth = tileWidth*map.tileGrid.numcols
 fullHeight = tileHeight*map.tileGrid.numrows
@@ -35,9 +35,23 @@ filterImage.src = 'filter.png'
 #Initialisation events
 
 
+makemenu = (x,y) ->
+   menuactions = map.getTile(x, y).actions
+   itemsactions = if map.noItem(x,y) then [] else map.getItem(x, y).actions
+   menuactions = menuactions.concat(itemsactions)
+   console.log menuactions
+   $('#inventorymenu ul').append("<li>#{theAction.actionname}</li>") for theAction in menuactions
+
+
+inventoryPopup = ->
+  #$('#inventorymenu').show()
+  $('#inventorymenu').fadeToggle("fast")
+
 $(document).ready ->
 
   # mouse move event within 'container' div
+
+  $('#inventorymenu').hide()
 
   $('#container').mousemove (evt) ->
     offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset
@@ -50,22 +64,21 @@ $(document).ready ->
   $(document.documentElement).keyup (evt) ->
     #alert ("Key pressed! Value: #{evt.keyCode}") 
     if (evt.keyCode == 87) #w pressed
-      map.getTile(player.tilex, player.tiley-1).actions[0].doFn(player.tilex, player.tiley-1)
-      if !map.noItem(player.tilex, player.tiley-1) then map.getItem(player.tilex, player.tiley-1).actions[0].doFn(player.tilex, player.tiley-1)
-    if (evt.keyCode == 83) #s
-      map.getTile(player.tilex, player.tiley+1).actions[0].doFn(player.tilex,player.tiley+1)
-      if !map.noItem(player.tilex, player.tiley+1) then map.getItem(player.tilex, player.tiley+1).actions[0].doFn(player.tilex,player.tiley+1)
+      makemenu(player.tilex, player.tiley-1)
+    if (evt.keyCode == 83) #s pressed
+      makemenu(player.tilex, player.tiley+1)
     if (evt.keyCode == 65) #a
-      map.getTile(player.tilex-1, player.tiley).actions[0].doFn(player.tilex-1, player.tiley)
-      if !map.noItem(player.tilex-1, player.tiley) then map.getItem(player.tilex-1, player.tiley).actions[0].doFn(player.tilex-1, player.tiley)
-    if (evt.keyCode == 68) #d 
-      map.getTile(player.tilex+1, player.tiley).actions[0].doFn(player.tilex+1, player.tiley)
-      if !map.noItem(player.tilex+1, player.tiley) then map.getItem(player.tilex+1, player.tiley).actions[0].doFn(player.tilex+1, player.tiley)
+      makemenu(player.tilex-1, player.tiley)
+    if (evt.keyCode == 68) #a
+      makemenu(player.tilex+1, player.tiley)
     playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
     playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
     playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
     playerMovingDown = false if (evt.keyCode == 40)     # down arrow key up -> playerMovingDown becomes false
     
+    if(evt.keyCode == 73)
+      inventoryPopup()
+
 
 
 

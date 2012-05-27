@@ -1,0 +1,63 @@
+body{
+	margin: 0px;
+
+}
+
+*{padding:0px; margin:0px;}
+
+#containerbox{
+	width: 900px;
+	height: 635px;
+	position: relative;
+	z-index: 1;
+	margin: 0px;
+	border: 0px;
+}
+
+#container{
+	margin: 0px !important;
+	border: 0px ;
+	padding: 0px;
+}
+
+#uibar{
+	margin: 0px;
+	padding: 0px;
+	float: left;
+	height: 35px;
+	background-color: red;
+	width: 100%;
+	position: relative;
+	z-index: 99;
+	top: -40px;
+}
+
+#inventory{
+	margin:0px;
+	width: 35px;
+	height: 35px;
+	cursor: pointer;
+	background-color: gray;
+}
+
+#inventorymenu{
+	position: relative;
+	margin:0px;
+	width:200px;
+	height:300px;
+	z-index:100;
+	top:-340px;
+	background-color: gray;
+}
+
+#inventorymenu ul{
+	padding-left: 0;
+	margin-left: 0;
+	width: 200px;
+}
+
+#inventorymenu ul li{
+	list-style: none;
+	margin: 0;
+	padding: 0.25em;
+}
