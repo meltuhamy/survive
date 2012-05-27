@@ -1,8 +1,8 @@
 tileWidth = 25
 tileHeight = 25
 
-canvasWidth = 1000
-canvasHeight = 1000
+canvasWidth = 900
+canvasHeight = 600
 
 fullWidth = tileWidth*map.tileGrid.numcols
 fullHeight = tileHeight*map.tileGrid.numrows
@@ -167,11 +167,25 @@ render = =>
         mapContext.drawImage map.getTile(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
         if (filterReady)
             mapContext.drawImage filterImage, x*tileWidth-scrollx, y*tileHeight-scrolly
-            if !map.noItem(x,y) then mapContext.drawImage map.getItem(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
-            for v in vision2
-              visionx = player.playerSquarex+v.x
-              visiony = player.playerSquarey+v.y 
-              mapContext.drawImage map.getTile(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
+            
+  for v in vision2
+    visionx = player.playerSquarex+v.x
+    visiony = player.playerSquarey+v.y 
+    if(map.inBounds(visionx,visiony))
+      mapContext.drawImage map.getTile(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
+      if !map.noItem(visionx,visiony) then mapContext.drawImage map.getItem(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
+
+  oldplayerSquarex = player.playerSquarex
+  oldplayerSquarey = player.playerSquarey
+  player.playerSquarex = Math.floor((player.playerx+12.5) / 25);
+  player.playerSquarey = Math.floor((player.playery+12.5) / 25);
+  if(oldplayerSquarex != player.playerSquarex || oldplayerSquarey != player.playerSquarey)
+    player.statchange(map.getTile(player.playerSquarex,player.playerSquarey))
+  debugText.setText("inventory = #{player.inventory}, player.playerSquarex = #{player.playerSquarex}, player.playerSquarey = #{player.playerSquarey} \n
+    health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
+  window.debugLayer.draw()
+  window.hoverSelectBox.setX player.playerSquarex*tileWidth - Math.floor(scrollx)
+  window.hoverSelectBox.setY player.playerSquarey*tileHeight - Math.floor(scrolly)
 
 
   #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
@@ -211,17 +225,7 @@ render = =>
     
   #update the hover select box position
 
-  oldplayerSquarex = player.playerSquarex
-  oldplayerSquarey = player.playerSquarey
-  player.playerSquarex = Math.floor((player.playerx+12.5) / 25);
-  player.playerSquarey = Math.floor((player.playery+12.5) / 25);
-  if(oldplayerSquarex != player.playerSquarex || oldplayerSquarey != player.playerSquarey)
-    player.statchange(map.getTile(player.playerSquarex,player.playerSquarey))
-  debugText.setText("inventory = #{player.inventory}, player.playerSquarex = #{player.playerSquarex}, player.playerSquarey = #{player.playerSquarey} \n
-    health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
-  window.debugLayer.draw()
-  window.hoverSelectBox.setX player.playerSquarex*tileWidth - Math.floor(scrollx)
-  window.hoverSelectBox.setY player.playerSquarey*tileHeight - Math.floor(scrolly)
+  
 
 
 ###

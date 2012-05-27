@@ -9,7 +9,7 @@ class Player
     @playerImage.src = if image? then image else "sprite.png"
     @inventory = if inventory? then inventory else []
     @health = if health? then health else 10
-    @stamina = if stamina? then stamina else 15
+    @stamina = if stamina? then stamina else 100
     @hunger = if hunger? then hunber else 20
     @thirst = if thirst? then thirst else 20
     @speed = if speed? then speed else 0.8
