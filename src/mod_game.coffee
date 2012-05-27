@@ -184,18 +184,26 @@ render = =>
   mapContext.drawImage player.playerImage, player.playerx-scrollx, player.playery-scrolly if player.imgReady
 
   # if player is moving left or right, update it's stored horizontal position
-  if playerMovingLeft && map.getTile(player.playerSquarex-1,player.playerSquarey).walkable
+  if `playerMovingLeft 
+      && map.getTile(player.playerSquarex-1,player.playerSquarey).walkable 
+      && map.getTile(player.playerSquarex-1,player.playerSquarey).stamina_cost <= player.stamina`
     player.playerx = player.playerx - player.speed
-  else if playerMovingRight && map.getTile(player.playerSquarex+1,player.playerSquarey).walkable
+  else if `playerMovingRight 
+           && map.getTile(player.playerSquarex+1,player.playerSquarey).walkable 
+           && map.getTile(player.playerSquarex+1,player.playerSquarey).stamina_cost <= player.stamina`
     player.playerx = player.playerx + player.speed
   # if player not moving left or right, center it's horizontal position
   else
     player.playerx = player.playerSquarex*tileWidth
   
   # if player is moving up or down, update it's stored vertical position
-  if playerMovingUp && map.getTile(player.playerSquarex,player.playerSquarey-1).walkable
+  if `playerMovingUp 
+      && map.getTile(player.playerSquarex,player.playerSquarey-1).walkable 
+      && map.getTile(player.playerSquarex,player.playerSquarey-1).stamina_cost <= player.stamina`
     player.playery = player.playery - player.speed
-  else if playerMovingDown && map.getTile(player.playerSquarex,player.playerSquarey+1).walkable
+  else if `playerMovingDown 
+           && map.getTile(player.playerSquarex,player.playerSquarey+1).walkable 
+           && map.getTile(player.playerSquarex,player.playerSquarey+1).stamina_cost <= player.stamina`
     player.playery = player.playery + player.speed
   # if player not moving up or down, center it's vertical position
   else 
