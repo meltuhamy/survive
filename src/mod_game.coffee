@@ -27,6 +27,11 @@ playerMovingUp = false
 playerMovingRight = false
 playerMovingDown = false
 
+filterReady = false
+filterImage = new Image()
+filterImage.onload = => filterReady = true
+filterImage.src = 'filter.png'
+
 #Initialisation events
 
 
@@ -144,6 +149,9 @@ player = new Player()
     Drawing to canvas
 ###
 
+vision1 = [{x:0,y:0}, {x:1,y:0}, {x:0,y:1}, {x:-1,y:0}, {x:0,y:-1}]
+vision2 = [{x:0,y:0},{x:-1,y:-1},{x:0,y:-1},{x:1,y:-1},{x:1,y:0},{x:1,y:1},{x:0,y:1},{x:-1,y:1},{x:-1,y:0},{x:-2,y:0},{x:0,y:-2},{x:0,y:2},{x:2,y:0}]
+
 render = =>
   mapContext = window.mapLayer.getContext() # get map
   mapContext.fillStyle = "#000000" 
@@ -157,7 +165,9 @@ render = =>
       if (map.getTile(x,y).tileReady)
         # draw the image on the map in the position relative to map scroll
         mapContext.drawImage map.getTile(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
-        if !map.noItem(x,y) then mapContext.drawImage map.getItem(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+        if (filterReady)
+            mapContext.drawImage filterImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+            if !map.noItem(x,y) then mapContext.drawImage map.getItem(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
 
   #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
   #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
