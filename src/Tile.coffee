@@ -7,6 +7,8 @@ class Tile
     @tileImage = new Image()
     @tileImage.onload = => @tileReady = true
     @tileImage.src = src
+
+class MapTile extends Tile
   tileReady: false
   stamina_cost: 1
   thirst_cost: 0
@@ -14,81 +16,48 @@ class Tile
   health_cost: 0
   walkable: true
 
-class GrassTile extends Tile
+class GrassTile extends MapTile
   constructor: -> super('grass.png')
   actions: [new DigTrapAction()]
 
-class DeepWaterTile extends Tile
+class DeepWaterTile extends MapTile
   constructor: -> 
     super('water.png')
     @stamina_cost = Number.MAX_VALUE
     @walkable = false
   actions: [new DrinkWaterAction()]
 
-class ShallowWaterTile extends Tile
+class ShallowWaterTile extends MapTile
   constructor: -> 
     super('shallowwater.png')
     @stamina_cost = 3
   actions: [new DrinkWaterAction()]
 
-class FireTile extends Tile
+class FireTile extends MapTile
   constructor: -> 
     super('fire.png')
     @health_cost = 2
     @thirst_cost = 2
   actions: [new DigTrapAction()]
 
-class HillTile extends Tile
+class HillTile extends MapTile
   constructor: -> 
     super('hill.png')
     @walkable = false
   actions: [new DigTrapAction()]
   walkable: false
 
-tileArray = [new GrassTile(), new FireTile(), new HillTile(), new ShallowWaterTile(), new DeepWaterTile()]
-
-
-###
-My Player tile
-###
-class Player
-  constructor: -> 
-    @playerImage = new Image()
-    @playerImage.onload = => @imgReady = true
-    @playerImage.src = "sprite.png"
-    @inventory = []
-    @health = 10
-    @stamina = 15
-    @hunger = 20
-    @thirst = 20
-  imgReady: false
-  statchange: (tiletype) -> 
-    @health = @health - tileArray[tiletype].health_cost
-    @stamina = @stamina - tileArray[tiletype].stamina_cost
-    @hunger = @hunger - tileArray[tiletype].hunger_cost
-    @thirst = @thirst - tileArray[tiletype].thirst_cost
 ###
 Item tiles
 ###
-class Item
-  constructor: (src) -> 
-    @tileImage = new Image()
-    @tileReady = false
-    @tileImage.onload = => @tileReady = true
-    @tileImage.src = src
 
-
-class GreenHelm extends Item
+class GreenHelm extends Tile
   constructor: -> super('items/greenhelm.gif')
   actions: [new PickUpItemAction()]
   name: 'Green helmet'
 
-class WaterBottle extends Item
+class WaterBottle extends Tile
   constructor: -> super('items/waterbottle.gif')
   actions: [new PickUpItemAction()]
   name: 'Water bottle'
 
-itemarray = [0, new GreenHelm(), new WaterBottle()]
-
-###
-###

@@ -13,7 +13,7 @@ class DrinkWaterAction extends Action
 
 class PickUpItemAction extends Action
   constructor: -> super('Pick Up Item Action', (x,y) -> 
-  	pickedItem = itemmap.getElement(x,y)
-  	player.inventory.push(pickedItem)
-  	itemmap.setElement(x,y,0) 
-  	alert("I picked up the damned item at #{x}, #{y}. It is a #{itemarray[itemmap.getElement(x,y)].name}"))
+  	pickedItem = map.getItem(x,y)
+  	player.inventory.push(pickedItem.name)
+  	map.removeItem(x,y)
+  	alert("I picked up the damned item at #{x}, #{y}. It is a #{pickedItem.name}"))

@@ -4,8 +4,8 @@ tileHeight = 25
 canvasWidth = 1000
 canvasHeight = 1000
 
-fullWidth = tileWidth*map.numcols
-fullHeight = tileHeight*map.numrows
+fullWidth = tileWidth*map.tileGrid.numcols
+fullHeight = tileHeight*map.tileGrid.numrows
 
 
 mousex = 0
@@ -52,17 +52,17 @@ $(document).ready ->
   $(document.documentElement).keyup (evt) ->
     #alert ("Key pressed! Value: #{evt.keyCode}") 
     if (evt.keyCode == 87) #w pressed
-      tileArray[map.getElement(playerSquarex, playerSquarey-1)].actions[0].doFn(playerSquarex, playerSquarey-1)
-      if itemmap.getElement(playerSquarex, playerSquarey-1) != 0 then itemarray[itemmap.getElement(playerSquarex, playerSquarey-1)].actions[0].doFn(playerSquarex, playerSquarey-1)
+      map.getTile(playerSquarex, playerSquarey-1).actions[0].doFn(playerSquarex, playerSquarey-1)
+      if !map.noItem(playerSquarex, playerSquarey-1) then map.getItem(playerSquarex, playerSquarey-1).actions[0].doFn(playerSquarex, playerSquarey-1)
     if (evt.keyCode == 83) #s
-      tileArray[map.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
-      if itemmap.getElement(playerSquarex, playerSquarey+1) != 0 then itemarray[itemmap.getElement(playerSquarex, playerSquarey+1)].actions[0].doFn(playerSquarex,playerSquarey+1)
+      map.getTile(playerSquarex, playerSquarey+1).actions[0].doFn(playerSquarex,playerSquarey+1)
+      if !map.noItem(playerSquarex, playerSquarey+1) then map.getItem(playerSquarex, playerSquarey+1).actions[0].doFn(playerSquarex,playerSquarey+1)
     if (evt.keyCode == 65) #a
-      tileArray[map.getElement(playerSquarex-1, playerSquarey)].actions[0].doFn(playerSquarex-1, playerSquarey)
-      if itemmap.getElement(playerSquarex-1, playerSquarey) != 0 then itemarray[itemmap.getElement(playerSquarex-1, playerSquarey)].actions[0].doFn(playerSquarex-1, playerSquarey)
+      map.getTile(playerSquarex-1, playerSquarey).actions[0].doFn(playerSquarex-1, playerSquarey)
+      if !map.noItem(playerSquarex-1, playerSquarey) then map.getItem(playerSquarex-1, playerSquarey).actions[0].doFn(playerSquarex-1, playerSquarey)
     if (evt.keyCode == 68) #d 
-      tileArray[map.getElement(playerSquarex+1, playerSquarey)].actions[0].doFn(playerSquarex+1, playerSquarey)
-      if itemmap.getElement(playerSquarex+1, playerSquarey) != 0 then itemarray[itemmap.getElement(playerSquarex+1, playerSquarey)].actions[0].doFn(playerSquarex+1, playerSquarey)
+      map.getTile(playerSquarex+1, playerSquarey).actions[0].doFn(playerSquarex+1, playerSquarey)
+      if !map.noItem(playerSquarex+1, playerSquarey) then map.getItem(playerSquarex+1, playerSquarey).actions[0].doFn(playerSquarex+1, playerSquarey)
     playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
     playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
     playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
@@ -158,13 +158,13 @@ render = =>
 
 
   # for every grid location
-  for y in [0...map.numrows]
-    for x in [0...map.numcols]
+  for y in [0...map.tileGrid.numrows]
+    for x in [0...map.tileGrid.numcols]
       # if the corresponding tile is loaded
-      if (tileArray[map.getElement(x,y)].tileReady)
+      if (map.getTile(x,y).tileReady)
         # draw the image on the map in the position relative to map scroll
-        mapContext.drawImage tileArray[map.getElement(x,y)].tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
-        if itemmap.getElement(x,y) != 0 then mapContext.drawImage itemarray[itemmap.getElement(x,y)].tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+        mapContext.drawImage map.getTile(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+        if !map.noItem(x,y) then mapContext.drawImage map.getItem(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
 
   #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
   #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
@@ -176,18 +176,18 @@ render = =>
   mapContext.drawImage player.playerImage, playerx-scrollx, playery-scrolly if player.imgReady
 
   # if player is moving left or right, update it's stored horizontal position
-  if playerMovingLeft && tileArray[map.getElement(playerSquarex-1,playerSquarey)].walkable
+  if playerMovingLeft && map.getTile(playerSquarex-1,playerSquarey).walkable
     playerx = playerx - playerspeed
-  else if playerMovingRight && tileArray[map.getElement(playerSquarex+1,playerSquarey)].walkable
+  else if playerMovingRight && map.getTile(playerSquarex+1,playerSquarey).walkable
     playerx = playerx + playerspeed
   # if player not moving left or right, center it's horizontal position
   else
     playerx = Math.floor((playerx+12.5)/tileWidth)*tileWidth
   
   # if player is moving up or down, update it's stored vertical position
-  if playerMovingUp && tileArray[map.getElement(playerSquarex,playerSquarey-1)].walkable
+  if playerMovingUp && map.getTile(playerSquarex,playerSquarey-1).walkable
     playery = playery - playerspeed
-  else if playerMovingDown && tileArray[map.getElement(playerSquarex,playerSquarey+1)].walkable
+  else if playerMovingDown && map.getTile(playerSquarex,playerSquarey+1).walkable
     playery = playery + playerspeed
   # if player not moving up or down, center it's vertical position
   else 
@@ -202,7 +202,7 @@ render = =>
   playerSquarex = Math.floor ((playerx+12.5) / 25);
   playerSquarey = Math.floor ((playery+12.5) / 25);
   if(oldplayerSquarex != playerSquarex || oldplayerSquarey != playerSquarey)
-    player.statchange(map.getElement(playerSquarex,playerSquarey))
+    player.statchange(map.getTile(playerSquarex,playerSquarey))
   debugText.setText("inventory = #{player.inventory}, playerSquarex = #{playerSquarex}, playerSquarey = #{playerSquarey} \n
     health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
   window.debugLayer.draw()
