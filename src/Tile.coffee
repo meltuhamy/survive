@@ -18,7 +18,7 @@ class MapTile extends Tile
 
 class GrassTile extends MapTile
   constructor: -> super('grass.png')
-  actions: [new DigTrapAction()]
+  actions: [new DigTrapAction(), new BuildBoobyTrapAction()]
 
 class DeepWaterTile extends MapTile
   constructor: -> 
@@ -31,7 +31,7 @@ class ShallowWaterTile extends MapTile
   constructor: -> 
     super('shallowwater.png')
     @stamina_cost = 3
-  actions: [new DrinkWaterAction()]
+  actions: [new DrinkWaterAction(), new PoisonWaterAction()]
 
 class FireTile extends MapTile
   constructor: -> 
@@ -44,8 +44,33 @@ class HillTile extends MapTile
   constructor: -> 
     super('hill.png')
     @walkable = false
-  actions: [new DigTrapAction()]
+  actions: []
   walkable: false
+
+class TreeTile extends MapTile
+  constructor: -> 
+    super('tree.png')
+    @walkable = false
+  actions: [new ChopTreeAction(), new BurnTreeAction()]
+  walkable: false
+
+class HoleTrapTile extends MapTile
+  constructor: -> 
+    super('grass.png')
+    @stamina_cost = 10
+  actions: []
+
+class BoobyTrapTile extends MapTile
+  constructor: -> 
+    super('grass.png')
+    @health_cost = 4
+  actions: []
+
+class PoisonWaterTile extends MapTile
+  constructor: -> 
+    super('shallowwater.png')
+    @health_cost = 2
+  actions: [new DrinkPoisonedWaterAction(), new PoisonWaterAction()]
 
 ###
 Item tiles
@@ -61,3 +86,27 @@ class WaterBottle extends Tile
   actions: [new PickUpItemAction()]
   name: 'Water bottle'
 
+class Shovel extends Tile
+  constructor: -> super('items/shovel.png')
+  actions: [new PickUpItemAction()]
+  name: 'Shovel'
+
+class Log extends Tile
+  constructor: -> super('items/log.png')
+  actions: [new PickUpItemAction()]
+  name: 'Log'
+
+class Axe extends Tile
+  constructor: -> super('items/axe.png')
+  actions: [new PickUpItemAction()]
+  name: 'Axe'
+
+class Torch extends Tile
+  constructor: -> super('items/torch.png')
+  actions: [new PickUpItemAction()]
+  name: 'Torch'
+
+class Poison extends Tile
+  constructor: -> super('items/poison.png')
+  actions: [new PickUpItemAction()]
+  name: 'Poison'
