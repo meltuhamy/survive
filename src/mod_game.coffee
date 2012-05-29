@@ -28,6 +28,9 @@ playerMovingRight = false
 playerMovingDown = false
 
 filterReady = false
+
+focusOnCanvas = true
+
 filterImage = new Image()
 filterImage.onload = => filterReady = true
 filterImage.src = 'filter.png'
@@ -39,8 +42,25 @@ makemenu = (x,y) ->
    menuactions = map.getTile(x, y).actions
    itemsactions = if map.noItem(x,y) then [] else map.getItem(x, y).actions
    menuactions = menuactions.concat(itemsactions)
-   console.log menuactions
-   $('#inventorymenu ul').append("<li>#{theAction.actionname}</li>") for theAction in menuactions
+   #displayNewMenu menuactions
+   inputSelect = '<select id="actionSelection">'
+   for menuaction in menuactions
+    inputSelect = inputSelect.concat('<option value="'+menuaction.actionname+'">'+menuaction.actionname+'</option>')
+   inputSelect = inputSelect.concat('</select>')
+   #console.log 'Got here'
+   displayNewMenu('Choose an action:', [inputSelect])
+
+displayNewMenu = (menutitle, menuitems) ->
+  console.log "Creating menu #{menutitle} with items:"
+  console.log menuitems
+  focusOnCanvas = false
+  $('#dialog').bind( "dialogclose", (event, ui) -> focusOnCanvas = true)
+  $('#dialog .content').empty()
+  for item in menuitems
+    $('#dialog .content').append item 
+  
+  $('#dialog').dialog( "option", "title", menutitle)
+  $('#dialog').dialog( "open" )
 
 
 inventoryPopup = ->
@@ -49,9 +69,20 @@ inventoryPopup = ->
 
 $(document).ready ->
 
+  #Dialogs
+  $( "#dialog" ).dialog({
+      autoOpen: false
+  });
+
   # mouse move event within 'container' div
 
   $('#inventorymenu').hide()
+
+  $('#actionSelection').keyup (evt) ->
+    console.log 'Hit enter on actions'
+    if(evt.keyCode == 13)
+      alert('Did Action: '+$('#actionSelection:selected').html())
+      $("#dialog").dialog('close')
 
   $('#container').mousemove (evt) ->
     offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset
@@ -63,21 +94,24 @@ $(document).ready ->
 
   $(document.documentElement).keyup (evt) ->
     #alert ("Key pressed! Value: #{evt.keyCode}") 
-    if (evt.keyCode == 87) #w pressed
-      makemenu(player.tilex, player.tiley-1)
-    if (evt.keyCode == 83) #s pressed
-      makemenu(player.tilex, player.tiley+1)
-    if (evt.keyCode == 65) #a
-      makemenu(player.tilex-1, player.tiley)
-    if (evt.keyCode == 68) #a
-      makemenu(player.tilex+1, player.tiley)
-    playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
-    playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
-    playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
-    playerMovingDown = false if (evt.keyCode == 40)     # down arrow key up -> playerMovingDown becomes false
-    
-    if(evt.keyCode == 73)
-      inventoryPopup()
+    if focusOnCanvas
+      if (evt.keyCode == 87) #w pressed
+        makemenu(player.tilex, player.tiley-1)
+      if (evt.keyCode == 83) #s pressed
+        makemenu(player.tilex, player.tiley+1)
+      if (evt.keyCode == 65) #a
+        makemenu(player.tilex-1, player.tiley)
+      if (evt.keyCode == 68) #a
+        makemenu(player.tilex+1, player.tiley)
+      playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
+      playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
+      playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
+      playerMovingDown = false if (evt.keyCode == 40)     # down arrow key up -> playerMovingDown becomes false
+      if(evt.keyCode == 73)
+        inventoryPopup()
+
+    else
+      #This is NOT a canvas thing
 
 
 
@@ -87,26 +121,29 @@ $(document).ready ->
     #set all others to false
     
   $(document.documentElement).keydown (evt) ->
-    if (evt.keyCode == 37) # push left
-      playerMovingLeft = true
-      playerMovingUp = false
-      playerMovingRight = false
-      playerMovingDown = false
-    if (evt.keyCode == 38) # push up
-      playerMovingUp = true
-      playerMovingLeft = false
-      playerMovingRight = false
-      playerMovingDown = false
-    if (evt.keyCode == 39) # push right
-      playerMovingRight = true
-      playerMovingLeft = false
-      playerMovingUp = false
-      playerMovingDown = false
-    if (evt.keyCode == 40) # push down
-      playerMovingDown = true
-      playerMovingLeft = false
-      playerMovingUp = false
-      playerMovingRight = false
+    if focusOnCanvas
+      if (evt.keyCode == 37) # push left
+        playerMovingLeft = true
+        playerMovingUp = false
+        playerMovingRight = false
+        playerMovingDown = false
+      if (evt.keyCode == 38) # push up
+        playerMovingUp = true
+        playerMovingLeft = false
+        playerMovingRight = false
+        playerMovingDown = false
+      if (evt.keyCode == 39) # push right
+        playerMovingRight = true
+        playerMovingLeft = false
+        playerMovingUp = false
+        playerMovingDown = false
+      if (evt.keyCode == 40) # push down
+        playerMovingDown = true
+        playerMovingLeft = false
+        playerMovingUp = false
+        playerMovingRight = false
+    else
+      #This is NOT a canvas thing
 
 
 # executes once page has loaded
