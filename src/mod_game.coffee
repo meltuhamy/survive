@@ -169,26 +169,9 @@ window.onload = =>
     alpha: 0.6
   )
   window.hoverSelectLayer.add window.hoverSelectBox
-
-  # Debug text layer
-  window.debugLayer = new Kinetic.Layer()
-  window.debugText = new Kinetic.Text(
-    x: 10,
-    y: 10,
-    fontSize: 12,
-    fontFamily: "Calibri",
-    textFill: "red",
-    align: "left",
-    verticalAlign: "middle"
-  )
-
-  window.debugLayer.add window.debugText
   window.stage.add window.mapLayer
   window.stage.add window.hoverSelectLayer
-  window.stage.add window.debugLayer
   
-
-
 ###
     Loading resources
 ###
@@ -231,7 +214,7 @@ render = =>
   player.tiley = Math.floor((player.posy+12.5) / 25);
   if(oldTilex != player.tilex || oldTiley != player.tiley)
     player.statchange(map.getTile(player.tilex,player.tiley))
-  debugText.setText("inventory = #{player.inventory}, player.tilex = #{player.tilex}, player.tiley = #{player.tiley} \n
+  $('#debugbar').html("inventory = #{player.inventory}, player.tilex = #{player.tilex}, player.tiley = #{player.tiley} \n
     health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
   
   window.hoverSelectBox.setX player.tilex*tileWidth - Math.floor(scrollx)
@@ -280,7 +263,7 @@ render = =>
      
   #update the hover select box position
   #debugText.setText("rightwalkable = #{map.getTile(player.tilex+1,player.tiley).walkable}, rightwalkablepixel = #{player.posx+25}")
-  window.debugLayer.draw()
+
 
   
 
@@ -346,4 +329,4 @@ main = ->
   render()
   then_ = now
 then_ = Date.now()
-setInterval main, 1
+setInterval main, 50
