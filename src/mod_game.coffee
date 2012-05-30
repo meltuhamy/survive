@@ -39,20 +39,20 @@ filterImage.src = 'filter.png'
 
 
 makemenu = (x,y) ->
-   menuactions = map.getTile(x, y).actions
-   itemsactions = if map.noItem(x,y) then [] else map.getItem(x, y).actions
-   menuactions = menuactions.concat(itemsactions)
+   menuactions = map.getActions(x,y)
    #displayNewMenu menuactions
-   inputSelect = '<select id="actionSelection">'
-   for menuaction in menuactions
-    inputSelect = inputSelect.concat('<option value="'+menuaction.actionname+'">'+menuaction.actionname+'</option>')
+   inputSelect = "<select id=\"actionSelection\" tile=\"#{x},#{y}\">"
+   for i in [0...menuactions.length]
+    inputSelect = inputSelect.concat('<option value="'+i+'">'+menuactions[i].actionname+'</option>')
    inputSelect = inputSelect.concat('</select>')
    #console.log 'Got here'
-   displayNewMenu('Choose an action:', [inputSelect])
+   displayNewMenu('Choose an action:', ['<p>Use arrow keys to make a selection then hit the enter key to do the action</p><br />',inputSelect])
+   $('#actionSelection').focus()
+   $('#actionSelection').focusout(-> $('#actionSelection').focus()) #forces focus on selection
 
 displayNewMenu = (menutitle, menuitems) ->
-  console.log "Creating menu #{menutitle} with items:"
-  console.log menuitems
+  #console.log "Creating menu #{menutitle} with items:"
+  #console.log menuitems
   focusOnCanvas = false
   $('#dialog').bind( "dialogclose", (event, ui) -> focusOnCanvas = true)
   $('#dialog .content').empty()
@@ -77,12 +77,29 @@ $(document).ready ->
   # mouse move event within 'container' div
 
   $('#inventorymenu').hide()
-
-  $('#actionSelection').keyup (evt) ->
+  ###
+  $('#actionSelection').keydown (evt) ->
     console.log 'Hit enter on actions'
     if(evt.keyCode == 13)
       alert('Did Action: '+$('#actionSelection:selected').html())
       $("#dialog").dialog('close')
+  ###
+  $("#actionSelection").live "keypress", (e) ->
+    key = e.which
+    if(key == 13)
+      #console.log "Chosen action: #{$('#actionSelection').val()}"
+      #console.log "Tile: #{$('#actionSelection').attr('tile')}"
+      tilecoords = $('#actionSelection').attr('tile').split(',')
+      tilecoords[0] = parseInt(tilecoords[0])
+      tilecoords[1] = parseInt(tilecoords[1])
+      #console.log tilecoords
+      actions = map.getActions(tilecoords[0], tilecoords[1])
+      #console.log actions
+      theAction = actions[$('#actionSelection').val()]
+      $('#dialog').dialog('close')
+      theAction.doFn(tilecoords[0], tilecoords[1])
+
+
 
   $('#container').mousemove (evt) ->
     offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset
@@ -329,4 +346,4 @@ main = ->
   render()
   then_ = now
 then_ = Date.now()
-setInterval main, 50
+setInterval main, 10
