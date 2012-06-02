@@ -1,3 +1,3 @@
 #!bin/sh
-coffee --join server.js --compile -b src/*.coffee
+~/node_modules/coffee-script/bin/coffee --join server.js --compile -b src/*.coffee
 cd public && sh compile.sh
