@@ -27,6 +27,8 @@ class BuildBoobyTrapAction extends Action
       for invItem in [0...player.inventory.length]
         if (player.inventory[invItem] == 4)
           hasLog = true
+          player.inventory.splice invItem, 1
+          break
       if (hasLog) 
         map.setTileElement(x,y,7)
         alert("Building a booby-trap at #{x},#{y}")
