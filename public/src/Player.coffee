@@ -8,10 +8,10 @@ class Player
     @playerImage.onload = => @imgReady = true
     @playerImage.src = if image? then image else "#{window.spriteDir}/sprite.png"
     @inventory = if inventory? then inventory else []
-    @health = if health? then health else 10
-    @stamina = if stamina? then stamina else 100
-    @hunger = if hunger? then hunber else 20
-    @thirst = if thirst? then thirst else 20
+    @health = if health? then health else 30
+    @stamina = if stamina? then stamina else 20
+    @hunger = if hunger? then hunger else 100
+    @thirst = if thirst? then thirst else 100
     @speed = if speed? then speed else 0.8
     @posx = if posx? then posx else 0
     @posy = if posy? then posy else 0
@@ -24,3 +24,7 @@ class Player
     @stamina = @stamina - tile.stamina_cost
     @hunger = @hunger - tile.hunger_cost
     @thirst = @thirst - tile.thirst_cost
+  decrement: ->
+    @stamina += 1 if @stamina < 20
+    @thirst -= 1
+    @hunger -= 1

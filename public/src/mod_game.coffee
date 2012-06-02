@@ -383,11 +383,16 @@ updateScroll = =>
 Main method
 ###
 
+count = 0
 main = ->
   now = Date.now()
   delta = now - then_
   update delta / 1000
   render()
   then_ = now
+  if count == 150
+      player.decrement()
+      count = 0
+  count += 1
 then_ = Date.now()
 setInterval main, 10

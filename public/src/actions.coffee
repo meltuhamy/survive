@@ -13,6 +13,7 @@ class DigTrapAction extends Action
       for invItem in [0...player.inventory.length]
         if (player.inventory[invItem] == 3)
           hasShovel = true
+          break
       if (hasShovel) 
         map.setTileElement(x,y,6)
         alert("Digging a trap at #{x},#{y}")
@@ -27,6 +28,8 @@ class BuildBoobyTrapAction extends Action
       for invItem in [0...player.inventory.length]
         if (player.inventory[invItem] == 4)
           hasLog = true
+          player.inventory.splice invItem, 1
+          break
       if (hasLog) 
         map.setTileElement(x,y,7)
         alert("Building a booby-trap at #{x},#{y}")
@@ -37,14 +40,14 @@ class BuildBoobyTrapAction extends Action
 class DrinkWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) -> 
-    	player.thirst = 20
+    	player.thirst = 100
     	alert("Drinking water at #{x},#{y}")
     )
 
 class DrinkPoisonedWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) -> 
-      player.thirst = 20
+      player.thirst += 10 if player.thirst < 90
       player.health = player.health - 2
       alert("Drinking water at #{x},#{y}")
     )
@@ -53,9 +56,7 @@ class ChopTreeAction extends Action
   constructor: -> 
     super('Chop Tree', (x,y) -> 
       hasAxe = false
-      console.log player.inventory
       for i in [0...player.inventory.length]
-        console.log player.inventory[i]
         if (player.inventory[i] == 5)
           hasAxe = true
           break
@@ -75,6 +76,7 @@ class BurnTreeAction extends Action
       for y in [0...player.inventory.length]
         if (player.inventory[y] == 6)
           hasTorch = true
+          break
       if (hasTorch)
         map.setTileElement(x,y,1)
         alert("Burnt down tree at #{x},#{y}.")
@@ -89,6 +91,8 @@ class PoisonWaterAction extends Action
       for y in [0...player.inventory.length]
         if (player.inventory[y] == 7)
           hasPoison = true
+          player.inventory.splice y, 1
+          break
       if (hasPoison)
         map.setTileElement(x,y,8)
         alert("Poisoned water at #{x},#{y}.")
