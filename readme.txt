@@ -1,10 +1,69 @@
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+           New: Node.js server with socket.io and express engine
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+
+There's quite a lot involved here.
+-> Node.js: Server side javascript - http://nodejs.org/api/
+-> Socket.io: Websocket server for node - http://socket.io/
+-> Express: Node web framework, used to serve html pages and other stuff - 
+   http://expressjs.com/
+
+Note, none of the steps below have been tested in lab machines but hopefully
+it should still work since the node server is installed locally on lab machines.
+
+
+
+                ---[Installation of server dependencies]---
+                   
+I did all the hard work for you.
+You need to run:
+	> sh install_node_modules.sh
+In the tradersgame directory. This will install all required modules for node.
+
+
+
+                        ---[Running the server]---
+                        
+All you do is
+	> sh runserver.sh
+This both compiles the coffee code for the server AND runs it in node.
+
+
+
+                        ---[Running the client]---
+                        
+*client code is now in the tradersgame/public directory*
+Ensure that coffee code is compiled. This can be done by
+	> cd public
+	> sh compile.sh
+
+Or, in tradersgame:
+	> sh compile-all.sh
+which compiles both server and client coffee files.
+
+Once coffee compiles succesfully, open a web browser and go to:
+	http://localhost:8080/
+
+Of course, if the server is NOT running, you'll get an error.
+See above for how to run the server.
+
+
+
+                   ---[Browsing local (client-only)]---
+                   
+You can open public/index.html in your browser as before and everything
+should still work. This only runs client code. Any server interaction will 
+cause errors.
+
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+                  Installing CoffeeScript and Sublime Text
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+
 Note: CoffeeScript is required to compile the coffeescript files.
 
 
 To install coffeescript at home, follow the instructions on
 http://coffeescript.org/#installation
-
-_____________________________
 
 To install it on lab machines:
 
