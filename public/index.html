@@ -3,13 +3,18 @@
 	<head>
 		<meta charset="utf-8">
 		<title>A Game that is not yet a Game</title>
-	  <script src="jslibraries/jquery.js"></script>
-	  <script src="jslibraries/jqueryui.js"></script>
-	  <script src="jslibraries/kinetic.js"></script>
-	  <script src="lib/game.js"></script>
 
-	  <link rel="stylesheet" href="css/main.css" type="text/css"> 
-	  <link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.20.custom.css" type="text/css"> 
+		<!--for web sockets -->
+		<script src="/socket.io/socket.io.js"></script>
+
+		
+		<script src="jslibraries/jquery.js"></script>
+		<script src="jslibraries/jqueryui.js"></script>
+		<script src="jslibraries/kinetic.js"></script>
+		<script src="lib/game.js"></script>
+
+		<link rel="stylesheet" href="css/main.css" type="text/css"> 
+		<link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.20.custom.css" type="text/css"> 
 
 	</head>
 	<body>
@@ -38,7 +43,8 @@
     			sample content
     		</div>
     	</div>
-
+    	<div id="message-list" title="Web Server Debug">
+    	</div>
 	</body>
 
 </html>

@@ -2,7 +2,7 @@ tileWidth = 25
 tileHeight = 25
 
 canvasWidth = 900
-canvasHeight = 700
+canvasHeight = 600
 
 fullWidth = tileWidth*map.tileGrid.numcols
 fullHeight = tileHeight*map.tileGrid.numrows
@@ -33,7 +33,7 @@ focusOnCanvas = true
 
 filterImage = new Image()
 filterImage.onload = => filterReady = true
-filterImage.src = 'filter.png'
+filterImage.src = "#{assetDir}/filter.png"
 
 #Initialisation events
 
@@ -72,6 +72,11 @@ $(document).ready ->
   #Dialogs
   $( "#dialog" ).dialog({
       autoOpen: false
+  });
+
+  $( "#message-list" ).dialog({
+      autoOpen: true,
+      height: 530
   });
 
   # mouse move event within 'container' div

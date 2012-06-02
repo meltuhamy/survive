@@ -1,4 +1,5 @@
 nbproject/*
-tradersgame.sublime-project
-tradersgame.sublime-workspace
+*.sublime*
+server.js
 lib/*.js
+node_modules/*

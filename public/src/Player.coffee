@@ -6,7 +6,7 @@ class Player
   constructor: (tilex, tiley, image, inventory, health, stamina, hunger, thirst, speed) -> 
     @playerImage = new Image()
     @playerImage.onload = => @imgReady = true
-    @playerImage.src = if image? then image else "sprite.png"
+    @playerImage.src = if image? then image else "#{window.spriteDir}/sprite.png"
     @inventory = if inventory? then inventory else []
     @health = if health? then health else 10
     @stamina = if stamina? then stamina else 100
