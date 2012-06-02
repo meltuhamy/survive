@@ -38,9 +38,9 @@ filterImage.src = "#{assetDir}/filter.png"
 #Initialisation events
 
 
+# Makes the action menu for given coordinates
 makemenu = (x,y) ->
-   menuactions = map.getActions(x,y)
-   #displayNewMenu menuactions
+   menuactions = map.getActions(x,y)    #first we get all actions available at given coordinates
    inputSelect = "<select id=\"actionSelection\" tile=\"#{x},#{y}\">"
    for i in [0...menuactions.length]
     inputSelect = inputSelect.concat('<option value="'+i+'">'+menuactions[i].actionname+'</option>')
@@ -79,9 +79,9 @@ $(document).ready ->
       height: 530
   });
 
-  # mouse move event within 'container' div
 
   $('#inventorymenu').hide()
+
   ###
   $('#actionSelection').keydown (evt) ->
     console.log 'Hit enter on actions'
@@ -89,6 +89,7 @@ $(document).ready ->
       alert('Did Action: '+$('#actionSelection:selected').html())
       $("#dialog").dialog('close')
   ###
+
   $("#actionSelection").live "keypress", (e) ->
     key = e.which
     if(key == 13)
@@ -104,7 +105,7 @@ $(document).ready ->
       $('#dialog').dialog('close')
       theAction.doFn(tilecoords[0], tilecoords[1])
 
-
+  # mouse move event within 'container' div
 
   $('#container').mousemove (evt) ->
     offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset

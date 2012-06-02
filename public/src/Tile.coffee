@@ -98,7 +98,7 @@ class Log extends Tile
   name: 'Log'
 
 class Axe extends Tile
-  constructor: -> super("#{window.itemDir}/axe.png")
+  constructor: -> super("#{window.itemDir}/axe.gif")
   actions: [new PickUpItemAction()]
   name: 'Axe'
 

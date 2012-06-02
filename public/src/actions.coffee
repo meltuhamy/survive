@@ -10,11 +10,11 @@ class DigTrapAction extends Action
   constructor: -> 
     super('Dig Trap', (x,y) -> 
       hasShovel = false
-      for invItem in [0...player.inventory.length-1]
+      for invItem in [0...player.inventory.length]
         if (player.inventory[invItem] == 3)
           hasShovel = true
       if (hasShovel) 
-        setTile(x,y,6)
+        map.setTileElement(x,y,6)
         alert("Digging a trap at #{x},#{y}")
       else 
         alert("Can't dig a trap at #{x},#{y}. I need a shovel.")
@@ -24,11 +24,11 @@ class BuildBoobyTrapAction extends Action
   constructor: -> 
     super('Build Booby Trap', (x,y) -> 
       hasLog = false
-      for invItem in [0...player.inventory.length-1]
+      for invItem in [0...player.inventory.length]
         if (player.inventory[invItem] == 4)
           hasLog = true
       if (hasLog) 
-        setTile(x,y,7)
+        map.setTileElement(x,y,7)
         alert("Building a booby-trap at #{x},#{y}")
       else 
         alert("Can't build a booby-trap at #{x},#{y}. I need a log.")
@@ -53,12 +53,16 @@ class ChopTreeAction extends Action
   constructor: -> 
     super('Chop Tree', (x,y) -> 
       hasAxe = false
-      for y in [0...player.inventory.length-1]
-        if (player.inventory[y] == 5)
+      console.log player.inventory
+      for i in [0...player.inventory.length]
+        console.log player.inventory[i]
+        if (player.inventory[i] == 5)
           hasAxe = true
+          break
       if (hasAxe)
-        map.setTile(x,y,0)
-        map setItem(x,y,3)
+        console.log "has axe"
+        map.setTileElement(x,y,0)
+        map.setItemElement(x,y,4)
         alert("Chopped down tree at #{x},#{y}.")
       else 
         alert("Can't chop down tree at #{x},#{y}. I need an axe.")
@@ -68,11 +72,11 @@ class BurnTreeAction extends Action
   constructor: -> 
     super('Burn Tree', (x,y) -> 
       hasTorch = false
-      for y in [0...player.inventory.length-1]
+      for y in [0...player.inventory.length]
         if (player.inventory[y] == 6)
           hasTorch = true
       if (hasTorch)
-        map.setTile(x,y,1)
+        map.setTileElement(x,y,1)
         alert("Burnt down tree at #{x},#{y}.")
       else 
         alert("Can't burn down tree at #{x},#{y}. I need a torch.")
@@ -82,11 +86,11 @@ class PoisonWaterAction extends Action
   constructor: -> 
     super('Poison Water', (x,y) -> 
       hasPoison = false
-      for y in [0...player.inventory.length-1]
+      for y in [0...player.inventory.length]
         if (player.inventory[y] == 7)
           hasPoison = true
       if (hasPoison)
-        map.setTile(x,y,8)
+        map.setTileElement(x,y,8)
         alert("Poisoned water at #{x},#{y}.")
       else 
         alert("Can't poison water at #{x},#{y}. I need a poison.")
@@ -96,8 +100,8 @@ class PoisonWaterAction extends Action
 class PickUpItemAction extends Action
   constructor: -> 
     super('Pick Up Item Action', (x,y) -> 
-    	pickedItem = map.getItem(x,y)
-    	player.inventory.push(pickedItem.name)
+    	pickedItem = map.getItemElement(x,y)
+    	player.inventory.push(pickedItem)
     	map.removeItem(x,y)
-    	alert("I picked up the damned item at #{x}, #{y}. It is a #{pickedItem.name}")
+    	#alert("I picked up the damned item at #{x}, #{y}. It is a #{pickedItem.name}")
     )
