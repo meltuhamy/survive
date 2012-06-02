@@ -18,8 +18,9 @@ class Player
     @tilex = Math.floor((tilex+12.5) / 25);
     @tiley = Math.floor((tiley+12.5) / 25);
   imgReady: false
+  id: -1
   statchange: (tile) -> 
     @health = @health - tile.health_cost
-    @stamina = @stamina - tile.stamina_cost
+    @stamina = @stamina - tilex.stamina_cost
     @hunger = @hunger - tile.hunger_cost
     @thirst = @thirst - tile.thirst_cost
