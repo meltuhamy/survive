@@ -70,8 +70,7 @@ class BoobyTrapTile extends MapTile
 class PoisonWaterTile extends MapTile
   constructor: -> 
     super("#{window.terrainDir}/shallowwater.png")
-    @health_cost = 2
-  actions: [new DrinkPoisonedWaterAction(), new PoisonWaterAction()]
+  actions: [new DrinkPoisonedWaterAction()]
 
 ###
 Item tiles
