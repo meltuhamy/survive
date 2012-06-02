@@ -1,11 +1,16 @@
 tileWidth = 25
 tileHeight = 25
 
-canvasWidth = 900
-canvasHeight = 600
+canvasWidth = 600
+canvasHeight = 400
 
 fullWidth = tileWidth*map.tileGrid.numcols
 fullHeight = tileHeight*map.tileGrid.numrows
+
+
+gamestarted = false
+player = new Player()
+#otherplayers 
 
 
 mousex = 0
@@ -28,8 +33,8 @@ playerMovingRight = false
 playerMovingDown = false
 
 filterReady = false
-
 focusOnCanvas = true
+
 
 filterImage = new Image()
 filterImage.onload = => filterReady = true
@@ -126,6 +131,7 @@ $(document).ready ->
         makemenu(player.tilex-1, player.tiley)
       if (evt.keyCode == 68) #a
         makemenu(player.tilex+1, player.tiley)
+      
       playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
       playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
       playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
@@ -169,21 +175,15 @@ $(document).ready ->
       #This is NOT a canvas thing
 
 
-# executes once page has loaded
+###
+    Executes once page has loaded
+###
 
 window.onload = =>
-
-  # Create the kintetic stage
-  window.stage = new Kinetic.Stage(
-    container: "container"
-    width: canvasWidth
-    height: canvasHeight
-  )
-
   # Map layer
   window.mapLayer = new Kinetic.Layer()
 
-  # Hover select layer
+  # Current square select layer
   window.hoverSelectLayer = new Kinetic.Layer()
   window.hoverSelectBox = new Kinetic.Rect(
     fill: 'yellow'
@@ -192,14 +192,26 @@ window.onload = =>
     alpha: 0.6
   )
   window.hoverSelectLayer.add window.hoverSelectBox
+
+  # Item layer
+  window.itemLayer = new Kinetic.Layer()
+
+  # Player layer
+  window.playerLayer = new Kinetic.Layer()
+
+  
+  # Create the kinetic stage
+  window.stage = new Kinetic.Stage(
+    container: "container"
+    width: canvasWidth
+    height: canvasHeight
+  )
+  # Add the layers to the stage
   window.stage.add window.mapLayer
   window.stage.add window.hoverSelectLayer
+  window.stage.add window.itemLayer
+  window.stage.add window.playerLayer
   
-###
-    Loading resources
-###
-
-player = new Player()
 
 ###
     Drawing to canvas
@@ -212,8 +224,11 @@ render = =>
   mapContext = window.mapLayer.getContext() # get map
   mapContext.fillStyle = "#000000" 
   mapContext.fillRect(0,0,canvasWidth,canvasHeight) # fill map black
-
-
+  itemContext = window.itemLayer.getContext() # get drawing context for item layer
+  itemLayer.clear()
+  playerContext = window.playerLayer.getContext() # get drawing context for item layer
+  playerLayer.clear()
+  
   # for every grid location
   for y in [0...map.tileGrid.numrows]
     for x in [0...map.tileGrid.numcols]
@@ -223,37 +238,60 @@ render = =>
         mapContext.drawImage map.getTile(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
         if (filterReady)
             mapContext.drawImage filterImage, x*tileWidth-scrollx, y*tileHeight-scrolly
-            
+
+  # for every grid location in our vision
   for v in vision2
     visionx = player.tilex+v.x
     visiony = player.tiley+v.y 
     if(map.inBounds(visionx,visiony))
+      # overwrite the grayed out tile with a full brightness map tile
       mapContext.drawImage map.getTile(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
-      if !map.noItem(visionx,visiony) then mapContext.drawImage map.getItem(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
+      # draw any items in our view
+      if !map.noItem(visionx,visiony) 
+        itemContext.drawImage map.getItem(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
+      # draw other players that are in our view
+      #for p in otherPlayers
+      #  if (p.tilex == visionx && p.tiley == visiony)
+      #    playerContext.drawImage player.playerImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly if player.imgReady
 
+  # draw the yellow square for the tile the player is currently standing on
+  window.hoverSelectBox.setX player.tilex*tileWidth - Math.floor(scrollx)
+  window.hoverSelectBox.setY player.tiley*tileHeight - Math.floor(scrolly)
+  window.hoverSelectLayer.draw()
+
+  # draw the player that the client is controlling
+  
+  playerContext.drawImage player.playerImage, player.posx-scrollx, player.posy-scrolly if player.imgReady
+
+
+
+###
+    Updating game logic
+###
+
+update = (modifier) =>
+  updatePlayerTiles()
+  updatePlayerMovement()
+  updateScroll()
+
+updatePlayerTiles = =>
+  # calculate the player's tile location from his pixel location
   oldTilex = player.tilex
   oldTiley = player.tiley
   player.tilex = Math.floor((player.posx+12.5) / 25);
   player.tiley = Math.floor((player.posy+12.5) / 25);
+
+  # see if the tile has changed location
   if(oldTilex != player.tilex || oldTiley != player.tiley)
+    # on player change square event
     player.statchange(map.getTile(player.tilex,player.tiley))
+    sendMoveToServer "\n#{player.name}: #{player.tilex},#{player.tiley}\n"
   $('#debugbar').html("inventory = #{player.inventory}, player.tilex = #{player.tilex}, player.tiley = #{player.tiley} \n
     health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
-  
-  window.hoverSelectBox.setX player.tilex*tileWidth - Math.floor(scrollx)
-  window.hoverSelectBox.setY player.tiley*tileHeight - Math.floor(scrolly)
 
 
-  #window.hoverSelectBox.setX Math.floor((scrollx + mousex) / 25)*25 - Math.floor(scrollx)
-  #window.hoverSelectBox.setY Math.floor((scrolly + mousey) / 25)*25 - Math.floor(scrolly)
-
-  window.hoverSelectLayer.draw()
-
-  #console.log("hoverSelectBox x: #{window.hoverSelectBox.getX()} y:#{window.hoverSelectBox.getY()}")
-
-  mapContext.drawImage player.playerImage, player.posx-scrollx, player.posy-scrolly if player.imgReady
-
-  # if player is moving left or right, update it's stored horizontal position
+updatePlayerMovement = =>
+  # work out the adjacent squares to the player
   playerRightSquare = Math.floor((player.posx+25)/25)
   playerLeftSquare = Math.floor((player.posx-1)/25)
   playerUpSquare = Math.floor((player.posy-1)/25)
@@ -283,19 +321,8 @@ render = =>
   # if player not moving up or down, center it's vertical position
   else 
     player.posy = player.tiley*tileHeight
-     
-  #update the hover select box position
-  #debugText.setText("rightwalkable = #{map.getTile(player.tilex+1,player.tiley).walkable}, rightwalkablepixel = #{player.posx+25}")
 
 
-  
-
-
-###
-    Updating game logic
-###
-
-update = (modifier) -> updateScroll()
 updateScroll = =>
    scrollxvel = scrollxvel * 0.92
    scrollyvel = scrollyvel * 0.92
@@ -339,7 +366,6 @@ updateScroll = =>
     scrolly = -(canvasHeight-fullHeight)/2
    mouseSquarex = Math.floor(mousex / tileWidth)
    mouseSquarey = Math.floor(mousey / tileHeight)
-
 
 ###
 Main method
