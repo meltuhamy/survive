@@ -1,8 +1,10 @@
+DEBUGMODE = off
+
 tileWidth = 25
 tileHeight = 25
 
-canvasWidth = 600
-canvasHeight = 400
+canvasWidth = 900
+canvasHeight = 600
 
 fullWidth = tileWidth*map.tileGrid.numcols
 fullHeight = tileHeight*map.tileGrid.numrows
@@ -10,7 +12,7 @@ fullHeight = tileHeight*map.tileGrid.numrows
 
 gamestarted = false
 player = new Player()
-#otherplayers 
+otherplayers = []
 
 
 mousex = 0
@@ -42,6 +44,15 @@ filterImage.src = "#{assetDir}/filter.png"
 
 #Initialisation events
 
+gamestart = (players) ->
+  otherplayers.push new Player(jsonplayer.id) for jsonplayer in players
+  gamestarted = true
+
+createPlayerJSON = (jsonAtrribs) ->
+  otherplayers.push newPlayer(jsonAtrribs)
+
+createMyPlayer = (id) ->
+  player = new Player(id)
 
 # Makes the action menu for given coordinates
 makemenu = (x,y) ->
@@ -250,9 +261,9 @@ render = =>
       if !map.noItem(visionx,visiony) 
         itemContext.drawImage map.getItem(visionx,visiony).tileImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly
       # draw other players that are in our view
-      #for p in otherPlayers
-      #  if (p.tilex == visionx && p.tiley == visiony)
-      #    playerContext.drawImage player.playerImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly if player.imgReady
+      for p in otherplayers
+        if (p.tilex == visionx && p.tiley == visiony)
+          playerContext.drawImage player.playerImage, visionx*tileWidth-scrollx, visiony*tileHeight-scrolly if player.imgReady
 
   # draw the yellow square for the tile the player is currently standing on
   window.hoverSelectBox.setX player.tilex*tileWidth - Math.floor(scrollx)
@@ -270,9 +281,10 @@ render = =>
 ###
 
 update = (modifier) =>
-  updatePlayerTiles()
-  updatePlayerMovement()
-  updateScroll()
+  if(gamestarted || DEBUGMODE)
+    updatePlayerTiles()
+    updatePlayerMovement()
+    updateScroll()
 
 updatePlayerTiles = =>
   # calculate the player's tile location from his pixel location
@@ -285,7 +297,7 @@ updatePlayerTiles = =>
   if(oldTilex != player.tilex || oldTiley != player.tiley)
     # on player change square event
     player.statchange(map.getTile(player.tilex,player.tiley))
-    sendMoveToServer "\n#{player.name}: #{player.tilex},#{player.tiley}\n"
+    sendPlayer()
   $('#debugbar').html("inventory = #{player.inventory}, player.tilex = #{player.tilex}, player.tiley = #{player.tiley} \n
     health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
 

@@ -6,6 +6,22 @@ sendMoveToServer = (move) ->
   socket.send move
   log "<span style=\"color:#888\">Move made \"" + message + "\" to the server!</span>"
 
+sendPlayer = ->
+  socket.emit "receivePlayer", {id: player.id, tilex: player.tilex, tiley: player.tiley}
+
+getPlayerIndexById = (id) ->
+    listofids = []
+    listofids.push aplayer.id for aplayer in otherplayers
+    return listofids.indexOf(id)
+
+receivePlayer = (receivedPlayer)->
+  console.log "Received a player!"
+  console.log receivedPlayer
+  if receivedPlayer.id != player.id
+    playerindex = getPlayerIndexById(receivedPlayer.id)
+    otherplayers[playerindex].tilex = receivedPlayer.tilex
+    otherplayers[playerindex].tiley = receivedPlayer.tiley
+
 log = (message) ->
   li = document.createElement("li")
   li.innerHTML = message
@@ -23,3 +39,13 @@ socket.on "roommsg", (data) ->
   log "<span style=\"color:green;\">#{data}</span>"
 socket.on "disconnect", ->
   log "<span style=\"color:red;\">The client has disconnected!</span>"
+socket.on "gamestart", ->
+  socket.emit "startmeup"
+  log "<span style=\"color:red;\">Game started!</span>"
+socket.on "createMyPlayer", (id) ->
+  createMyPlayer(id)
+socket.on "startmeup", (otherplayers) ->
+  gamestart(otherplayers)
+  log "<span style=\"color:red;\">Other Players Received!</span>"
+socket.on "receivePlayer", (playerReceived) ->
+  receivePlayer playerReceived
