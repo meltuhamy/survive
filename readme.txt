@@ -8,8 +8,7 @@ There's quite a lot involved here.
 -> Express: Node web framework, used to serve html pages and other stuff - 
    http://expressjs.com/
 
-Note, none of the steps below have been tested in lab machines but hopefully
-it should still work since the node server is installed locally on lab machines.
+Tested and works on lab machines
 
 
 
