@@ -17,12 +17,22 @@ class Map
         getTileElement: (row, col) -> @tileGrid.getElement(row,col)
         getItemElement: (row, col) -> @itemGrid.getElement(row,col)
 
-        setTileElement: (row, col, item) -> @tileGrid.setElement(row,col,item) 
+        setTileElement: (row, col, tile, broadcast) -> 
+                @tileGrid.setElement(row,col,tile)
+                console.log "set tile #{row}, #{col}, #{tile}"
+                if !broadcast? || (broadcast? && broadcast)
+                        console.log "broadcasting tile"
+                        sendTile player.id, row, col, tile
+                else
+                        console.log "not broadcasting tile"
+
+
         setItemElement: (row, col, item, broadcast) -> 
                 @itemGrid.setElement(row,col,item)
+                #console.log "set item #{row}, #{col}, #{item}"
                 if !broadcast? || (broadcast? && broadcast)
                         console.log "broadcasting item"
-                        sendItem row, col, item
+                        sendItem player.id, row, col, item
                 else
                         console.log "not broadcasting item"
 
@@ -34,7 +44,7 @@ class Map
         getTopPixel: (row, col) -> col*25
         getBottomPixel: (row, col) -> (col+1)*25-1
 
-        removeItem: (row,col) -> @itemGrid.setElement(row,col,0)
+        removeItem: (row,col) -> @setItemElement row, col, 0, true
         noItem: (row,col) -> @itemGrid.getElement(row,col) == 0
 
         inBounds: (col,row) -> (row >= 0) && (row < @tileGrid.numrows) && (col >= 0) && (col < @tileGrid.numcols)

@@ -34,3 +34,8 @@ socket.sockets.on "connection", (client) ->
     client.emit "startmeup", otherPlayers
   client.on "receivePlayer", (playerReceived) ->
     socket.sockets.in('game').emit('receivePlayer', playerReceived)
+  client.on "itemChannel", (itemChange) ->
+    socket.sockets.in('game').emit('itemChannel', itemChange)
+  client.on "tileChannel", (tileChange) ->
+    socket.sockets.in('game').emit('tileChannel', tileChange)
+    

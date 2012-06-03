@@ -15,8 +15,8 @@ getPlayerIndexById = (id) ->
     return listofids.indexOf(id)
 
 receivePlayer = (receivedPlayer)->
-  console.log "Received a player!"
-  console.log receivedPlayer
+  #console.log "Received a player!"
+  #console.log receivedPlayer
   if receivedPlayer.id != player.id
     playerindex = getPlayerIndexById(receivedPlayer.id)
     otherplayers[playerindex].tilex = receivedPlayer.tilex
@@ -24,17 +24,33 @@ receivePlayer = (receivedPlayer)->
 
 
 sendItem = (playerId, x, y, num) ->
-  socket.emit "itemChannel", {pid: playerId, tilex: x, tiley: y, itemnum:num}
+  itemObj = {pid: playerId, tilex: x, tiley: y, itemnum: num}
+  socket.emit "itemChannel", itemObj
+  #console.log itemObj
 
 updateItems = (itemChange) ->
+  #console.log itemChange
   if itemChange.playerId != player.id
-    setItemElement itemChange.tilex itemChange.tiley itemChange.itemnum false
+    map.setItemElement itemChange.tilex, itemChange.tiley, itemChange.itemnum, false
+
+sendTile = (playerId, x, y, num) ->
+  tileObj = {pid: playerId, tilex: x, tiley: y, tilenum: num}
+  socket.emit "tileChannel", tileObj
+  console.log tileObj
+
+updateTiles = (tileChange) ->
+  #console.log itemChange
+  if tileChange.playerId != player.id
+    map.setTileElement tileChange.tilex, tileChange.tiley, tileChange.tilenum, false
+
 
 log = (message) ->
   li = document.createElement("li")
   li.innerHTML = message
   document.getElementById("message-list").appendChild li
   $('#message-list').prepend(li)
+
+  
 socket = io.connect()
 socket.on "connect", ->
   log "<span style=\"color:green;\">Client has connected to the server!</span>"
@@ -59,3 +75,5 @@ socket.on "receivePlayer", (playerReceived) ->
   receivePlayer playerReceived
 socket.on "itemChannel", (itemChange) ->
   updateItems itemChange
+socket.on "tileChannel", (tileChange) ->
+  updateTiles tileChange
