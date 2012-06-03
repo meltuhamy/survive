@@ -49,7 +49,7 @@ class DrinkPoisonedWaterAction extends Action
     super('Drink water', (x,y) -> 
       player.thirst += 10 if player.thirst < 90
       player.health = player.health - 2
-      alert("Drinking water at #{x},#{y}")
+      alert("Drinking poisoned water at #{x},#{y}")
     )
 
 class ChopTreeAction extends Action
@@ -73,8 +73,8 @@ class BurnTreeAction extends Action
   constructor: -> 
     super('Burn Tree', (x,y) -> 
       hasTorch = false
-      for y in [0...player.inventory.length]
-        if (player.inventory[y] == 6)
+      for i in [0...player.inventory.length]
+        if (player.inventory[i] == 6)
           hasTorch = true
           break
       if (hasTorch)
@@ -88,10 +88,10 @@ class PoisonWaterAction extends Action
   constructor: -> 
     super('Poison Water', (x,y) -> 
       hasPoison = false
-      for y in [0...player.inventory.length]
-        if (player.inventory[y] == 7)
+      for i in [0...player.inventory.length]
+        if (player.inventory[i] == 7)
           hasPoison = true
-          player.inventory.splice y, 1
+          player.inventory.splice i, 1
           break
       if (hasPoison)
         map.setTileElement(x,y,8)
