@@ -1,4 +1,4 @@
-DEBUGMODE = off
+DEBUGMODE = on
 
 tileWidth = 25
 tileHeight = 25
@@ -309,26 +309,22 @@ updatePlayerMovement = =>
   playerUpSquare = Math.floor((player.posy-1)/25)
   playerDownSquare = Math.floor((player.posy+25)/25)
 
-  if `playerMovingLeft && map.inBounds(playerLeftSquare, player.tiley)
-      && !(map.inBounds(playerLeftSquare,player.tiley) && !map.getTile(playerLeftSquare,player.tiley).walkable)
-      && !(map.inBounds(playerLeftSquare,player.tiley) && player.stamina < map.getTile(playerLeftSquare,player.tiley).stamina_cost)`
+  if `playerMovingLeft && map.inBounds(playerLeftSquare, player.tiley) && player.stamina > 0
+      && !(map.inBounds(playerLeftSquare,player.tiley) && !map.getTile(playerLeftSquare,player.tiley).walkable)`
     player.posx = player.posx - player.speed  
-  else if `playerMovingRight && map.inBounds(playerRightSquare, player.tiley)
-           && !(map.inBounds(playerRightSquare,player.tiley) && !map.getTile(playerRightSquare,player.tiley).walkable)
-           && !(map.inBounds(playerRightSquare,player.tiley) && player.stamina < map.getTile(playerRightSquare,player.tiley).stamina_cost)`
+  else if `playerMovingRight && map.inBounds(playerRightSquare, player.tiley) && player.stamina > 0
+           && !(map.inBounds(playerRightSquare,player.tiley) && !map.getTile(playerRightSquare,player.tiley).walkable)`
     player.posx = player.posx + player.speed
   # if player not moving left or right, center it's horizontal position
   else
     player.posx = player.tilex*tileWidth
   
   # if player is moving up or down, update it's stored vertical position
-  if `playerMovingUp && map.inBounds(player.tilex,playerUpSquare)
-      && !(map.inBounds(player.tilex,playerUpSquare) && !map.getTile(player.tilex,playerUpSquare).walkable)
-      && !(map.inBounds(player.tilex,playerUpSquare) && player.stamina < map.getTile(player.tilex,playerUpSquare).stamina_cost)`
+  if `playerMovingUp && map.inBounds(player.tilex,playerUpSquare) && player.stamina > 0
+      && !(map.inBounds(player.tilex,playerUpSquare) && !map.getTile(player.tilex,playerUpSquare).walkable)`
     player.posy = player.posy - player.speed
-  else if `playerMovingDown && map.inBounds(player.tilex,playerDownSquare)
-      && !(map.inBounds(player.tilex,playerDownSquare) && !map.getTile(player.tilex,playerDownSquare).walkable)
-      && !(map.inBounds(player.tilex,playerDownSquare) && player.stamina < map.getTile(player.tilex,playerDownSquare).stamina_cost)`  
+  else if `playerMovingDown && map.inBounds(player.tilex,playerDownSquare) && player.stamina > 0
+      && !(map.inBounds(player.tilex,playerDownSquare) && !map.getTile(player.tilex,playerDownSquare).walkable)`  
     player.posy = player.posy + player.speed
   # if player not moving up or down, center it's vertical position
   else 
@@ -390,7 +386,7 @@ main = ->
   update delta / 1000
   render()
   then_ = now
-  if count == 150
+  if count == 100
       player.decrement()
       count = 0
   count += 1
