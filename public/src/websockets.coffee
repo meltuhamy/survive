@@ -22,6 +22,14 @@ receivePlayer = (receivedPlayer)->
     otherplayers[playerindex].tilex = receivedPlayer.tilex
     otherplayers[playerindex].tiley = receivedPlayer.tiley
 
+
+sendItem = (playerId, x, y, num) ->
+  socket.emit "itemChannel", {pid: playerId, tilex: x, tiley: y, itemnum:num}
+
+updateItems = (itemChange) ->
+  if itemChange.playerId != player.id
+    setItemElement itemChange.tilex itemChange.tiley itemChange.itemnum false
+
 log = (message) ->
   li = document.createElement("li")
   li.innerHTML = message
@@ -49,3 +57,5 @@ socket.on "startmeup", (otherplayers) ->
   log "<span style=\"color:red;\">Other Players Received!</span>"
 socket.on "receivePlayer", (playerReceived) ->
   receivePlayer playerReceived
+socket.on "itemChannel", (itemChange) ->
+  updateItems itemChange

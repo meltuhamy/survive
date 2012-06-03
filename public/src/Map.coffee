@@ -17,8 +17,14 @@ class Map
         getTileElement: (row, col) -> @tileGrid.getElement(row,col)
         getItemElement: (row, col) -> @itemGrid.getElement(row,col)
 
-        setTileElement: (row, col, item) -> @tileGrid.setElement(row,col,item)
-        setItemElement: (row, col, item) -> @itemGrid.setElement(row,col,item)
+        setTileElement: (row, col, item) -> @tileGrid.setElement(row,col,item) 
+        setItemElement: (row, col, item, broadcast) -> 
+                @itemGrid.setElement(row,col,item)
+                if !broadcast? || (broadcast? && broadcast)
+                        console.log "broadcasting item"
+                        sendItem row, col, item
+                else
+                        console.log "not broadcasting item"
 
         getTile: (row, col) -> @tileArray[@getTileElement(row,col)]
         getItem: (row, col) -> @itemArray[@getItemElement(row,col)]
