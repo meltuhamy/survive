@@ -37,10 +37,17 @@ playerMovingDown = false
 filterReady = false
 focusOnCanvas = true
 
+actionMenuSelected = 0
+actionMenuTotal = 0
+actionMenuTileX = 0
+actionMenuTileY = 0
 
 filterImage = new Image()
 filterImage.onload = => filterReady = true
 filterImage.src = "#{assetDir}/filter.png"
+
+
+
 
 #Initialisation events
 
@@ -62,29 +69,39 @@ createMyPlayer = (playerParams) ->
 addRooms = (rooms) ->
   $("#roomlist").append("<li><a onClick=\"clientJoinRoom(#{room.number})\">#{room.name}</a></li>") for room in rooms
 
+$('#actionmenu').fadeOut()
 # Makes the action menu for given coordinates
 makemenu = (x,y) ->
    menuactions = map.getActions(x,y)    #first we get all actions available at given coordinates
-   inputSelect = "<select id=\"actionSelection\" tile=\"#{x},#{y}\">"
+   inputSelect = ''
    for i in [0...menuactions.length]
-    inputSelect = inputSelect.concat('<option value="'+i+'">'+menuactions[i].actionname+'</option>')
-   inputSelect = inputSelect.concat('</select>')
-   #console.log 'Got here'
-   displayNewMenu('Choose an action:', ['<p>Use arrow keys to make a selection then hit the enter key to do the action</p><br />',inputSelect])
-   $('#actionSelection').focus()
-   $('#actionSelection').focusout(-> $('#actionSelection').focus()) #forces focus on selection
+    inputSelect = inputSelect.concat('<li id="menuAction'+i+'">'+menuactions[i].actionname+'</li>')
+   $('#actionmenu').css('top', y*tileHeight-scrolly)
+   $('#actionmenu').css('left', x*tileWidth-scrollx)
+   actionMenuSelected = 0
+   actionMenuTileX = x
+   actionMenuTileY = y
+   actionMenuTotal = menuactions.length
+   focusOnCanvas = false
+   $('#actionlist').html inputSelect 
+   $('#actionmenu ul li#menuAction0').toggleClass('selected')
+   $('#actionmenu').fadeIn()
 
-displayNewMenu = (menutitle, menuitems) ->
-  #console.log "Creating menu #{menutitle} with items:"
-  #console.log menuitems
-  focusOnCanvas = false
-  $('#dialog').bind( "dialogclose", (event, ui) -> focusOnCanvas = true)
-  $('#dialog .content').empty()
-  for item in menuitems
-    $('#dialog .content').append item 
   
-  $('#dialog').dialog( "option", "title", menutitle)
-  $('#dialog').dialog( "open" )
+
+actionMenuKeyDown = (evt) ->
+  $('#actionmenu ul li#menuAction'+actionMenuSelected).toggleClass('selected')
+  if(evt.keyCode == 38)
+    actionMenuSelected = (actionMenuSelected-1+actionMenuTotal) % actionMenuTotal
+  else if(evt.keyCode == 40)
+    actionMenuSelected = (actionMenuSelected+1) % actionMenuTotal
+  else if(evt.keyCode == 13)
+    actions = map.getActions(actionMenuTileX, actionMenuTileY)
+    selectedAction = actions[actionMenuSelected]
+    selectedAction.doFn(actionMenuTileX, actionMenuTileY)
+    $('#actionmenu').fadeOut()
+    focusOnCanvas = true
+  $('#actionmenu ul li#menuAction'+actionMenuSelected).toggleClass('selected')
 
 
 inventoryPopup = ->
@@ -105,7 +122,8 @@ $(document).ready ->
 
 
   $('#inventorymenu').hide()
-  $('.game').hide();
+  if(!DEBUGMODE)
+    $('.game').hide();
 
   ###
   $('#actionSelection').keydown (evt) ->
@@ -149,7 +167,7 @@ $(document).ready ->
         makemenu(player.tilex, player.tiley+1)
       if (evt.keyCode == 65) #a
         makemenu(player.tilex-1, player.tiley)
-      if (evt.keyCode == 68) #a
+      if (evt.keyCode == 68) #d
         makemenu(player.tilex+1, player.tiley)
       
       playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
@@ -193,6 +211,8 @@ $(document).ready ->
         playerMovingRight = false
     else
       #This is NOT a canvas thing
+      #actionmenu
+      actionMenuKeyDown(evt)
 
 
 ###

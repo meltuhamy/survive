@@ -7,7 +7,7 @@ body{
 
 #containerbox{
 	width: 900px;
-	height: 635px;
+	height: 600px;
 	position: relative;
 	z-index: 1;
 	margin: 0px;
@@ -27,9 +27,9 @@ body{
 	height: 35px;
 	background-color: rgb(131, 131, 131);
 	width: 100%;
-	position: relative;
+	position: absolute;
 	z-index: 99;
-	top: -40px;
+	top:600px;
 }
 
 #inventory{
@@ -41,26 +41,65 @@ body{
 }
 
 #inventorymenu{
-	position: relative;
+	position: absolute;
 	margin:0px;
-	width:200px;
-	height:300px;
+	height:45px;
+	width:100%;
 	z-index:100;
-	top:-340px;
-	background-color: gray;
+	top:600px;
+	float: left;
+	background-color: green;
 }
 
 #inventorymenu ul{
 	padding-left: 0;
 	margin-left: 0;
-	width: 200px;
+	float: left;
+	width: 100%;
 }
 
 #inventorymenu ul li{
-	list-style: none;
-	margin: 0;
-	padding: 0.25em;
+	background: #CCC;
+	list-style-type: none;
+	float:left;
+	padding:1px;
+	margin: 5px 2px 5px 2px;
+	width: 30px;
+	height: 30px;
+	text-align:center;
+	border:1px solid #CCC;
 }
+
+#inventorymenu ul li.selected{
+	border:1px solid red;
+}
+
+
+#actionmenu{
+	position: absolute;
+	margin:0px;
+	z-index:120;
+	top:200px;
+	left:100px;
+	width:140px;
+	background: rgba(216, 177, 100, 0.5);
+	font-size: 12px;
+	text-shadow: 1px 1px 1px black;
+}
+
+#actionmenu ul {
+	list-style-type: none;
+}
+
+#actionmenu ul li{
+}
+
+#actionmenu ul li.selected{
+	background-color: red;
+}
+
+
+
 
 #debugbar{
 	padding-top: 5px;
