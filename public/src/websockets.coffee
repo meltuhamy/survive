@@ -22,6 +22,8 @@ receivePlayer = (receivedPlayer)->
     otherplayers[playerindex].tilex = receivedPlayer.tilex
     otherplayers[playerindex].tiley = receivedPlayer.tiley
 
+clientJoinRoom = (roomNumber) ->
+  socket.emit "clientSendingRoomNumber", roomNumber
 
 sendItem = (playerId, x, y, num) ->
   itemObj = {pid: playerId, tilex: x, tiley: y, itemnum: num}
@@ -54,6 +56,8 @@ log = (message) ->
 socket = io.connect()
 socket.on "connect", ->
   log "<span style=\"color:green;\">Client has connected to the server!</span>"
+socket.on "serverSendingRooms", (rooms) ->
+  addRooms rooms
 socket.on "ijoined", (myid)->
   player.playerid = myid
   console.log myid

@@ -48,11 +48,15 @@ gamestart = (players) ->
   otherplayers.push new Player(jsonplayer.id) for jsonplayer in players
   gamestarted = true
 
+
 createPlayerJSON = (jsonAtrribs) ->
   otherplayers.push newPlayer(jsonAtrribs)
 
 createMyPlayer = (id) ->
   player = new Player(id)
+
+addRooms = (rooms) ->
+  $("#roomlist").append("<li><a onClick=\"clientJoinRoom(#{room.number})\">#{room.name}</a></li>") for room in rooms
 
 # Makes the action menu for given coordinates
 makemenu = (x,y) ->
@@ -86,17 +90,18 @@ inventoryPopup = ->
 $(document).ready ->
 
   #Dialogs
-  $( "#dialog" ).dialog({
+  $("#dialog").dialog({
       autoOpen: false
   });
 
-  $( "#message-list" ).dialog({
+  $("#message-list").dialog({
       autoOpen: true,
       height: 530
   });
 
 
   $('#inventorymenu').hide()
+  $('.game').hide();
 
   ###
   $('#actionSelection').keydown (evt) ->
