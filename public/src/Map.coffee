@@ -19,22 +19,13 @@ class Map
 
         setTileElement: (row, col, tile, broadcast) -> 
                 @tileGrid.setElement(row,col,tile)
-                console.log "set tile #{row}, #{col}, #{tile}"
                 if !broadcast? || (broadcast? && broadcast)
-                        console.log "broadcasting tile"
-                        sendTile player.id, row, col, tile
-                else
-                        console.log "not broadcasting tile"
-
+                        sendTileData {id: player.id, roomNumber:player.roomNumber, tilex: row, tiley: col, tileNumber: tile}
 
         setItemElement: (row, col, item, broadcast) -> 
                 @itemGrid.setElement(row,col,item)
-                #console.log "set item #{row}, #{col}, #{item}"
                 if !broadcast? || (broadcast? && broadcast)
-                        console.log "broadcasting item"
-                        sendItem player.id, row, col, item
-                else
-                        console.log "not broadcasting item"
+                        sendItemData {id: player.id, roomNumber:player.roomNumber, tilex: row, tiley: col, itemNumber: item}
 
         getTile: (row, col) -> @tileArray[@getTileElement(row,col)]
         getItem: (row, col) -> @itemArray[@getItemElement(row,col)]

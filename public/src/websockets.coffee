@@ -1,49 +1,67 @@
-sendMessageToServer = (message) ->
-  socket.send message
-  log "<span style=\"color:#888\">Sending \"" + message + "\" to the server!</span>"
-
-sendMoveToServer = (move) ->
-  socket.send move
-  log "<span style=\"color:#888\">Move made \"" + message + "\" to the server!</span>"
-
-sendPlayer = ->
-  socket.emit "receivePlayer", {id: player.id, tilex: player.tilex, tiley: player.tiley}
 
 getPlayerIndexById = (id) ->
     listofids = []
     listofids.push aplayer.id for aplayer in otherplayers
     return listofids.indexOf(id)
 
-receivePlayer = (receivedPlayer)->
-  #console.log "Received a player!"
-  #console.log receivedPlayer
-  if receivedPlayer.id != player.id
-    playerindex = getPlayerIndexById(receivedPlayer.id)
-    otherplayers[playerindex].tilex = receivedPlayer.tilex
-    otherplayers[playerindex].tiley = receivedPlayer.tiley
+
+###
+Joining and leaving Rooms
+###  
 
 clientJoinRoom = (roomNumber) ->
   socket.emit "clientSendingRoomNumber", roomNumber
 
-sendItem = (playerId, x, y, num) ->
-  itemObj = {pid: playerId, tilex: x, tiley: y, itemnum: num}
-  socket.emit "itemChannel", itemObj
-  #console.log itemObj
+###
+Messages
+###  
 
-updateItems = (itemChange) ->
+sendMessageToServer = (message) ->
+  socket.send message
+  log "<span style=\"color:#888\">Sending \"" + message + "\" to the server!</span>"
+
+
+###
+Sending player position
+###  
+
+sendPlayerData = ->
+  #console.log "sending player!!!"
+  #console.log {id: player.id, roomNumber: player.roomNumber, tilex: player.tilex, tiley: player.tiley}
+  socket.emit "clientSendingPlayerData", {id: player.id, roomNumber: player.roomNumber, tilex: player.tilex, tiley: player.tiley}
+
+receivePlayerData = (playerData)->
+  console.log "Received a player!"
+  console.log playerData
+  if playerData.id != player.id
+    playerindex = getPlayerIndexById(playerData.id)
+    otherplayers[playerindex].tilex = playerData.tilex
+    otherplayers[playerindex].tiley = playerData.tiley
+
+###
+Sending and receiving updates to the items
+###  
+
+sendItemData  = (itemData) ->
+  socket.emit "clientSendingItemData", {id: player.id, roomNumber: player.roomNumber, tilex: itemData.tilex, tiley: itemData.tiley, itemNumber: itemData.itemNumber}
+
+receiveItemData = (itemData) ->
   #console.log itemChange
-  if itemChange.playerId != player.id
-    map.setItemElement itemChange.tilex, itemChange.tiley, itemChange.itemnum, false
+  if itemData.id != player.id
+    map.setItemElement itemData.tilex, itemData.tiley, itemData.itemNumber, false
 
-sendTile = (playerId, x, y, num) ->
-  tileObj = {pid: playerId, tilex: x, tiley: y, tilenum: num}
-  socket.emit "tileChannel", tileObj
-  console.log tileObj
+###
+Sending and receiving updates to the tiles
+###  
 
-updateTiles = (tileChange) ->
+sendTileData = (tileData) ->
+  socket.emit "clientSendingTileData", {id: player.id, roomNumber: player.roomNumber, tilex: tileData.tilex, tiley: tileData.tiley, tileNumber: tileData.tileNumber}
+
+receiveTileData = (tileData) ->
   #console.log itemChange
-  if tileChange.playerId != player.id
-    map.setTileElement tileChange.tilex, tileChange.tiley, tileChange.tilenum, false
+  if tileData.id != player.id
+    map.setTileElement tileData.tilex, tileData.tiley, tileData.tileNumber, false
+
 
 
 log = (message) ->
@@ -52,21 +70,49 @@ log = (message) ->
   document.getElementById("message-list").appendChild li
   $('#message-list').prepend(li)
 
-  
+
 socket = io.connect()
 socket.on "connect", ->
   log "<span style=\"color:green;\">Client has connected to the server!</span>"
+
 socket.on "serverSendingRooms", (rooms) ->
   addRooms rooms
+
+socket.on "serverSendingAcceptJoin", (playerParams) ->
+  console.log "Accepted!! player stuff:"
+  console.log playerParams
+  createMyPlayer(playerParams)
+
+socket.on "beginGame", (allplayers) ->
+  gamestart(allplayers)
+  log "<span style=\"color:red;\">Other Players Received! #{otherplayers}</span>"
+
+socket.on "disconnect", ->
+  log "<span style=\"color:red;\">The client has disconnected!</span>"
+
+socket.on "serverSendingPlayerData", (playerData) ->
+  console.log "Received player movement"
+  receivePlayerData playerData
+
+socket.on "serverSendingItemData", (itemData) ->
+  receiveItemData itemData
+
+socket.on "serverSendingTileData", (tileData) ->
+  receiveTileData tileData
+
+socket.on "message", (data) ->
+  log "Received: #{data}"
+
+socket.on "serverSendingPlayerDisconnected", (id) ->
+  removePlayerFromArray id
+
+socket.on "serverSendingReload", (data) ->
+  window.location.reload()
+
+###
 socket.on "ijoined", (myid)->
   player.playerid = myid
   console.log myid
-socket.on "message", (data) ->
-  log "Received: #{data}"
-socket.on "roommsg", (data) ->
-  log "<span style=\"color:green;\">#{data}</span>"
-socket.on "disconnect", ->
-  log "<span style=\"color:red;\">The client has disconnected!</span>"
 socket.on "gamestart", ->
   socket.emit "startmeup"
   log "<span style=\"color:red;\">Game started!</span>"
@@ -75,9 +121,6 @@ socket.on "createMyPlayer", (id) ->
 socket.on "startmeup", (otherplayers) ->
   gamestart(otherplayers)
   log "<span style=\"color:red;\">Other Players Received!</span>"
-socket.on "receivePlayer", (playerReceived) ->
-  receivePlayer playerReceived
-socket.on "itemChannel", (itemChange) ->
-  updateItems itemChange
-socket.on "tileChannel", (tileChange) ->
-  updateTiles tileChange
+socket.on "roommsg", (data) ->
+  log "<span style=\"color:green;\">#{data}</span>"
+###

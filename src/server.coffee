@@ -6,14 +6,14 @@ server.listen 8080
 io = socketiolib.listen(server)
 
 class Room
-  constructor: (@roomNumber) ->
+  constructor: (@roomNumber, @maxPlayers = 2, @ingame = false) ->
     @setFriendlyName(@getName)
   isEmpty: -> @getPlayerCount() == 0
   getName: -> "room#{@roomNumber}"
   getFriendlyName: -> @friendlyName
   setFriendlyName: (name) -> @friendlyName = name
   hasStarted: -> false
-  getScokets: -> 
+  getSockets: -> 
     socketsArray = []
     io.sockets.clients(@getName()).forEach( (thesocket) ->  socketsArray.push thesocket)
     return socketsArray
@@ -25,10 +25,18 @@ class Room
     ids = []
     ids.push {id: parseInt(aclient.id)} for aclient in @getSockets()
     return ids
-  getPlayerCount: -> @getIds().length
+  getPlayerCount: -> @getPlayerIds().length
   joinRoom: (client) -> client.join(@getName())
   leaveRoom: (client) -> client.leave(@getName())
   emit: (eventName, data) -> io.sockets.in(@getName()).emit(eventName, data)
+  isFull: -> 
+    console.log "isFull: #{@getPlayerCount()} == #{@maxPlayers} #{@getPlayerCount() == @maxPlayers}"
+    @getPlayerCount() == @maxPlayers
+  isInGame: -> @ingame
+  setInGame: (val) -> @ingame = val
+
+getRoomByName = (name) ->
+  rooms[parseInt(name.substring(4))]
 
 numRooms = 10
 rooms = []
@@ -39,11 +47,40 @@ roomsToSend.push {name: r.getName(), number: r.roomNumber} for r in rooms
 io.sockets.on "connection", (client) ->
   # Lobby stuff
   client.join('lobby')
-  io.sockets.in('lobby').emit("serverSendingRooms", roomsToSend)
-  client.on "clientSendingRoomNumber", (roomNumber) ->
-    rooms[roomNumber].joinRoom(client)
-    rooms[roomNumber].emit("message", "hello, room #{roomNumber}")
+  client.emit("serverSendingRooms", roomsToSend)
 
+  client.on "clientSendingRoomNumber", (roomNumber) ->
+    client.leave('lobby')
+    currentroom = rooms[roomNumber]
+    if(!currentroom.isInGame() && !currentroom.isFull())
+      currentroom.joinRoom(client)
+      client.emit("message", "Welcome to room \"#{currentroom.getFriendlyName}\". Your id is #{client.id}")
+      client.emit('serverSendingAcceptJoin', {id: parseInt(client.id), roomNumber: roomNumber})
+      if(currentroom.isFull())
+        currentroom.emit('beginGame', currentroom.getPlayerIds())
+        currentroom.setInGame true
+
+  client.on "clientSendingPlayerData", (playerData) ->
+    rooms[playerData.roomNumber].emit('serverSendingPlayerData', playerData)
+
+  client.on "clientSendingItemData", (itemData) ->
+    rooms[itemData.roomNumber].emit('serverSendingItemData', itemData)
+
+  client.on "clientSendingTileData", (tileData) ->
+    rooms[tileData.roomNumber].emit('serverSendingTileData', tileData)
+
+  client.on "disconnect", ->
+      for key, val of io.sockets.manager.roomClients[client.id]
+        console.log "#{key}, #{val}"
+        if (key isnt '' && key isnt '/lobby')
+          console.log key
+          console.log getRoomByName(key.substring(1))
+          leavingRoom = getRoomByName(key.substring(1))
+          leavingRoom.emit("serverSendingPlayerDisconnected", client.id)
+          if leavingRoom.getPlayerCount() == 2
+            leavingRoom.setInGame false
+            leavingRoom.emit("serverSendingReload", '')
+      console.log ">>>>>>>>>>>>>>>>>>>>>>>. Server #{client.id} has disconnected"
 
 
   ###
@@ -65,10 +102,4 @@ io.sockets.on "connection", (client) ->
     otherPlayers = []
     otherPlayers.push {id: parseInt(otherClient.id)} for otherClient in startMeSocketArray when otherClient.id isnt client.id
     client.emit "startmeup", otherPlayers
-  client.on "receivePlayer", (playerReceived) ->
-    io.sockets.in('game').emit('receivePlayer', playerReceived)
-  client.on "itemChannel", (itemChange) ->
-    io.sockets.in('game').emit('itemChannel', itemChange)
-  client.on "tileChannel", (tileChange) ->
-    io.sockets.in('game').emit('tileChannel', tileChange)
   ###

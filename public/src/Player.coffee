@@ -3,7 +3,7 @@ My Player tile
 ###
 
 class Player
-  constructor: (id, tilex, tiley, image, inventory, health, stamina, hunger, thirst, speed) -> 
+  constructor: (id, roomNumber, tilex, tiley, image, inventory, health, stamina, hunger, thirst, speed) -> 
     @playerImage = new Image()
     @playerImage.onload = => @imgReady = true
     @playerImage.src = if image? then image else "#{window.spriteDir}/sprite.png"
@@ -16,6 +16,7 @@ class Player
     @posx = if posx? then posx else 0
     @posy = if posy? then posy else 0
     @id = if id? then id else -1
+    @roomNumber = if roomNumber? then roomNumber else -1
     @tilex = Math.floor((@posx+12.5) / 25)
     @tiley = Math.floor((@posy+12.5) / 25)
   imgReady: false

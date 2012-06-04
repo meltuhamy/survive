@@ -45,15 +45,19 @@ filterImage.src = "#{assetDir}/filter.png"
 #Initialisation events
 
 gamestart = (players) ->
-  otherplayers.push new Player(jsonplayer.id) for jsonplayer in players
+  otherplayers.push new Player(p.id, p.roomNumber) for p in players when p.id isnt player.id
   gamestarted = true
+  $("#lobby").fadeOut()
+  $(".game").fadeIn()
 
+removePlayerFromArray = (id) ->
+  otherplayers.splice getPlayerIndexById(id), 1
 
 createPlayerJSON = (jsonAtrribs) ->
   otherplayers.push newPlayer(jsonAtrribs)
 
-createMyPlayer = (id) ->
-  player = new Player(id)
+createMyPlayer = (playerParams) ->
+  player = new Player(playerParams.id, playerParams.roomNumber)
 
 addRooms = (rooms) ->
   $("#roomlist").append("<li><a onClick=\"clientJoinRoom(#{room.number})\">#{room.name}</a></li>") for room in rooms
@@ -302,7 +306,7 @@ updatePlayerTiles = =>
   if(oldTilex != player.tilex || oldTiley != player.tiley)
     # on player change square event
     player.statchange(map.getTile(player.tilex,player.tiley))
-    sendPlayer()
+    sendPlayerData()
   $('#debugbar').html("inventory = #{player.inventory}, player.tilex = #{player.tilex}, player.tiley = #{player.tiley} \n
     health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
 
