@@ -19,11 +19,27 @@ PostgreSQL version: 8.3
 pg = require("pg")
 #            postgres://[user]:[pass]@[host]:[port]/[database]
 conString = "postgres://g1127112_u:nrG0gKR1QC@db:5432/g1127112_u"
-pg.connect conString, (err, client) ->
-  client.query "SELECT NOW() as when", (err, result) ->
-    console.log "Row count: %d", result.rows.length
-    console.log "Current year: %d", result.rows[0].when.getYear()
+dbClient = new pg.Client({user: 'g1127112_u', password: 'nrG0gKR1QC', host: 'db', port: 5432, database: 'g1127112_u'});
+dbClient.connect()
 
+dbClient.query "SELECT * from actions", (err, result) ->
+    console.log "Row count: %d", result.rows.length
+
+dbClient.on('error', (error) -> 
+  console.log "<><><><><><><><ERRROR><><><><><><><>"
+  console.log(error)
+  console.log "<><><><><><><><><><><><><><><><><><>"
+)
+
+printRowCount = ->
+  dbClient.query "SELECT * from actions", (err, result) ->
+    console.log "Row count: %d", result.rows.length
+###
+pg.connect conString, (err, dbClient) ->
+  dbClient.query "SELECT * from actions", (err, result) ->
+    console.log "Row count: %d", result.rows.length
+    #console.log "Current year: %d", result.rows[0].when.getYear()
+###
 
 
 class Room
@@ -65,6 +81,7 @@ rooms.push new Room(i) for i in [0...10]
 roomsToSend = []
 roomsToSend.push {name: r.getName(), number: r.roomNumber} for r in rooms
 
+
 io.sockets.on "connection", (client) ->
   # Lobby stuff
   client.join('lobby')
@@ -82,12 +99,21 @@ io.sockets.on "connection", (client) ->
         currentroom.setInGame true
 
   client.on "clientSendingPlayerData", (playerData) ->
+    dbClient.query "insert into actions values (NOW(), #{playerData.roomNumber}, #{parseInt(client.id)}, 'p', #{playerData.tilex}, #{playerData.tiley});", (err, result) ->
+      console.log "INSERTED ROW"
+    printRowCount()
     rooms[playerData.roomNumber].emit('serverSendingPlayerData', playerData)
 
   client.on "clientSendingItemData", (itemData) ->
+    dbClient.query "insert into actions values (NOW(), #{itemData.roomNumber}, #{parseInt(client.id)}, 'i', #{itemData.tilex}, #{itemData.tiley}, #{itemData.itemNumber});", (err, result) ->
+      console.log "INSERTED ROW"
+    printRowCount()
     rooms[itemData.roomNumber].emit('serverSendingItemData', itemData)
 
   client.on "clientSendingTileData", (tileData) ->
+    dbClient.query "insert into actions values (NOW(), #{tileData.roomNumber}, #{parseInt(client.id)}, 't', #{tileData.tilex}, #{tileData.tiley}, #{tileData.tileNumber});", (err, result) ->
+      console.log "INSERTED ROW"
+    printRowCount()
     rooms[tileData.roomNumber].emit('serverSendingTileData', tileData)
 
   client.on "disconnect", ->
