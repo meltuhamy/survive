@@ -100,6 +100,9 @@ actionMenuKeyDown = (evt) ->
     selectedAction = actions[actionMenuSelected]
     $('#actionmenu').fadeOut("fast")
     selectedAction.doFn(actionMenuTileX, actionMenuTileY)
+  else if(evt.keyCode == 27)
+    focusOnCanvas = true
+    $('#actionmenu').fadeOut("fast")
   $('#actionmenu ul li#menuAction'+actionMenuSelected).toggleClass('selected')
     
 
