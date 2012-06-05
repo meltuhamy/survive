@@ -1,4 +1,4 @@
-DEBUGMODE = off
+DEBUGMODE = on
 
 tileWidth = 25
 tileHeight = 25
