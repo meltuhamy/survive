@@ -1,4 +1,4 @@
-DEBUGMODE = on
+DEBUGMODE = off
 
 tileWidth = 25
 tileHeight = 25
@@ -85,9 +85,8 @@ makemenu = (x,y) ->
    focusOnCanvas = false
    $('#actionlist').html inputSelect 
    $('#actionmenu ul li#menuAction0').toggleClass('selected')
-   $('#actionmenu').fadeIn()
+   $('#actionmenu').fadeIn("fast")
 
-  
 
 actionMenuKeyDown = (evt) ->
   $('#actionmenu ul li#menuAction'+actionMenuSelected).toggleClass('selected')
@@ -96,13 +95,13 @@ actionMenuKeyDown = (evt) ->
   else if(evt.keyCode == 40)
     actionMenuSelected = (actionMenuSelected+1) % actionMenuTotal
   else if(evt.keyCode == 13)
+    focusOnCanvas = true
     actions = map.getActions(actionMenuTileX, actionMenuTileY)
     selectedAction = actions[actionMenuSelected]
+    $('#actionmenu').fadeOut("fast")
     selectedAction.doFn(actionMenuTileX, actionMenuTileY)
-    $('#actionmenu').fadeOut()
-    focusOnCanvas = true
   $('#actionmenu ul li#menuAction'+actionMenuSelected).toggleClass('selected')
-
+    
 
 inventoryPopup = ->
   #$('#inventorymenu').show()
@@ -124,29 +123,6 @@ $(document).ready ->
   $('#inventorymenu').hide()
   if(!DEBUGMODE)
     $('.game').hide();
-
-  ###
-  $('#actionSelection').keydown (evt) ->
-    console.log 'Hit enter on actions'
-    if(evt.keyCode == 13)
-      alert('Did Action: '+$('#actionSelection:selected').html())
-      $("#dialog").dialog('close')
-  ###
-
-  $("#actionSelection").live "keypress", (e) ->
-    key = e.which
-    if(key == 13)
-      #console.log "Chosen action: #{$('#actionSelection').val()}"
-      #console.log "Tile: #{$('#actionSelection').attr('tile')}"
-      tilecoords = $('#actionSelection').attr('tile').split(',')
-      tilecoords[0] = parseInt(tilecoords[0])
-      tilecoords[1] = parseInt(tilecoords[1])
-      #console.log tilecoords
-      actions = map.getActions(tilecoords[0], tilecoords[1])
-      #console.log actions
-      theAction = actions[$('#actionSelection').val()]
-      $('#dialog').dialog('close')
-      theAction.doFn(tilecoords[0], tilecoords[1])
 
   # mouse move event within 'container' div
 
@@ -210,9 +186,8 @@ $(document).ready ->
         playerMovingUp = false
         playerMovingRight = false
     else
-      #This is NOT a canvas thing
-      #actionmenu
       actionMenuKeyDown(evt)
+
 
 
 ###

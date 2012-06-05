@@ -6,7 +6,7 @@ server.listen 8080
 io = socketiolib.listen(server)
 
 class Room
-  constructor: (@roomNumber, @maxPlayers = 1, @ingame = false) ->
+  constructor: (@roomNumber, @maxPlayers = 2, @ingame = false) ->
     @setFriendlyName(@getName)
   isEmpty: -> @getPlayerCount() == 0
   getName: -> "room#{@roomNumber}"
