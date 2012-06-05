@@ -5,6 +5,27 @@ server.use express.static(__dirname + "/public")
 server.listen 8080
 io = socketiolib.listen(server)
 
+
+###
+Database Stuff
+Server:             db
+Port:               5432
+Database:           g1127112_u
+Account:            g1127112_u
+Password:           nrG0gKR1QC
+PostgreSQL version: 8.3
+
+###
+pg = require("pg")
+#            postgres://[user]:[pass]@[host]:[port]/[database]
+conString = "postgres://g1127112_u:nrG0gKR1QC@db:5432/g1127112_u"
+pg.connect conString, (err, client) ->
+  client.query "SELECT NOW() as when", (err, result) ->
+    console.log "Row count: %d", result.rows.length
+    console.log "Current year: %d", result.rows[0].when.getYear()
+
+
+
 class Room
   constructor: (@roomNumber, @maxPlayers = 2, @ingame = false) ->
     @setFriendlyName(@getName)
