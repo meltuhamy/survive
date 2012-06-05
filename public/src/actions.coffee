@@ -28,7 +28,7 @@ class BuildBoobyTrapAction extends Action
       for invItem in [0...player.inventory.length]
         if (player.inventory[invItem] == 4)
           hasLog = true
-          player.inventory.splice invItem, 1
+          player.removeitem(4)
           break
       if (hasLog) 
         map.setTileElement(x,y,7)
@@ -91,7 +91,7 @@ class PoisonWaterAction extends Action
       for i in [0...player.inventory.length]
         if (player.inventory[i] == 7)
           hasPoison = true
-          player.inventory.splice i, 1
+          player.removeitem(7)
           break
       if (hasPoison)
         map.setTileElement(x,y,8)
@@ -100,12 +100,28 @@ class PoisonWaterAction extends Action
         alert("Can't poison water at #{x},#{y}. I need a poison.")
     )
 
+class PoisonDeepWaterAction extends Action
+  constructor: -> 
+    super('Poison Water', (x,y) -> 
+      hasPoison = false
+      for i in [0...player.inventory.length]
+        if (player.inventory[i] == 7)
+          hasPoison = true
+          player.removeitem(7)
+          break
+      if (hasPoison)
+        map.setTileElement(x,y,9)
+        alert("Poisoned water at #{x},#{y}.")
+      else 
+        alert("Can't poison water at #{x},#{y}. I need a poison.")
+    )
 
 class PickUpItemAction extends Action
   constructor: -> 
     super('Pick Up Item Action', (x,y) -> 
-    	pickedItem = map.getItemElement(x,y)
-    	player.inventory.push(pickedItem)
-    	map.removeItem(x,y)
-    	#alert("I picked up the damned item at #{x}, #{y}. It is a #{pickedItem.name}")
+      pickedItem = map.getItemElement(x,y)
+      pushInventory(pickedItem)
+      player.inventory.push(pickedItem)
+      map.removeItem(x,y)
     )
+

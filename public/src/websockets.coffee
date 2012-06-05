@@ -28,7 +28,7 @@ Sending player position
 sendPlayerData = ->
   #console.log "sending player!!!"
   #console.log {id: player.id, roomNumber: player.roomNumber, tilex: player.tilex, tiley: player.tiley}
-  socket.emit "clientSendingPlayerData", {id: player.id, roomNumber: player.roomNumber, tilex: player.tilex, tiley: player.tiley}
+  if !DEBUGMODE then socket.emit "clientSendingPlayerData", {id: player.id, roomNumber: player.roomNumber, tilex: player.tilex, tiley: player.tiley} 
 
 receivePlayerData = (playerData)->
   console.log "Received a player!"
@@ -43,7 +43,7 @@ Sending and receiving updates to the items
 ###  
 
 sendItemData  = (itemData) ->
-  socket.emit "clientSendingItemData", {id: player.id, roomNumber: player.roomNumber, tilex: itemData.tilex, tiley: itemData.tiley, itemNumber: itemData.itemNumber}
+  if !DEBUGMODE then socket.emit "clientSendingItemData", {id: player.id, roomNumber: player.roomNumber, tilex: itemData.tilex, tiley: itemData.tiley, itemNumber: itemData.itemNumber}
 
 receiveItemData = (itemData) ->
   #console.log itemChange
@@ -55,7 +55,7 @@ Sending and receiving updates to the tiles
 ###  
 
 sendTileData = (tileData) ->
-  socket.emit "clientSendingTileData", {id: player.id, roomNumber: player.roomNumber, tilex: tileData.tilex, tiley: tileData.tiley, tileNumber: tileData.tileNumber}
+  if !DEBUGMODE then socket.emit "clientSendingTileData", {id: player.id, roomNumber: player.roomNumber, tilex: tileData.tilex, tiley: tileData.tiley, tileNumber: tileData.tileNumber}
 
 receiveTileData = (tileData) ->
   #console.log itemChange

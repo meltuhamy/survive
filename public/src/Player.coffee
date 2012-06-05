@@ -29,3 +29,6 @@ class Player
     @stamina += 1 if @stamina < 20
     @thirst -= 1
     @hunger -= 1
+  removeitem: (itemNo) ->
+    @inventory.splice @inventory.indexOf(itemNo), 1
+    $(".item#{itemNo}").first().remove()

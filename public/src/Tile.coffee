@@ -24,9 +24,8 @@ class GrassTile extends MapTile
 class DeepWaterTile extends MapTile
   constructor: -> 
     super("#{window.terrainDir}/water.png")
-    @stamina_cost = Number.MAX_VALUE
     @walkable = false
-  actions: [new DrinkWaterAction()]
+  actions: [new DrinkWaterAction(), new PoisonDeepWaterAction()]
 
 class ShallowWaterTile extends MapTile
   constructor: -> 
@@ -39,21 +38,19 @@ class FireTile extends MapTile
     super("#{window.terrainDir}/fire.png")
     @health_cost = 2
     @thirst_cost = 2
-  actions: [new DigTrapAction()]
+  actions: []
 
 class HillTile extends MapTile
   constructor: -> 
     super("#{window.terrainDir}/hill.png")
     @walkable = false
   actions: []
-  walkable: false
 
 class TreeTile extends MapTile
   constructor: -> 
     super("#{window.terrainDir}/tree.png")
     @walkable = false
   actions: [new ChopTreeAction(), new BurnTreeAction()]
-  walkable: false
 
 class HoleTrapTile extends MapTile
   constructor: -> 
@@ -70,7 +67,14 @@ class BoobyTrapTile extends MapTile
 class PoisonWaterTile extends MapTile
   constructor: -> 
     super("#{window.terrainDir}/shallowwater.png")
-  actions: [new DrinkPoisonedWaterAction()]
+    @stamina_cost = 3
+  actions: [ new DrinkPoisonedWaterAction(),new PoisonWaterAction()]
+
+class PoisonDeepWaterTile extends MapTile
+  constructor: -> 
+    super("#{window.terrainDir}/water.png")
+    @walkable = false
+  actions: [new DrinkPoisonedWaterAction(), new PoisonDeepWaterAction()]
 
 ###
 Item tiles

@@ -44,7 +44,7 @@ actionMenuTileY = 0
 
 filterImage = new Image()
 filterImage.onload = => filterReady = true
-filterImage.src = "#{assetDir}/filter.png"
+filterImage.src = "#{window.assetDir}/filter.png"
 
 
 
@@ -74,6 +74,7 @@ $('#actionmenu').fadeOut()
 makemenu = (x,y) ->
    menuactions = map.getActions(x,y)    #first we get all actions available at given coordinates
    inputSelect = ''
+   if (menuactions.length == 0) then return
    for i in [0...menuactions.length]
     inputSelect = inputSelect.concat('<li id="menuAction'+i+'">'+menuactions[i].actionname+'</li>')
    $('#actionmenu').css('top', y*tileHeight-scrolly)
@@ -107,8 +108,12 @@ actionMenuKeyDown = (evt) ->
     
 
 inventoryPopup = ->
-  #$('#inventorymenu').show()
   $('#inventorymenu').fadeToggle("fast")
+
+pushInventory = (itemNo) ->
+  itemObj = map.getItemFromNumber(itemNo)
+  imgSource = itemObj.tileImage.src
+  $('#inventorymenu ul').append("<li class=\"item#{itemNo}\"><img src=\"#{imgSource}\"></img></li>")
 
 $(document).ready ->
 
