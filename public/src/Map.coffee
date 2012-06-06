@@ -13,6 +13,12 @@ class Map
                     new TreeTile() , new HoleTrapTile(), new BoobyTrapTile(), new PoisonWaterTile(), new PoisonDeepWaterTile()]
         itemArray: [0, new GreenHelm(), new WaterBottle(), new Shovel(), new Log(), new Axe(), new Torch(), new Poison()]
         constructor: (@tileGrid, @itemGrid) ->
+                @tileGridOriginal = new Grid([],@tileGrid.numrows,@tileGrid.numcols)
+                @itemGridOriginal = new Grid([],@itemGrid.numrows,@itemGrid.numcols)
+                @tileGridOriginal.mapArray = []
+                @tileGridOriginal.mapArray.push arrayitem for arrayitem in @tileGrid.mapArray
+                @itemGridOriginal.mapArray = []
+                @itemGridOriginal.mapArray.push arrayitem for arrayitem in @itemGrid.mapArray
                 if @tileGrid.numrows != @itemGrid.numrows or @tileGrid.numcols != @itemGrid.numcols then console.log 'Sizes of grids dont match'
         getTileElement: (row, col) -> @tileGrid.getElement(row,col)
         getItemElement: (row, col) -> @itemGrid.getElement(row,col)
@@ -46,6 +52,11 @@ class Map
                 menuactions = if @noItem(x,y) then [] else @getItem(x, y).actions
                 menuactions = menuactions.concat(tileactions)
                 return menuactions
+        restore: -> 
+                @tileGrid.mapArray = []
+                @tileGrid.mapArray.push arrayitem for arrayitem in @tileGridOriginal.mapArray
+                @itemGrid.mapArray = []
+                @itemGrid.mapArray.push arrayitem for arrayitem in @itemGridOriginal.mapArray
 
 map0 =  [0, 1, 2, 3, 4, 5, 6, 7, 8, 5, 6, 7, 8, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 0, 0, 0, 0, 0, 0, 2, 4, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3, 2, 2, 3, 3, 4, 4, 4, 0, 0, 0, 2, 2, 2, 4, 4, 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 2, 2, 2, 2, 4, 4, 4, 4, 2, 2, 2, 2, 4, 4, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 4, 4, 0, 0, 0, 0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 0, 0, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 4, 4, 4, 4, 4, 4, 0, 2, 2, 3, 3, 2, 2, 1, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 2, 2, 3, 3, 2, 2, 1, 0, 2, 2, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2]
 
