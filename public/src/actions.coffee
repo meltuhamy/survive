@@ -118,10 +118,20 @@ class PoisonDeepWaterAction extends Action
 
 class PickUpItemAction extends Action
   constructor: -> 
-    super('Pick Up Item Action', (x,y) -> 
+    super('Pick Up Item', (x,y) -> 
       pickedItem = map.getItemElement(x,y)
       pushInventory(pickedItem)
       player.inventory.push(pickedItem)
       map.removeItem(x,y)
     )
 
+class EatItemAction extends Action
+  constructor: (@healthgain, @staminagain, @hungergain) ->
+    super('Eat Item', ->
+      player.health += @healthgain
+      player.health = maxHealth if @player.health > maxHealth
+      player.stamina += @staminagain
+      player.stamina = maxStamina if @player.stamina > maxStamina
+      player.hunger += @hungergain
+      player.hunger = maxHunger if @player.hunger > maxHunger
+    )

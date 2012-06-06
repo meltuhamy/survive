@@ -1,4 +1,4 @@
-DEBUGMODE = off
+DEBUGMODE = on
 
 tileWidth = 25
 tileHeight = 25
@@ -37,10 +37,13 @@ playerMovingDown = false
 filterReady = false
 focusOnCanvas = true
 
+actionMenuVisible = false
 actionMenuSelected = 0
 actionMenuTotal = 0
 actionMenuTileX = 0
 actionMenuTileY = 0
+
+inventoryActionSelected = 0
 
 filterImage = new Image()
 filterImage.onload = => filterReady = true
@@ -87,6 +90,7 @@ makemenu = (x,y) ->
    $('#actionlist').html inputSelect 
    $('#actionmenu ul li#menuAction0').toggleClass('selected')
    $('#actionmenu').fadeIn("fast")
+   actionMenuVisible = true
 
 
 actionMenuKeyDown = (evt) ->
@@ -100,20 +104,57 @@ actionMenuKeyDown = (evt) ->
     actions = map.getActions(actionMenuTileX, actionMenuTileY)
     selectedAction = actions[actionMenuSelected]
     $('#actionmenu').fadeOut("fast")
+    actionmenuVisible = false
     selectedAction.doFn(actionMenuTileX, actionMenuTileY)
   else if(evt.keyCode == 27)
     focusOnCanvas = true
     $('#actionmenu').fadeOut("fast")
+    actionmenuVisible = false
   $('#actionmenu ul li#menuAction'+actionMenuSelected).toggleClass('selected')
     
+$('#inventoryActionsMenu').fadeOut()
+# Makes the action menu for given coordinates
+makeInventoryMenu = (itemIndex) ->
+   itemNo = player.inventory[itemIndex]
+   itemObj = map.getItemFromNumber itemNo
+   menuactions = itemObj.inventoryActions
+   inputSelect = ''
+   if (menuactions.length == 0) then return
+   for i in [0...menuactions.length]
+     inputSelect = inputSelect.concat('<li id="itemAction'+i+'">'+menuactions[i].actionname+'</li>')
+   $('#inventoryActionsMenu').css('top', 200)
+   $('#inventoryActionsMenu').css('left', $('#inventorymenu ul li').eq(itemIndex).position().left)
+   actionMenuSelected = 0
+   inventoryActionMenuTotal = menuactions.length
+   focusOnCanvas = false
+   $('#inventoryActions').html inputSelect 
+   $('#inventoryActions li#itemAction0').toggleClass('selected')
+   $('#inventoryActions').fadeIn("fast")
 
+
+inventoryActionKeyDown = (evt) ->
+  $('#actionmenu ul li#menuAction'+inventoryActionSelected ).toggleClass('selected')
+  if(evt.keyCode == 38)
+    inventoryActionSelected = (inventoryActionSelected -1+inventoryActionMenuTotal) % inventoryActionMenuTotal
+  else if(evt.keyCode == 40)
+    inventoryActionSelected = (inventoryActionSelected +1) % inventoryActionMenuTotal 
+  else if(evt.keyCode == 13)
+    focusOnCanvas = true
+    actions = map.getItemFromNumber(selectedItem).inventoryActions
+    selectedAction = actions[inventoryActionSelected]
+    $('#actionmenu').fadeOut("fast")
+    selectedAction.doFn()
+  else if(evt.keyCode == 27)
+    focusOnCanvas = true
+    $('#inventoryActionsnMenu').fadeOut("fast")
+  $('#inventoryActionsMenu ul li#menuAction'+inventoryActionSelected).toggleClass('selected')
 inventoryPopup = ->
   $('#inventorymenu').fadeToggle("fast")
 
 pushInventory = (itemNo) ->
   itemObj = map.getItemFromNumber(itemNo)
   imgSource = itemObj.tileImage.src
-  $('#inventorymenu ul').append("<li class=\"item#{itemNo}\"><img src=\"#{imgSource}\"></img></li>")
+  $('#inventorymenu #inventoryActions').append("<li class=\"item#{itemNo}\"><img src=\"#{imgSource}\"></img></li>")
 
 $(document).ready ->
 
@@ -153,6 +194,8 @@ $(document).ready ->
         makemenu(player.tilex-1, player.tiley)
       if (evt.keyCode == 68) #d
         makemenu(player.tilex+1, player.tiley)
+      if (evt.keyCode == 49)
+        makeInventoryMenu(0)
       
       playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
       playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
@@ -162,7 +205,6 @@ $(document).ready ->
         inventoryPopup()
 
     else
-      #This is NOT a canvas thing
 
 
 
@@ -194,7 +236,11 @@ $(document).ready ->
         playerMovingUp = false
         playerMovingRight = false
     else
-      actionMenuKeyDown(evt)
+      if actionMenuVisible
+        actionMenuKeyDown(evt)
+      else
+        inventoryActionKeyDown(evt)
+
 
 
 

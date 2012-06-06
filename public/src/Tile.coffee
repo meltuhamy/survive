@@ -114,3 +114,9 @@ class Poison extends Tile
   constructor: -> super("#{window.itemDir}/poison.png")
   actions: [new PickUpItemAction()]
   name: 'Poison'
+
+class Chicken extends Tile
+  constructor: -> super("#{window.itemDir}/chicken.png")
+  actions: [new PickUpItemAction()]
+  inventoryActions: [new EatItemAction(10, 10, 20)]
+  name: 'Chicken'
