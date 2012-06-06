@@ -31,8 +31,8 @@ sendPlayerData = ->
   if !DEBUGMODE then socket.emit "clientSendingPlayerData", {id: player.id, roomNumber: player.roomNumber, tilex: player.tilex, tiley: player.tiley} 
 
 receivePlayerData = (playerData)->
-  console.log "Received a player!"
-  console.log playerData
+  #console.log "Received a player!"
+  #console.log playerData
   if playerData.id != player.id
     playerindex = getPlayerIndexById(playerData.id)
     otherplayers[playerindex].tilex = playerData.tilex
@@ -108,6 +108,14 @@ socket.on "serverSendingPlayerDisconnected", (id) ->
 
 socket.on "serverSendingReload", (data) ->
   window.location.reload()
+
+socket.on "serverSendingReplay", (replayData) ->
+  gameReplay replayData
+
+socket.on "serverSendingDebugLog", (debugLogData) ->
+  console.log debugLogData
+
+
 
 ###
 socket.on "ijoined", (myid)->

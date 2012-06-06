@@ -21,9 +21,9 @@ pg = require("pg")
 conString = "postgres://g1127112_u:nrG0gKR1QC@db:5432/g1127112_u"
 dbClient = new pg.Client({user: 'g1127112_u', password: 'nrG0gKR1QC', host: 'db', port: 5432, database: 'g1127112_u'});
 dbClient.connect()
-
 dbClient.query "SELECT * from actions", (err, result) ->
-    console.log "Row count: %d", result.rows.length
+    console.log "TOTAL: Row count: %d", result.rows.length
+
 
 dbClient.on('error', (error) -> 
   console.log "<><><><><><><><ERRROR><><><><><><><>"
@@ -31,9 +31,9 @@ dbClient.on('error', (error) ->
   console.log "<><><><><><><><><><><><><><><><><><>"
 )
 
-printRowCount = ->
-  dbClient.query "SELECT * from actions", (err, result) ->
-    console.log "Row count: %d", result.rows.length
+printRowCount = (thegameid=0)->
+  dbClient.query "SELECT * from actions where gameid=#{thegameid}", (err, result) ->
+    console.log "Row count for game #{thegameid}: %d", result.rows.length
 ###
 pg.connect conString, (err, dbClient) ->
   dbClient.query "SELECT * from actions", (err, result) ->
@@ -116,6 +116,18 @@ io.sockets.on "connection", (client) ->
     printRowCount()
     rooms[tileData.roomNumber].emit('serverSendingTileData', tileData)
 
+  client.on "clientSendingReplayRequest", (deathData) ->
+   query = dbClient.query("SELECT * FROM actions WHERE gameid = #{deathData.roomNumber}");
+   replayData = []
+   query.on 'row', (row, result) ->
+     replayData.push(row)
+   query.on 'end', (result) ->
+    console.log(result.rowCount + ' rows for the replay were received')
+    console.log replayData
+    client.emit("serverSendingReplay", replayData)
+
+
+
   client.on "disconnect", ->
       for key, val of io.sockets.manager.roomClients[client.id]
         console.log "#{key}, #{val}"
@@ -150,3 +162,4 @@ io.sockets.on "connection", (client) ->
     otherPlayers.push {id: parseInt(otherClient.id)} for otherClient in startMeSocketArray when otherClient.id isnt client.id
     client.emit "startmeup", otherPlayers
   ###
+  

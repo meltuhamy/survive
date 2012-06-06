@@ -49,8 +49,18 @@ filterImage = new Image()
 filterImage.onload = => filterReady = true
 filterImage.src = "#{window.assetDir}/filter.png"
 
+replayData = []
+replayMode = false
+replayGameTick = 0
+replayLoopIntervalId = 0
 
-
+gameReplay = (receivedReplayData) ->
+  clearInterval replayLoopIntervalId
+  replayMode = true
+  map.restore()
+  replayData = receivedReplayData
+  clearInterval mainLoopIntervalId
+  replayLoopIntervalId = setInterval replayLoop, 40
 
 #Initialisation events
 
@@ -235,6 +245,9 @@ $(document).ready ->
         playerMovingLeft = false
         playerMovingUp = false
         playerMovingRight = false
+      if(evt.keyCode == 82) # press r
+        replayGameTick = 0
+        socket.emit "clientSendingReplayRequest", {roomNumber: player.roomNumber}
     else
       if actionMenuVisible
         actionMenuKeyDown(evt)
@@ -329,9 +342,53 @@ render = =>
   window.hoverSelectLayer.draw()
 
   # draw the player that the client is controlling
-  
   playerContext.drawImage player.playerImage, player.posx-scrollx, player.posy-scrolly if player.imgReady
 
+
+
+replayGameRender = =>
+  mapContext = window.mapLayer.getContext() # get map
+  mapContext.fillStyle = "#000000" 
+  mapContext.fillRect(0,0,canvasWidth,canvasHeight) # fill map black
+  itemContext = window.itemLayer.getContext() # get drawing context for item layer
+  itemLayer.clear()
+  playerContext = window.playerLayer.getContext() # get drawing context for item layer
+  playerLayer.clear()
+  # for every grid location
+  for y in [0...map.tileGrid.numrows]
+    for x in [0...map.tileGrid.numcols]
+      # if the corresponding tile is loaded
+      if (map.getTile(x,y).tileReady)
+        # draw the image on the map in the position relative to map scroll
+        mapContext.drawImage map.getTile(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+        if !map.noItem(x,y)
+           itemContext.drawImage map.getItem(x,y).tileImage, x*tileWidth-scrollx, y*tileHeight-scrolly
+  playerContext.drawImage player.playerImage, player.posx-scrollx, player.posy-scrolly if player.imgReady
+  for p in otherplayers
+    playerContext.drawImage player.playerImage, p.tilex*tileWidth-scrollx, p.tiley*tileHeight-scrolly if player.imgReady
+
+
+replayGameUpdate = =>
+  if replayGameTick < replayData.length
+    replay = replayData[replayGameTick]
+    console.log "Replaying row #{replayGameTick}:"
+    console.log replay
+    switch replayData[replayGameTick].type
+      when "t"
+        map.setTileElement replay.tilex, replay.tiley, replay.value, false
+      when "i"
+        map.setItemElement replay.tilex, replay.tiley, replay.value, false
+      when "p"
+        if replay.socketid != player.id
+          playerindex = getPlayerIndexById(replay.socketid)
+          otherplayers[playerindex].tilex = replay.tilex
+          otherplayers[playerindex].tiley = replay.tiley
+        else
+          player.posx = replay.tilex*tileWidth
+          player.posy = replay.tiley*tileHeight
+          player.tilex = Math.floor((player.posx+12.5) / 25);
+          player.tiley = Math.floor((player.posy+12.5) / 25);
+    replayGameTick++
 
 
 ###
@@ -434,11 +491,11 @@ updateScroll = =>
    mouseSquarey = Math.floor(mousey / tileHeight)
 
 ###
-Main method
+Main method loop 
 ###
 
 count = 0
-main = ->
+mainLoop = ->
   now = Date.now()
   delta = now - then_
   update delta / 1000
@@ -449,4 +506,13 @@ main = ->
       count = 0
   count += 1
 then_ = Date.now()
-setInterval main, 10
+
+###
+Replay loop
+###
+
+replayLoop = ->
+  replayGameRender()
+  replayGameUpdate()
+
+mainLoopIntervalId = setInterval mainLoop, 10
