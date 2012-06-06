@@ -164,7 +164,7 @@ inventoryPopup = ->
 pushInventory = (itemNo) ->
   itemObj = map.getItemFromNumber(itemNo)
   imgSource = itemObj.tileImage.src
-  $('#inventorymenu #inventoryActions').append("<li class=\"item#{itemNo}\"><img src=\"#{imgSource}\"></img></li>")
+  $('#inventorymenu #inventoryImages').append("<li class=\"item#{itemNo}\"><img src=\"#{imgSource}\"></img></li>")
 
 $(document).ready ->
 

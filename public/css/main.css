@@ -58,7 +58,7 @@ body{
 	width: 100%;
 }
 
-#inventorymenu ul li{
+#inventorymenu ul#inventoryImages li{
 	background: #CCC;
 	list-style-type: none;
 	float:left;
@@ -115,4 +115,16 @@ body{
 	background: rgba(51,204,255,0.5);
 	height:30px;
 
+}
+
+#inventoryActionsMenu{
+	position: absolute;
+	margin:0px;
+	z-index:120;
+	top:200px;
+	left:100px;
+	width:140px;
+	background: rgba(216, 177, 100, 0.5);
+	font-size: 12px;
+	text-shadow: 1px 1px 1px black;
 }
