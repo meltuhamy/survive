@@ -26,12 +26,12 @@ class Map
         setTileElement: (row, col, tile, broadcast) -> 
                 @tileGrid.setElement(row,col,tile)
                 if !broadcast? || (broadcast? && broadcast)
-                        sendTileData {id: player.id, roomNumber:player.roomNumber, tilex: row, tiley: col, tileNumber: tile}
-
+                        NetworkClient.sendTileData {id: Game.player.id, roomNumber:Game.player.roomNumber, tilex: row, tiley: col, tileNumber: tile}
+                                                  
         setItemElement: (row, col, item, broadcast) -> 
                 @itemGrid.setElement(row,col,item)
                 if !broadcast? || (broadcast? && broadcast)
-                        sendItemData {id: player.id, roomNumber:player.roomNumber, tilex: row, tiley: col, itemNumber: item}
+                        NetworkClient.sendItemData {id: Game.player.id, roomNumber:Game.player.roomNumber, tilex: row, tiley: col, itemNumber: item}
 
         getTile: (row, col) -> @tileArray[@getTileElement(row,col)]
         getItem: (row, col) -> @itemArray[@getItemElement(row,col)]

@@ -16,6 +16,17 @@
 		<link rel="stylesheet" href="css/main.css" type="text/css"> 
 		<link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.20.custom.css" type="text/css"> 
 
+		<script type="text/javascript">
+        //  Executes once page has loaded
+		$(document).ready(function(){
+			Game.onload();
+		});
+
+		//  Main method loop 
+
+		Game.beginMainLoop();
+		</script>
+
 	</head>
 	<body>
 		<div id="lobby" style="background-color: red" >

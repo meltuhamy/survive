@@ -11,7 +11,7 @@ class Player
   constructor: (id, roomNumber, tilex, tiley, image, inventory, health, stamina, hunger, thirst, speed) -> 
     @playerImage = new Image()
     @playerImage.onload = => @imgReady = true
-    @playerImage.src = if image? then image else "#{window.spriteDir}/sprite.png"
+    @playerImage.src = if image? then image else "#{Settings.spriteDir}/sprite.png"
     @inventory = if inventory? then inventory else []
     @health = if health? then health else maxHealth
     maxHealth = @health
@@ -83,12 +83,11 @@ class Player
     @updatePlayerTiles()
 
   updatePlayerMovement: =>
-    console.log "TEST"
     # work out the adjacent squares to the player
-    right = Math.floor((player.posx+25)/25)
-    left = Math.floor((player.posx-1)/25)
-    up = Math.floor((player.posy-1)/25)
-    down = Math.floor((player.posy+25)/25)
+    right = Math.floor((@posx+25)/25)
+    left = Math.floor((@posx-1)/25)
+    up = Math.floor((@posy-1)/25)
+    down = Math.floor((@posy+25)/25)
 
     # if player is moving left or right, update it's stored horizontal position
     # if player not moving left or right, center it's horizontal position
@@ -97,7 +96,7 @@ class Player
     else if (@playerMovingRight && map.inBounds(right, @tiley) && @stamina > 0 && map.getTile(right,@tiley).walkable)
       @posx = @posx + @speed
     else
-      @posx = @tilex*tileWidth
+      @posx = @tilex*Settings.tileWidth
   
     # if player is moving up or down, update it's stored vertical position
     # if player not moving up or down, center it's vertical position
@@ -106,7 +105,7 @@ class Player
     else if (@playerMovingDown && map.inBounds(@tilex,down) && @stamina > 0 && map.getTile(@tilex,down).walkable)
       @posy = @posy + @speed
     else
-      @posy = @tiley*tileHeight
+      @posy = @tiley*Settings.tileHeight
 
   updatePlayerTiles: =>
     # calculate the player's tile location from his pixel location
@@ -117,6 +116,6 @@ class Player
     # see if the tile has changed location
     if(@oldTilex != @tilex || @oldTiley != @tiley)
       # on player change square event
-      @statchange(map.getTile(player.tilex,player.tiley))
-      sendPlayerData()
+      @statchange(map.getTile(@tilex,@tiley))
+      NetworkClient.sendPlayerData()
   

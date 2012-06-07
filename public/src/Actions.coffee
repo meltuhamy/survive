@@ -10,8 +10,8 @@ class DigTrapAction extends Action
   constructor: -> 
     super('Dig Trap', (x,y) -> 
       hasShovel = false
-      for invItem in [0...player.inventory.length]
-        if (player.inventory[invItem] == 3)
+      for invItem in [0...Game.player.inventory.length]
+        if (Game.player.inventory[invItem] == 3)
           hasShovel = true
           break
       if (hasShovel) 
@@ -25,10 +25,10 @@ class BuildBoobyTrapAction extends Action
   constructor: -> 
     super('Build Booby Trap', (x,y) -> 
       hasLog = false
-      for invItem in [0...player.inventory.length]
-        if (player.inventory[invItem] == 4)
+      for invItem in [0...Game.player.inventory.length]
+        if (Game.player.inventory[invItem] == 4)
           hasLog = true
-          player.removeitem(4)
+          Game.player.removeitem(4)
           break
       if (hasLog) 
         map.setTileElement(x,y,7)
@@ -40,15 +40,15 @@ class BuildBoobyTrapAction extends Action
 class DrinkWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) -> 
-    	player.thirst = 100
+    	Game.player.thirst = 100
     	alert("Drinking water at #{x},#{y}")
     )
 
 class DrinkPoisonedWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) -> 
-      player.thirst += 10 if player.thirst < 90
-      player.health = player.health - 2
+      Game.player.thirst += 10 if Game.player.thirst < 90
+      Game.player.health = Game.player.health - 2
       alert("Drinking poisoned water at #{x},#{y}")
     )
 
@@ -56,8 +56,8 @@ class ChopTreeAction extends Action
   constructor: -> 
     super('Chop Tree', (x,y) -> 
       hasAxe = false
-      for i in [0...player.inventory.length]
-        if (player.inventory[i] == 5)
+      for i in [0...Game.player.inventory.length]
+        if (Game.player.inventory[i] == 5)
           hasAxe = true
           break
       if (hasAxe)
@@ -73,8 +73,8 @@ class BurnTreeAction extends Action
   constructor: -> 
     super('Burn Tree', (x,y) -> 
       hasTorch = false
-      for i in [0...player.inventory.length]
-        if (player.inventory[i] == 6)
+      for i in [0...Game.player.inventory.length]
+        if (Game.player.inventory[i] == 6)
           hasTorch = true
           break
       if (hasTorch)
@@ -88,10 +88,10 @@ class PoisonWaterAction extends Action
   constructor: -> 
     super('Poison Water', (x,y) -> 
       hasPoison = false
-      for i in [0...player.inventory.length]
-        if (player.inventory[i] == 7)
+      for i in [0...Game.player.inventory.length]
+        if (Game.player.inventory[i] == 7)
           hasPoison = true
-          player.removeitem(7)
+          Game.player.removeitem(7)
           break
       if (hasPoison)
         map.setTileElement(x,y,8)
@@ -104,10 +104,10 @@ class PoisonDeepWaterAction extends Action
   constructor: -> 
     super('Poison Water', (x,y) -> 
       hasPoison = false
-      for i in [0...player.inventory.length]
-        if (player.inventory[i] == 7)
+      for i in [0...Game.player.inventory.length]
+        if (Game.player.inventory[i] == 7)
           hasPoison = true
-          player.removeitem(7)
+          Game.player.removeitem(7)
           break
       if (hasPoison)
         map.setTileElement(x,y,9)
@@ -121,17 +121,17 @@ class PickUpItemAction extends Action
     super('Pick Up Item', (x,y) -> 
       pickedItem = map.getItemElement(x,y)
       pushInventory(pickedItem)
-      player.inventory.push(pickedItem)
+      Game.player.inventory.push(pickedItem)
       map.removeItem(x,y)
     )
 
 class EatItemAction extends Action
   constructor: (@healthgain, @staminagain, @hungergain) ->
     super('Eat Item', ->
-      player.health += @healthgain
-      player.health = maxHealth if @player.health > maxHealth
-      player.stamina += @staminagain
-      player.stamina = maxStamina if @player.stamina > maxStamina
-      player.hunger += @hungergain
-      player.hunger = maxHunger if @player.hunger > maxHunger
+      Game.player.health += @healthgain
+      Game.player.health = maxHealth if Game.player.health > maxHealth
+      Game.player.stamina += @staminagain
+      Game.player.stamina = maxStamina if Game.player.stamina > maxStamina
+      Game.player.hunger += @hungergain
+      Game.player.hunger = maxHunger if Game.player.hunger > maxHunger
     )
