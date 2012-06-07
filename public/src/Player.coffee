@@ -28,6 +28,12 @@ class Player
     @roomNumber = if roomNumber? then roomNumber else -1
     @tilex = Math.floor((@posx+12.5) / 25)
     @tiley = Math.floor((@posy+12.5) / 25)
+    @oldTilex = @tilex
+    @oldTilex = @tiley
+    @playerMovingLeft = false
+    @playerMovingUp = false
+    @playerMovingRight = false
+    @playerMovingDown = false
   imgReady: false
   statchange: (tile) -> 
     @health = @health - tile.health_cost
@@ -41,3 +47,76 @@ class Player
   removeitem: (itemNo) ->
     @inventory.splice @inventory.indexOf(itemNo), 1
     $(".item#{itemNo}").first().remove()
+
+  onKeyDown: (evt) =>
+    #set corresponding moving direction boolean to true
+    #set all others to false
+    if (evt.keyCode == 37) # push left
+      @playerMovingLeft = true
+      @playerMovingUp = false
+      @playerMovingRight = false
+      @playerMovingDown = false
+    if (evt.keyCode == 38) # push up
+      @playerMovingUp = true
+      @playerMovingLeft = false
+      @playerMovingRight = false
+      @playerMovingDown = false
+    if (evt.keyCode == 39) # push right
+      @playerMovingRight = true
+      @playerMovingLeft = false
+      @playerMovingUp = false
+      @playerMovingDown = false
+    if (evt.keyCode == 40) # push down
+      @playerMovingDown = true
+      @playerMovingLeft = false
+      @playerMovingUp = false
+      @playerMovingRight = false
+
+  onKeyUp: (evt) =>
+    @playerMovingLeft = false if (evt.keyCode == 37)  # left arrow key up -> playerMovingLeft becomes false
+    @playerMovingUp = false if (evt.keyCode == 38)    # up arrow key up -> playerMovingUp becomes false
+    @playerMovingRight = false if (evt.keyCode == 39) # right arrow key up -> playerMovingRight becomes false
+    @playerMovingDown = false if (evt.keyCode == 40)  # down arrow key up -> playerMovingDown becomes false
+
+  update: =>
+    @updatePlayerMovement()
+    @updatePlayerTiles()
+
+  updatePlayerMovement: =>
+    console.log "TEST"
+    # work out the adjacent squares to the player
+    right = Math.floor((player.posx+25)/25)
+    left = Math.floor((player.posx-1)/25)
+    up = Math.floor((player.posy-1)/25)
+    down = Math.floor((player.posy+25)/25)
+
+    # if player is moving left or right, update it's stored horizontal position
+    # if player not moving left or right, center it's horizontal position
+    if (@playerMovingLeft && map.inBounds(left, @tiley) && @stamina > 0 && map.getTile(left,@tiley).walkable)
+      @posx = @posx - @speed  
+    else if (@playerMovingRight && map.inBounds(right, @tiley) && @stamina > 0 && map.getTile(right,@tiley).walkable)
+      @posx = @posx + @speed
+    else
+      @posx = @tilex*tileWidth
+  
+    # if player is moving up or down, update it's stored vertical position
+    # if player not moving up or down, center it's vertical position
+    if (@playerMovingUp && map.inBounds(@tilex,up) && @stamina > 0 && map.getTile(@tilex,up).walkable)
+      @posy = @posy - @speed
+    else if (@playerMovingDown && map.inBounds(@tilex,down) && @stamina > 0 && map.getTile(@tilex,down).walkable)
+      @posy = @posy + @speed
+    else
+      @posy = @tiley*tileHeight
+
+  updatePlayerTiles: =>
+    # calculate the player's tile location from his pixel location
+    @oldTilex = @tilex
+    @oldTiley = @tiley
+    @tilex = Math.floor((@posx+12.5) / 25);
+    @tiley = Math.floor((@posy+12.5) / 25);
+    # see if the tile has changed location
+    if(@oldTilex != @tilex || @oldTiley != @tiley)
+      # on player change square event
+      @statchange(map.getTile(player.tilex,player.tiley))
+      sendPlayerData()
+  

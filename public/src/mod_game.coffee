@@ -1,4 +1,4 @@
-DEBUGMODE = on
+DEBUGMODE = off
 
 tileWidth = 25
 tileHeight = 25
@@ -28,11 +28,6 @@ scrollyvel = 0.0
 scrollyacc = 0.0
 scrollRegion = 0.15
 scrollAccConst = 0.12
-
-playerMovingLeft = false
-playerMovingUp = false
-playerMovingRight = false
-playerMovingDown = false
 
 filterReady = false
 focusOnCanvas = true
@@ -184,7 +179,6 @@ $(document).ready ->
     $('.game').hide();
 
   # mouse move event within 'container' div
-
   $('#container').mousemove (evt) ->
     offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset
     mousex = Math.floor(evt.pageX - offset.left)    # sets mousex var to new mouse position
@@ -192,7 +186,6 @@ $(document).ready ->
     #console.log("x,y : #{mousex},#{mousey}")
 
   # key up event
-
   $(document.documentElement).keyup (evt) ->
     #alert ("Key pressed! Value: #{evt.keyCode}") 
     if focusOnCanvas
@@ -206,45 +199,16 @@ $(document).ready ->
         makemenu(player.tilex+1, player.tiley)
       if (evt.keyCode == 49)
         makeInventoryMenu(0)
-      
-      playerMovingLeft = false if (evt.keyCode == 37)     # left arrow key up -> playerMovingLeft becomes false
-      playerMovingUp = false if (evt.keyCode == 38)       # up arrow key up -> playerMovingUp becomes false
-      playerMovingRight = false if (evt.keyCode == 39)    # right arrow key up -> playerMovingRight becomes false
-      playerMovingDown = false if (evt.keyCode == 40)     # down arrow key up -> playerMovingDown becomes false
       if(evt.keyCode == 73)
         inventoryPopup()
-
-    else
-
+      player.onKeyUp(evt)
 
 
 
   #key down event
-    #set corresponding moving boolean to true
-    #set all others to false
-    
   $(document.documentElement).keydown (evt) ->
     if focusOnCanvas
-      if (evt.keyCode == 37) # push left
-        playerMovingLeft = true
-        playerMovingUp = false
-        playerMovingRight = false
-        playerMovingDown = false
-      if (evt.keyCode == 38) # push up
-        playerMovingUp = true
-        playerMovingLeft = false
-        playerMovingRight = false
-        playerMovingDown = false
-      if (evt.keyCode == 39) # push right
-        playerMovingRight = true
-        playerMovingLeft = false
-        playerMovingUp = false
-        playerMovingDown = false
-      if (evt.keyCode == 40) # push down
-        playerMovingDown = true
-        playerMovingLeft = false
-        playerMovingUp = false
-        playerMovingRight = false
+      player.onKeyDown(evt)
       if(evt.keyCode == 82) # press r
         replayGameTick = 0
         socket.emit "clientSendingReplayRequest", {roomNumber: player.roomNumber}
@@ -396,54 +360,14 @@ replayGameUpdate = =>
 ###
 
 update = (modifier) =>
-  if(gamestarted || DEBUGMODE)
-    updatePlayerTiles()
-    updatePlayerMovement()
-    updateScroll()
-
-updatePlayerTiles = =>
-  # calculate the player's tile location from his pixel location
-  oldTilex = player.tilex
-  oldTiley = player.tiley
-  player.tilex = Math.floor((player.posx+12.5) / 25);
-  player.tiley = Math.floor((player.posy+12.5) / 25);
-
-  # see if the tile has changed location
-  if(oldTilex != player.tilex || oldTiley != player.tiley)
-    # on player change square event
-    player.statchange(map.getTile(player.tilex,player.tiley))
-    sendPlayerData()
+  # draw onto the debug bar
   $('#debugbar').html("inventory = #{player.inventory}, player.tilex = #{player.tilex}, player.tiley = #{player.tiley} \n
     health = #{player.health}, stamina = #{player.stamina}, hunger = #{player.hunger}, thirst = #{player.thirst}")
+  # call update methods
+  if(gamestarted || DEBUGMODE)
+    player.update()
+    updateScroll()
 
-
-updatePlayerMovement = =>
-  # work out the adjacent squares to the player
-  playerRightSquare = Math.floor((player.posx+25)/25)
-  playerLeftSquare = Math.floor((player.posx-1)/25)
-  playerUpSquare = Math.floor((player.posy-1)/25)
-  playerDownSquare = Math.floor((player.posy+25)/25)
-
-  if `playerMovingLeft && map.inBounds(playerLeftSquare, player.tiley) && player.stamina > 0
-      && !(map.inBounds(playerLeftSquare,player.tiley) && !map.getTile(playerLeftSquare,player.tiley).walkable)`
-    player.posx = player.posx - player.speed  
-  else if `playerMovingRight && map.inBounds(playerRightSquare, player.tiley) && player.stamina > 0
-           && !(map.inBounds(playerRightSquare,player.tiley) && !map.getTile(playerRightSquare,player.tiley).walkable)`
-    player.posx = player.posx + player.speed
-  # if player not moving left or right, center it's horizontal position
-  else
-    player.posx = player.tilex*tileWidth
-  
-  # if player is moving up or down, update it's stored vertical position
-  if `playerMovingUp && map.inBounds(player.tilex,playerUpSquare) && player.stamina > 0
-      && !(map.inBounds(player.tilex,playerUpSquare) && !map.getTile(player.tilex,playerUpSquare).walkable)`
-    player.posy = player.posy - player.speed
-  else if `playerMovingDown && map.inBounds(player.tilex,playerDownSquare) && player.stamina > 0
-      && !(map.inBounds(player.tilex,playerDownSquare) && !map.getTile(player.tilex,playerDownSquare).walkable)`  
-    player.posy = player.posy + player.speed
-  # if player not moving up or down, center it's vertical position
-  else 
-    player.posy = player.tiley*tileHeight
 
 
 updateScroll = =>
