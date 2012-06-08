@@ -35,7 +35,7 @@ class PlayerInput
 
   @onMouseMove: (evt) =>
   	# mouse move event within 'container' div
-  	$('#container').mousemove (evt) ->
+  	$(Settings.canvasIDElement).mousemove (evt) ->
   	  offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset
   	  @mousex = Math.floor(evt.pageX - offset.left)    # sets mousex var to new mouse position
   	  @mousey = Math.floor(evt.pageY - offset.top)     # sets mousey var to new mouse position

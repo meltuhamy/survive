@@ -1,0 +1,103 @@
+body{
+    margin: 0px;
+
+}
+
+#mainContainer{
+    width: 1000px;
+
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#gameContainer{
+    width: 900px;
+
+    margin: 0px;
+    height: 500px;
+    margin-top: 10px;
+    box-shadow: 1px 1px 5px black;
+}
+
+#canvasContainer{
+    width: 900px;
+
+}
+
+#canvas{
+    background-color: green;
+    width: 900px;
+
+    height: 450px;
+    float: left;
+    clear: right;
+}
+
+#playerAnnouncements{
+    position: relative;
+    margin-top: -25px;
+
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    float: left;
+    clear: both;
+}
+
+#playerAnnouncementList{
+    margin: 0px;
+
+    padding: 0px;
+}
+
+.playerAnnouncement{
+    height: 25px;
+    
+    float: left;
+    width: 900px;
+}
+
+#statsAndInventoryBar{
+    background-image: url('../assets/ui/uibarbackground.png');
+    float: left;
+
+    width: 900px;
+    height: 50px;
+}
+
+.statsBar{
+    float: left;
+
+    width: 200px;
+    height: 50px;
+    color:;
+}
+
+#inventoryBar{
+    float: left;
+
+    clear: right;
+    width: 300px;
+    background-color: darkgray;
+}
+
+#inventorySlots{
+    margin: 0px;
+
+    padding: 0px;
+    height: 50px;
+    float: left;
+    clear: right;
+}
+
+#inventorySlots li{
+    display: block;
+
+    list-style-type: none;
+    width: 50px;
+    height: 50px;
+    float: left;
+    padding: 0px;
+    margin: 0px;
+}

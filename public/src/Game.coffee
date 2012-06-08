@@ -64,7 +64,7 @@ class Game
 
     # Create the kinetic stage
     @stage = new Kinetic.Stage(
-      container: "container"
+      container: Settings.canvasIDName
       width: Settings.canvasWidth
       height: Settings.canvasHeight
     )
