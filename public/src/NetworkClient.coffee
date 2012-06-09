@@ -24,10 +24,7 @@ class NetworkClient
     Game.spawnPlayer(spawnData)
     
   @receiveGameStart = (allplayers) ->
-    Game.setOpponents allplayers
-    Game.gamestarted = true
-    $("#lobby").fadeOut()
-    $(".game").fadeIn()
+    Game.start(allplayers)
 
   @receivePlayerData = (playerData) ->
     if playerData.id != Game.player.id
@@ -49,9 +46,19 @@ class NetworkClient
     if tileData.id != Game.player.id
       map.setTileElement tileData.tilex, tileData.tiley, tileData.tileNumber, false
 
-  @receiveRooms = (rooms) =>
+  @receiveRooms = (roomData) =>
     $("#roomlist").empty()
-    $("#roomlist").append("<li><a onclick=\"NetworkClient.sendJoinRoomRequest(#{room.number})\">#{room.name}</a></li>") for room in rooms
+    $("#roomlist").append("<table id=\"rooms\">")
+    # header row
+    $("#roomlist").append("<tr><th>No.</th><th>Room Name</th><th>Players</th><th>Status</th></tr>")
+    # one row for each room
+    for r in roomData
+      tableData = "<td>#{r.roomNumber}</td>"
+      tableData += "<td><a onclick=\"NetworkClient.sendJoinRoomRequest(#{r.roomNumber})\">#{r.friendlyName}</a></td>"
+      tableData += "<td>#{r.playerCount} / #{r.maxPlayerCount}</td>"
+      tableData += if (r.ingame) then "<td>Playing!</td>" else "<td>Waiting for more players</td>"
+      $("#roomlist").append("<tr>#{tableData}</tr>") 
+    $("#roomlist").append("</table>")
 
 
 socket = io.connect()

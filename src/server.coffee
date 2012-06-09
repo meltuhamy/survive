@@ -45,17 +45,19 @@ pg.connect conString, (err, dbClient) ->
 
 class Room
   constructor: (@roomNumber, @maxPlayers = 2) ->
-    @setFriendlyName(@getName)
+    @setFriendlyName(@getName())
+    @maxPlayerCount = @maxPlayers
   ingame: false
   intervalid: null
   secondsElapsed: 0
   friendlyName: ""
   numberplayers: 0
+  maxPlayerCount: @maxPlayers
 
   isEmpty: -> @getPlayerCount() == 0
   isFull: ->  @getPlayerCount() == @maxPlayers
   getName: -> "room#{@roomNumber}"
-  getFriendlyName: => @friendlyName
+  getFriendlyName: -> @friendlyName
   setFriendlyName: (name) => @friendlyName = name
 
   getSockets: -> 
@@ -160,7 +162,16 @@ io.sockets.on "connection", (client) ->
 
   # Send the list of rooms to the client
   roomsToSend = []
-  roomsToSend.push {name: r.getName(), number: r.roomNumber} for r in rooms
+  for r in rooms
+    roomData = {
+      name: r.getName(),
+      roomNumber: r.roomNumber,
+      friendlyName: "#{r.getFriendlyName()}",
+      playerCount: r.getPlayerCount(),
+      maxPlayerCount: r.maxPlayerCount,
+      ingame: r.ingame
+    }
+    roomsToSend.push roomData
   client.emit("serverSendingRooms", roomsToSend)
 
   # The client has request to join a room

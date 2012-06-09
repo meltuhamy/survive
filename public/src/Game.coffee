@@ -75,6 +75,14 @@ class Game
     @stage.add @itemLayer
     @stage.add @playerLayer
 
+  @start = (allplayers) =>
+    @setOpponents allplayers
+    @gamestarted = true
+    NetworkClient.sendPlayerData()
+    $("#lobby").fadeOut()
+    $(".game").fadeIn()
+
+
   @spawnPlayer = (spawnData) ->
     @player = new Player(spawnData.id, spawnData.roomNumber)
     @player.tilex = spawnData.tilex
