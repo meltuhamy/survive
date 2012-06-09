@@ -11,5 +11,4 @@ class Settings
 	@numCols = 30
 	@fullWidth = @tileWidth*@numCols
 	@fullHeight = @tileHeight*@numRows
-	@canvasIDName = 'canvas'
-	@canvasIDElement = "##{@canvasIDName}"
+	@canvasIDName = 'container'

@@ -20,13 +20,13 @@ class Camera
       @scrollx = 0
       @scrollxvel = 0
       @scrollxacc = 0
-    else if (mousex < Settings.canvasWidth * @scrollRegion)
+    else if (PlayerInput.mousex < Settings.canvasWidth * @scrollRegion)
       @scrollxacc = -@scrollAccConst
     else if (@scrollx > Settings.fullWidth - Settings.canvasWidth)
       @scrollx = Settings.fullWidth - Settings.canvasWidth 
       @scrollxvel = 0
       @scrollxacc = 0
-    else if (mousex > Settings.canvasWidth * (1 - @scrollRegion))
+    else if (PlayerInput.mousex > Settings.canvasWidth * (1 - @scrollRegion))
       @scrollxacc = scrollAccConst
     else 
       @scrollxacc = 0
@@ -37,17 +37,17 @@ class Camera
       @scrolly = 0
       @scrollyvel = 0
       @scrollyacc = 0
-    else if (mousey < Settings.canvasHeight * @scrollRegion)
+    else if (PlayerInput.mousey < Settings.canvasHeight * @scrollRegion)
       @scrollyacc = -@scrollAccConst
     else if (@scrolly > Settings.fullHeight - Settings.canvasHeight)
       @scrolly = Settings.fullHeight - Settings.canvasHeight 
       @scrollyvel = 0
       @scrollyacc = 0
-    else if (mousey > Settings.canvasHeight * (1 - @scrollRegion))
+    else if (PlayerInput.mousey > Settings.canvasHeight * (1 - @scrollRegion))
       @scrollyacc = @scrollAccConst
     else 
       @scrollyacc = 0
    else 
     @scrolly = -(Settings.canvasHeight-Settings.fullHeight)/2
-   mouseSquarex = Math.floor(@mousex / Settings.tileWidth)
-   mouseSquarey = Math.floor(@mousey / Settings.tileHeight)
+   mouseSquarex = Math.floor(PlayerInput.mousex / Settings.tileWidth)
+   mouseSquarey = Math.floor(PlayerInput.mousey / Settings.tileHeight)
