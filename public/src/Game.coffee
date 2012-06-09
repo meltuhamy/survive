@@ -75,7 +75,10 @@ class Game
     @stage.add @itemLayer
     @stage.add @playerLayer
 
-  @removePlayer = (id) =>
+  @spawnPlayer = (spawnData) ->
+    @player = new Player(spawnData.id, spawnData.roomNumber)
+    @player.tilex = spawnData.tilex
+    @player.tiley = spawnData.tiley
 
   @setOpponents = (players) =>
     @opponents = []

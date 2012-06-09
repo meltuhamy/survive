@@ -20,9 +20,9 @@ class NetworkClient
   @sendTileData = (tileData) ->
     if !@OFFLINEMODE then socket.emit "clientSendingTileData", tileData
 
-  @receiveRoomJoin = (playerParams) ->
-    Game.player = new Player(playerParams.id, playerParams.roomNumber)
-
+  @receiveRoomJoin = (spawnData) ->
+    Game.spawnPlayer(spawnData)
+    
   @receiveGameStart = (allplayers) ->
     Game.setOpponents allplayers
     Game.gamestarted = true
@@ -63,8 +63,8 @@ socket.on "connect", ->
 socket.on "serverSendingRooms", (rooms) ->
   NetworkClient.receiveRooms(rooms)
 
-socket.on "serverSendingAcceptJoin", (playerParams) ->
-  NetworkClient.receiveRoomJoin(playerParams)
+socket.on "serverSendingAcceptJoin", (spawnData) ->
+  NetworkClient.receiveRoomJoin(spawnData)
   
 socket.on "beginGame", (allplayers) ->
   NetworkClient.receiveGameStart(allplayers)
@@ -96,21 +96,3 @@ socket.on "serverSendingReplay", (replayData) ->
 
 socket.on "serverSendingDebugLog", (debugLogData) ->
   console.log debugLogData
-
-
-
-###
-socket.on "ijoined", (myid)->
-  player.playerid = myid
-  console.log myid
-socket.on "gamestart", ->
-  socket.emit "startmeup"
-  log "<span style=\"color:red;\">Game started!</span>"
-socket.on "createMyPlayer", (id) ->
-  createMyPlayer(id)
-socket.on "startmeup", (opponents) ->
-  gamestart(opponents)
-  log "<span style=\"color:red;\">Other Players Received!</span>"
-socket.on "roommsg", (data) ->
-  log "<span style=\"color:green;\">#{data}</span>"
-###

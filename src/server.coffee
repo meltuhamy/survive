@@ -80,11 +80,25 @@ class Room
   emit: (eventName, data) -> io.sockets.in(@getName()).emit(eventName, data)
   
   isInGame: => @ingame
-    
+
+  requestJoin: (client) =>
+    # if the requested game room is not full and hasn't started then he can join
+    if(!@isInGame() && !@isFull())
+      @addPlayer(client)
+      client.emit("message", "Welcome to room #{@friendlyName}. Your id is #{client.id}")
+      randomx = Math.floor(Math.random() * 20)
+      randomy = Math.floor(Math.random() * 20)
+      spawnData = {id: parseInt(client.id), roomNumber: @roomNumber, tilex: randomx, tiley:randomy}
+      client.emit('serverSendingAcceptJoin', spawnData)
+      # if the room is full *after* he has joined - then start the game
+      if(@isFull())
+        @startGame()
+
   startGame: =>
     @emit('beginGame', @getPlayerIds())
     @ingame = true
     @intervalid = setInterval @roomLoop, 1000
+
 
   roomLoop: =>
     # increase seconds timer for game
@@ -152,16 +166,8 @@ io.sockets.on "connection", (client) ->
   # The client has request to join a room
   client.on "clientSendingRoomNumber", (roomNumber) ->
     client.leave('lobby')
-    requestedRoom = rooms[roomNumber]
-    # if the requested game room is not full and hasn't started then he can join
-    if(!requestedRoom.isInGame() && !requestedRoom.isFull())
-      requestedRoom.addPlayer(client)
-      client.emit("message", "Welcome to room #{requestedRoom.getFriendlyName()}. Your id is #{client.id}")
-      client.emit('serverSendingAcceptJoin', {id: parseInt(client.id), roomNumber: roomNumber})
-      # if the room is full *after* he has joined - then start the game
-      if(requestedRoom.isFull())
-        requestedRoom.startGame()
-
+    requestedRoom = rooms[roomNumber].requestJoin(client)
+    
   client.on "clientSendingPlayerData", (playerData) ->
     rooms[playerData.roomNumber].sendPlayer(playerData, client.id)
 
