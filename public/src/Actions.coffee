@@ -130,6 +130,7 @@ class PickUpItemAction extends Action
 class DropItemAction extends Action
   constructor: ->
     super('Drop Item', (itemNum) ->
+      player.removeItem(itemNum)
       map.setItemElement(player.tilex,player.tiley,itemNum)
     )
 
