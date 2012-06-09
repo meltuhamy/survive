@@ -12,3 +12,4 @@ class Settings
 	@fullWidth = @tileWidth*@numCols
 	@fullHeight = @tileHeight*@numRows
 	@canvasIDName = 'container'
+	@MAXANNOUNCEMENTS = 5

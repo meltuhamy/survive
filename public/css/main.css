@@ -41,7 +41,7 @@ body{
 }
 
 #inventorymenu{
-	position: absolute;
+	position: relative;
 	margin:0px;
 	height:45px;
 	width:100%;

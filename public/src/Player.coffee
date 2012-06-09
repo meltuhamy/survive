@@ -53,7 +53,7 @@ class Player
     @inventory.splice @inventory.indexOf(itemNo), 1
     $(".item#{itemNo}").first().remove()
   setDead: ->
-    alert 'Player Died'
+    Game.announce 'Player Died'
     @alive = false
 
   onKeyDown: (evt) =>

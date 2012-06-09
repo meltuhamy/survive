@@ -197,6 +197,7 @@ io.sockets.on "connection", (client) ->
       client.emit("serverSendingReplay", replayData)
 
   client.on "disconnect", ->
+    console.log "<<<<<<<CLIENT DISCONNECTED>>>>>>> "
     # determine which game rooms the client was connected to. 
     # loop through each socket.io room the client was connected to
     # if the socket.io room isn't called '' or 'lobby' then it is a game room

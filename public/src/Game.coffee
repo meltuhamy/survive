@@ -9,7 +9,7 @@ class Game
   @replayGameTick = 0
   @mainLoopIntervalId = 0
   @replayLoopIntervalId = 0
-  @DEBUGMODE = on
+  @DEBUGMODE = off
   @filterImage = new Image()
   @filterImage.onload = => @filterReady = true
   @filterImage.src = "#{Settings.assetDir}/filter.png"
@@ -41,7 +41,12 @@ class Game
     $('#actionmenu').fadeOut()
     if(!@DEBUGMODE)
       $('.game').hide();
-
+  @announce: (content) => 
+    $('#playerAnnouncementList').prepend("<li class=\"playerAnnouncement\">#{content}</li>")
+    if($('.playerAnnouncement').length >= Settings.MAXANNOUNCEMENTS)
+      $('.playerAnnouncement').last().remove()
+    else
+      $('#playerAnnouncements').css('margin-top', '-=25')
   @createStage : =>  
     # Map layer
     @mapLayer = new Kinetic.Layer()
@@ -146,7 +151,7 @@ class Game
 
   @update = (modifier) =>
     # draw onto the blue debug bar at the top of the game
-    $('#debugbar').html("inventory = #{@player.inventory}, @player.tilex = #{@player.tilex}, @player.tiley = #{@player.tiley} \n
+    $('.debugbar').html("inventory = #{@player.inventory}, @player.tilex = #{@player.tilex}, @player.tiley = #{@player.tiley} \n
       health = #{@player.health}, stamina = #{@player.stamina}, hunger = #{@player.hunger}, thirst = #{@player.thirst}")
     # call update methods
     if(@gamestarted || @DEBUGMODE)

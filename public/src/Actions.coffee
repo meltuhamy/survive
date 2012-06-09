@@ -16,9 +16,9 @@ class DigTrapAction extends Action
           break
       if (hasShovel) 
         map.setTileElement(x,y,6)
-        alert("Digging a trap at #{x},#{y}")
+        Game.announce("Digging a trap at #{x},#{y}")
       else 
-        alert("Can't dig a trap at #{x},#{y}. I need a shovel.")
+        Game.announce("Can't dig a trap at #{x},#{y}. I need a shovel.")
     )
 
 class BuildBoobyTrapAction extends Action
@@ -32,9 +32,9 @@ class BuildBoobyTrapAction extends Action
           break
       if (hasLog) 
         map.setTileElement(x,y,7)
-        alert("Building a booby-trap at #{x},#{y}")
+        Game.announce("Building a booby-trap at #{x},#{y}")
       else 
-        alert("Can't build a booby-trap at #{x},#{y}. I need a log.")
+        Game.announce("Can't build a booby-trap at #{x},#{y}. I need a log.")
     )
 
 class DrinkWaterAction extends Action
@@ -43,7 +43,7 @@ class DrinkWaterAction extends Action
       Game.player.thirst = 90
       Game.player.health += 5
       if Game.player.health > maxHealth then Game.player.health = maxHealth 
-      alert("Drinking water at #{x},#{y}")
+      Game.announce("Drinking water at #{x},#{y}")
     )
 
 class DrinkPoisonedWaterAction extends Action
@@ -51,7 +51,7 @@ class DrinkPoisonedWaterAction extends Action
     super('Drink water', (x,y) -> 
       Game.player.thirst += 10 if Game.player.thirst < 90
       Game.player.health = Game.player.health - 2
-      alert("Drinking poisoned water at #{x},#{y}")
+      Game.announce("Drinking poisoned water at #{x},#{y}")
     )
 
 class ChopTreeAction extends Action
@@ -66,9 +66,9 @@ class ChopTreeAction extends Action
         console.log "has axe"
         map.setTileElement(x,y,0)
         map.setItemElement(x,y,4)
-        alert("Chopped down tree at #{x},#{y}.")
+        Game.announce("Chopped down tree at #{x},#{y}.")
       else 
-        alert("Can't chop down tree at #{x},#{y}. I need an axe.")
+        Game.announce("Can't chop down tree at #{x},#{y}. I need an axe.")
     )
 
 class BurnTreeAction extends Action
@@ -81,9 +81,9 @@ class BurnTreeAction extends Action
           break
       if (hasTorch)
         map.setTileElement(x,y,1)
-        alert("Burnt down tree at #{x},#{y}.")
+        Game.announce("Burnt down tree at #{x},#{y}.")
       else 
-        alert("Can't burn down tree at #{x},#{y}. I need a torch.")
+        Game.announce("Can't burn down tree at #{x},#{y}. I need a torch.")
     )
 
 class PoisonWaterAction extends Action
@@ -97,9 +97,9 @@ class PoisonWaterAction extends Action
           break
       if (hasPoison)
         map.setTileElement(x,y,8)
-        alert("Poisoned water at #{x},#{y}.")
+        Game.announce("Poisoned water at #{x},#{y}.")
       else 
-        alert("Can't poison water at #{x},#{y}. I need a poison.")
+        Game.announce("Can't poison water at #{x},#{y}. I need a poison.")
     )
 
 class PoisonDeepWaterAction extends Action
@@ -113,9 +113,9 @@ class PoisonDeepWaterAction extends Action
           break
       if (hasPoison)
         map.setTileElement(x,y,9)
-        alert("Poisoned water at #{x},#{y}.")
+        Game.announce("Poisoned water at #{x},#{y}.")
       else 
-        alert("Can't poison water at #{x},#{y}. I need a poison.")
+        Game.announce("Can't poison water at #{x},#{y}. I need a poison.")
     )
 
 class PickUpItemAction extends Action

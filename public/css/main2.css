@@ -3,6 +3,10 @@ body{
 
 }
 
+.listTypeNone{
+    list-style-type: none;
+}
+
 #mainContainer{
     width: 1000px;
 
@@ -22,6 +26,7 @@ body{
 
 #canvasContainer{
     width: 900px;
+    position:relative;
 
 }
 
@@ -37,24 +42,27 @@ body{
 #playerAnnouncements{
     position: relative;
     margin-top: -25px;
-
     text-align: center;
     color: white;
     text-shadow: 1px 1px 1px black;
     float: left;
     clear: both;
+    overflow-x:hidden;
+    overflow-y:auto;
 }
 
 #playerAnnouncementList{
     margin: 0px;
-
     padding: 0px;
+    vertical-align: bottom;
+    list-style-type: none;
+    float:left;
 }
 
-.playerAnnouncement{
+.playerAnnouncement, .debugbar{
     height: 25px;
-    
     float: left;
+    display: inline-block;
     width: 900px;
 }
 
@@ -100,4 +108,24 @@ body{
     float: left;
     padding: 0px;
     margin: 0px;
+}
+
+
+/**WARNING, DIRTY CSS BELOW**/
+
+#actionmenu{
+    position: absolute;
+    margin:0px;
+    z-index:120;
+    top:200px;
+    left:100px;
+    width:140px;
+    background: rgba(216, 177, 100, 0.5);
+    font-size: 12px;
+    text-shadow: 1px 1px 1px black;
+}
+
+
+#actionmenu ul li.selected{
+    background-color: red;
 }

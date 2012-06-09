@@ -17,8 +17,6 @@ class PlayerInput
         makemenu(Game.player.tilex+1, Game.player.tiley)
       if (evt.keyCode == 49)
         makeInventoryMenu(0)
-      if(evt.keyCode == 73)
-        inventoryPopup()
       Game.player.onKeyUp(evt)
 
   @onKeyDown: (evt) =>
