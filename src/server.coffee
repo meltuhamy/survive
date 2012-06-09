@@ -204,6 +204,7 @@ io.sockets.on "connection", (client) ->
       if (key isnt '' && key isnt '/lobby')
         leavingRoom = getRoomByName(key.substring(1))
         leavingRoom.emit("serverSendingPlayerDisconnected", client.id)
+        leavingRoom.removePlayer()
         # if two people currently connected in room and one leaves, end the game
         if leavingRoom.getPlayerCount() == 2
           console.log "GAME ENDED"
