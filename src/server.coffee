@@ -79,6 +79,8 @@ class Room
     @numberplayers += 1
   removePlayer: -> 
     @numberplayers -= 1
+    ingame = (@numberplayers > 0)
+
   emit: (eventName, data) -> io.sockets.in(@getName()).emit(eventName, data)
   
   isInGame: => @ingame
