@@ -30,6 +30,10 @@ class Game
     $(document.documentElement).keydown (evt) ->
       PlayerInput.onKeyDown(evt)
 
+    $("##{Settings.canvasIDName}").mousemove (evt) ->
+      PlayerInput.onMouseMove(evt, @)
+
+
     $("#dialog").dialog({
       autoOpen: false
     });

@@ -31,9 +31,8 @@ class PlayerInput
       else
         inventoryActionKeyDown(evt)
 
-  @onMouseMove: (evt) =>
-  	# mouse move event within 'container' div
-  	$("##{Settings.canvasIDName}").mousemove (evt) ->
-  	  offset = $(@).offset()    # not quite sure what @ refers to, but this gets an offset
-  	  @mousex = Math.floor(evt.pageX - offset.left)    # sets mousex var to new mouse position
-  	  @mousey = Math.floor(evt.pageY - offset.top)     # sets mousey var to new mouse position
+  @onMouseMove: (evt, elem) =>
+    # mouse move event within 'container' div
+    offset = $(elem).offset()
+    @mousex = Math.floor(evt.pageX - offset.left)    # sets mousex var to new mouse position
+    @mousey = Math.floor(evt.pageY - offset.top)     # sets mousey var to new mouse position
