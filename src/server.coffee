@@ -42,124 +42,152 @@ pg.connect conString, (err, dbClient) ->
 ###
 
 
+
 class Room
-  constructor: (@roomNumber, @maxPlayers = 2, @ingame = false) ->
+  constructor: (@roomNumber, @maxPlayers = 2) ->
     @setFriendlyName(@getName)
+  ingame: false
+  intervalid: null
+  secondsElapsed: 0
+  friendlyName: ""
+  numberplayers: 0
+
   isEmpty: -> @getPlayerCount() == 0
+  isFull: ->  @getPlayerCount() == @maxPlayers
   getName: -> "room#{@roomNumber}"
-  getFriendlyName: -> @friendlyName
-  setFriendlyName: (name) -> @friendlyName = name
-  hasStarted: -> false
+  getFriendlyName: => @friendlyName
+  setFriendlyName: (name) => @friendlyName = name
+
   getSockets: -> 
-    socketsArray = []
-    io.sockets.clients(@getName()).forEach( (thesocket) ->  socketsArray.push thesocket)
-    return socketsArray
+    sockets = []
+    io.sockets.clients(@getName()).forEach((s) ->  sockets.push s)
+    return sockets
   getPlayerIdsExceptFor: (searchId) ->
     ids = []
-    ids.push {id: parseInt(aclient.id)} for aclient in @getSockets() when aclient.id isnt searchId
+    ids.push {id: parseInt(c.id)} for c in @getSockets() when c.id isnt searchId
     return ids
   getPlayerIds: ->
     ids = []
-    ids.push {id: parseInt(aclient.id)} for aclient in @getSockets()
+    ids.push {id: parseInt(c.id)} for c in @getSockets()
     return ids
-  getPlayerCount: -> @getPlayerIds().length
-  joinRoom: (client) -> client.join(@getName())
-  leaveRoom: (client) -> client.leave(@getName())
+
+  getPlayerCount: -> @numberplayers
+  addPlayer: (client) -> 
+    client.join(@getName())
+    @numberplayers += 1
+  removePlayer: -> 
+    @numberplayers -= 1
   emit: (eventName, data) -> io.sockets.in(@getName()).emit(eventName, data)
-  isFull: -> 
-    console.log "isFull: #{@getPlayerCount()} == #{@maxPlayers} #{@getPlayerCount() == @maxPlayers}"
-    @getPlayerCount() == @maxPlayers
-  isInGame: -> @ingame
-  setInGame: (val) -> @ingame = val
+  
+  isInGame: => @ingame
+    
+  startGame: =>
+    @emit('beginGame', @getPlayerIds())
+    @ingame = true
+    @intervalid = setInterval @roomLoop, 1000
+
+  roomLoop: =>
+    # increase seconds timer for game
+    @secondsElapsed++
+    # spawn a water bottle in a random location every ten seconds
+    if(@secondsElapsed % 10 == 0)
+      # 0 <= randomx < 20
+      randomx = Math.floor(Math.random() * 20)
+      randomy = Math.floor(Math.random() * 20)
+      itemData = {id: 60, roomNumber:@roomNumber, tilex: randomx, tiley: randomy, itemNumber: 2}
+      @sendItem itemData
+
+  endGame: =>
+    # ensure to disconnect remaining players from the room
+    @removePlayer()
+    s.disconnect() for s in @getSockets()
+    # now say that the game is over and tell 
+    @ingame = false
+    #@emit("serverSendingReload", '')
+    clearInterval @intervalid
+
+  sendPlayer: (playerData, clientid) ->
+    @emit('serverSendingPlayerData', playerData)
+    dbClient.query "insert into actions values (NOW(), #{playerData.roomNumber}, #{clientid}, 'p', #{playerData.tilex}, #{playerData.tiley});", (err, result) ->
+      console.log "INSERTED ROW"
+    printRowCount()
+
+  sendItem: (itemData, clientid) -> 
+    # if the clientid parameter is not given, assume server is sending the update
+    # if this is the case, itemData.id will be 0
+    @emit('serverSendingItemData', itemData)
+    clientidstr = if(clientid?) then "#{clientid}" else "NULL" 
+    dbClient.query "insert into actions values (NOW(), #{itemData.roomNumber}, #{clientidstr}, 'i', #{itemData.tilex}, #{itemData.tiley}, #{itemData.itemNumber});", (err, result) -> 
+      console.log "INSERTED ROW"
+    printRowCount()
+
+  sendTile: (tileData, clientid) -> 
+    # if the clientid parameter is not given, assume server is sending the update
+    # if this is the case, tileData.id will be 0
+    @emit('serverSendingTileData', tileData)
+    clientidstr = if(clientid?) then "#{clientid}" else "NULL" 
+    dbClient.query "insert into actions values (NOW(), #{tileData.roomNumber}, #{clientidstr}, 't', #{tileData.tilex}, #{tileData.tiley}, #{tileData.tileNumber});", (err, result) ->
+      console.log "INSERTED ROW"
+    printRowCount()
+
 
 getRoomByName = (name) ->
   rooms[parseInt(name.substring(4))]
 
+
 numRooms = 10
 rooms = []
-rooms.push new Room(i) for i in [0...10]
-roomsToSend = []
-roomsToSend.push {name: r.getName(), number: r.roomNumber} for r in rooms
+rooms.push new Room(i) for i in [0...numRooms]
 
 
 io.sockets.on "connection", (client) ->
   # Lobby stuff
   client.join('lobby')
+
+  # Send the list of rooms to the client
+  roomsToSend = []
+  roomsToSend.push {name: r.getName(), number: r.roomNumber} for r in rooms
   client.emit("serverSendingRooms", roomsToSend)
 
+  # The client has request to join a room
   client.on "clientSendingRoomNumber", (roomNumber) ->
     client.leave('lobby')
-    currentroom = rooms[roomNumber]
-    if(!currentroom.isInGame() && !currentroom.isFull())
-      currentroom.joinRoom(client)
-      client.emit("message", "Welcome to room \"#{currentroom.getFriendlyName}\". Your id is #{client.id}")
+    requestedRoom = rooms[roomNumber]
+    # if the requested game room is not full and hasn't started then he can join
+    if(!requestedRoom.isInGame() && !requestedRoom.isFull())
+      requestedRoom.addPlayer(client)
+      client.emit("message", "Welcome to room #{requestedRoom.getFriendlyName()}. Your id is #{client.id}")
       client.emit('serverSendingAcceptJoin', {id: parseInt(client.id), roomNumber: roomNumber})
-      if(currentroom.isFull())
-        currentroom.emit('beginGame', currentroom.getPlayerIds())
-        currentroom.setInGame true
+      # if the room is full *after* he has joined - then start the game
+      if(requestedRoom.isFull())
+        requestedRoom.startGame()
 
   client.on "clientSendingPlayerData", (playerData) ->
-    dbClient.query "insert into actions values (NOW(), #{playerData.roomNumber}, #{parseInt(client.id)}, 'p', #{playerData.tilex}, #{playerData.tiley});", (err, result) ->
-      console.log "INSERTED ROW"
-    printRowCount()
-    rooms[playerData.roomNumber].emit('serverSendingPlayerData', playerData)
+    rooms[playerData.roomNumber].sendPlayer(playerData, client.id)
 
   client.on "clientSendingItemData", (itemData) ->
-    dbClient.query "insert into actions values (NOW(), #{itemData.roomNumber}, #{parseInt(client.id)}, 'i', #{itemData.tilex}, #{itemData.tiley}, #{itemData.itemNumber});", (err, result) ->
-      console.log "INSERTED ROW"
-    printRowCount()
-    rooms[itemData.roomNumber].emit('serverSendingItemData', itemData)
+    rooms[itemData.roomNumber].sendItem(itemData, client.id)
 
   client.on "clientSendingTileData", (tileData) ->
-    dbClient.query "insert into actions values (NOW(), #{tileData.roomNumber}, #{parseInt(client.id)}, 't', #{tileData.tilex}, #{tileData.tiley}, #{tileData.tileNumber});", (err, result) ->
-      console.log "INSERTED ROW"
-    printRowCount()
-    rooms[tileData.roomNumber].emit('serverSendingTileData', tileData)
-
+    rooms[itemData.roomNumber].sendTile(tileData, client.id)
+    
   client.on "clientSendingReplayRequest", (deathData) ->
-   query = dbClient.query("SELECT * FROM actions WHERE gameid = #{deathData.roomNumber}");
-   replayData = []
-   query.on 'row', (row, result) ->
-     replayData.push(row)
-   query.on 'end', (result) ->
-    console.log(result.rowCount + ' rows for the replay were received')
-    console.log replayData
-    client.emit("serverSendingReplay", replayData)
-
-
+    query = dbClient.query("SELECT * FROM actions WHERE gameid = #{deathData.roomNumber}");
+    replayData = []
+    query.on 'row', (row, result) ->
+      replayData.push(row)
+    query.on 'end', (result) ->
+      client.emit("serverSendingReplay", replayData)
 
   client.on "disconnect", ->
-      for key, val of io.sockets.manager.roomClients[client.id]
-        console.log "#{key}, #{val}"
-        if (key isnt '' && key isnt '/lobby')
-          console.log key
-          console.log getRoomByName(key.substring(1))
-          leavingRoom = getRoomByName(key.substring(1))
-          leavingRoom.emit("serverSendingPlayerDisconnected", client.id)
-          if leavingRoom.getPlayerCount() == 2
-            leavingRoom.setInGame false
-            leavingRoom.emit("serverSendingReload", '')
-      console.log ">>>>>>>>>>>>>>>>>>>>>>>. Server #{client.id} has disconnected"
-
-
-  ###
-  client.emit('createMyPlayer',parseInt(client.id))
-  client.send("#{io.sockets.clients('game').name}")
-  socketArray = getSocketsArray()
-  if(socketArray.length >=2 )
-    io.sockets.in('game').emit('roommsg', "LET THE GAMES BEGIIIN!")
-    io.sockets.in('game').emit('gamestart')
-  io.sockets.in('game').emit('roommsg', socketArray.length)
-  client.send "Your id is #{client.id}"
-  client.on "message", (event) ->
-    console.log "Received message from client!", event
-  client.on "disconnect", ->
-    #clearInterval interval
-    console.log "Server has disconnected"
-  client.on "startmeup", ->
-    startMeSocketArray = getSocketsArray()
-    otherPlayers = []
-    otherPlayers.push {id: parseInt(otherClient.id)} for otherClient in startMeSocketArray when otherClient.id isnt client.id
-    client.emit "startmeup", otherPlayers
-  ###
-  
+    # determine which game rooms the client was connected to. 
+    # loop through each socket.io room the client was connected to
+    # if the socket.io room isn't called '' or 'lobby' then it is a game room
+    for key, val of io.sockets.manager.roomClients[client.id]
+      if (key isnt '' && key isnt '/lobby')
+        leavingRoom = getRoomByName(key.substring(1))
+        leavingRoom.emit("serverSendingPlayerDisconnected", client.id)
+        # if two people currently connected in room and one leaves, end the game
+        if leavingRoom.getPlayerCount() == 2
+          console.log "GAME ENDED"
+          leavingRoom.endGame()
