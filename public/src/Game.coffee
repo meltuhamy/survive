@@ -9,7 +9,7 @@ class Game
   @replayGameTick = 0
   @mainLoopIntervalId = 0
   @replayLoopIntervalId = 0
-  @DEBUGMODE = on
+  @DEBUGMODE = off
   @filterImage = new Image()
   @filterImage.onload = => @filterReady = true
   @filterImage.src = "#{Settings.assetDir}/filter.png"
@@ -29,6 +29,10 @@ class Game
 
     $(document.documentElement).keydown (evt) ->
       PlayerInput.onKeyDown(evt)
+
+    $("##{Settings.canvasIDName}").mousemove (evt) ->
+      PlayerInput.onMouseMove(evt, @)
+
 
     $("#dialog").dialog({
       autoOpen: false
