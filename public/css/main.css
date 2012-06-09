@@ -100,6 +100,31 @@ body{
 
 
 
+#lobby {
+	width: 800px;
+	margin: 0 auto;
+}
+
+#rooms{
+	width: 800px;
+	border:0px;
+	background: #FFF;
+}
+
+#rooms td{
+	width: 800px;
+	padding:3px;
+	background: #CCC;
+	text-align:center;
+}
+
+#rooms th td{
+	font-weight:bold;
+}
+
+
+
+
 
 #debugbar{
 	padding-top: 5px;

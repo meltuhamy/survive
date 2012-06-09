@@ -17,39 +17,38 @@
 		<link rel="stylesheet" href="css/smoothness/jquery-ui-1.8.20.custom.css" type="text/css"> 
 
 		<script type="text/javascript">
-        //  Executes once page has loaded
+		//  Executes once page has loaded
 		$(document).ready(function(){
 			Game.onload();
 		});
-
 		//  Main method loop 
-
 		Game.beginMainLoop();
 		</script>
 
 	</head>
 	<body>
-		<div id="lobby" style="background-color: red" >
-			<ul id="roomlist"></ul>
+		<div id="lobby">
+			<div id="roomlist">
+			</div>
 		</div>
 
 		<div id="containerbox" class="game">
 			<div id="debugbar" class="game">
 				Debug bar
-    	    </div>
+			</div>
 			<div id="container" class="game"></div>
 			<div id="uibar" class="game">
 						<div id="healthbar" class="game"></div>
 						<div id="staminabar" class="game"></div>
-	                    <div id="barbuttons" class="game">
-	                        <div id="inventory" class="game">I</div>
-	                    </div>
-	    	</div>
-	    	<div id="inventorymenu" class="game">
-                <div id="inventoryActionsMenu" class="game">
-                    <ul id="inventoryActions">
-                    </ul>
-                </div>
+						<div id="barbuttons" class="game">
+							<div id="inventory" class="game">I</div>
+						</div>
+			</div>
+			<div id="inventorymenu" class="game">
+				<div id="inventoryActionsMenu" class="game">
+					<ul id="inventoryActions">
+					</ul>
+				</div>
 				<ul id="inventoryImages">
 				</ul>
 			</div>
@@ -61,17 +60,17 @@
 			</div>
 
 
-    	</div>
-        
-        <!--
-    	<div id="dialog" title="Dialog">
+		</div>
+
+		<!--
+		<div id="dialog" title="Dialog">
     		<div class="content">
     			sample content
     		</div>
     	</div>-->
 
-    	<div id="message-list" title="Web Server Debug">
-    	</div>
+		<div id="message-list" title="Web Server Debug">
+		</div>
 	</body>
 
 </html>
