@@ -127,13 +127,19 @@ class PickUpItemAction extends Action
       map.removeItem(x,y)
     )
 
+class DropItemAction extends Action
+  constructor: ->
+    super('Drop Item', (itemNum) ->
+      map.setItemElement(player.tilex,player.tiley,itemNum)
+    )
+
 class EatItemAction extends Action
   constructor: (@healthgain, @staminagain, @hungergain) ->
     super('Eat Item', ->
       Game.player.health += @healthgain
-      Game.player.health = maxHealth if Game.player.health > maxHealth
+      if Game.player.health > maxHealth then Game.player.health = maxHealth 
       Game.player.stamina += @staminagain
-      Game.player.stamina = maxStamina if Game.player.stamina > maxStamina
+      if Game.player.stamina > maxStamina then Game.player.stamina = maxStamina 
       Game.player.hunger += @hungergain
-      Game.player.hunger = maxHunger if Game.player.hunger > maxHunger
+      if Game.player.hunger > maxHunger then Game.player.hunger = maxHunger 
     )

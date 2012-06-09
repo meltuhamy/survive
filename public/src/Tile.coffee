@@ -80,43 +80,33 @@ class PoisonDeepWaterTile extends MapTile
 Item tiles
 ###
 
-class GreenHelm extends Tile
-  constructor: -> super("#{Settings.itemDir}/greenhelm.gif")
+class itemTile extends Tile
+  constructor: (src, @name) -> super(src)
   actions: [new PickUpItemAction()]
-  name: 'Green helmet'
+  inventoryActions: [new DropItemAction()]
 
-class WaterBottle extends Tile
-  constructor: -> super("#{Settings.itemDir}/waterbottle.gif")
-  actions: [new PickUpItemAction()]
-  name: 'Water bottle'
+class GreenHelm extends itemTile
+  constructor: -> super("#{Settings.itemDir}/greenhelm.gif", 'Green helmet')
 
-class Shovel extends Tile
-  constructor: -> super("#{Settings.itemDir}/shovel.png")
-  actions: [new PickUpItemAction()]
-  name: 'Shovel'
+class WaterBottle extends itemTile
+  constructor: -> super("#{Settings.itemDir}/waterbottle.gif",'Water bottle')
 
-class Log extends Tile
-  constructor: -> super("#{Settings.itemDir}/log.png")
-  actions: [new PickUpItemAction()]
-  name: 'Log'
+class Shovel extends itemTile
+  constructor: -> super("#{Settings.itemDir}/shovel.png",'Shovel')
 
-class Axe extends Tile
-  constructor: -> super("#{Settings.itemDir}/axe.gif")
-  actions: [new PickUpItemAction()]
-  name: 'Axe'
+class Log extends itemTile
+  constructor: -> super("#{Settings.itemDir}/log.png",'Log')
 
-class Torch extends Tile
-  constructor: -> super("#{Settings.itemDir}/torch.png")
-  actions: [new PickUpItemAction()]
-  name: 'Torch'
+class Axe extends itemTile
+  constructor: -> super("#{Settings.itemDir}/axe.gif",'Axe')
 
-class Poison extends Tile
-  constructor: -> super("#{Settings.itemDir}/poison.png")
-  actions: [new PickUpItemAction()]
-  name: 'Poison'
+class Torch extends itemTile
+  constructor: -> super("#{Settings.itemDir}/torch.png",'Torch')
 
-class Chicken extends Tile
-  constructor: -> super("#{Settings.itemDir}/chicken.png")
-  actions: [new PickUpItemAction()]
-  inventoryActions: [new EatItemAction(10, 10, 20)]
-  name: 'Chicken'
+class Poison extends itemTile
+  constructor: -> super("#{Settings.itemDir}/poison.png",'Poison')
+
+class Chicken extends itemTile
+  constructor: ->
+    super("#{Settings.itemDir}/chicken.png",'Chicken')
+    @inventoryActions = @inventoryActions.concat(new EatItemAction(10,10,20))
