@@ -34,6 +34,7 @@ class Player
     @playerMovingUp = false
     @playerMovingRight = false
     @playerMovingDown = false
+    @alive = true;
   imgReady: false
   statchange: (tile) -> 
     @health = @health - tile.health_cost
@@ -41,42 +42,51 @@ class Player
     @hunger = @hunger - tile.hunger_cost
     @thirst = @thirst - tile.thirst_cost
   decrement: ->
-    @stamina += 1 if @stamina < maxStamina
-    @thirst -= 1
-    @hunger -= 1
+    if @alive
+      @stamina += 1 if @stamina < maxStamina
+      @thirst -= 1 if @thirst > 0
+      @hunger -= 1 if @hunger > 0
+      @health -=1 if @thirst == 0
+      @health -= 1 if @hunger == 0
+      @setDead() if @health <= 0
   removeitem: (itemNo) ->
     @inventory.splice @inventory.indexOf(itemNo), 1
     $(".item#{itemNo}").first().remove()
+  setDead: ->
+    alert 'Player Died'
+    @alive = false
 
   onKeyDown: (evt) =>
     #set corresponding moving direction boolean to true
     #set all others to false
-    if (evt.keyCode == 37) # push left
-      @playerMovingLeft = true
-      @playerMovingUp = false
-      @playerMovingRight = false
-      @playerMovingDown = false
-    if (evt.keyCode == 38) # push up
-      @playerMovingUp = true
-      @playerMovingLeft = false
-      @playerMovingRight = false
-      @playerMovingDown = false
-    if (evt.keyCode == 39) # push right
-      @playerMovingRight = true
-      @playerMovingLeft = false
-      @playerMovingUp = false
-      @playerMovingDown = false
-    if (evt.keyCode == 40) # push down
-      @playerMovingDown = true
-      @playerMovingLeft = false
-      @playerMovingUp = false
-      @playerMovingRight = false
+    if @alive
+      if (evt.keyCode == 37) # push left
+        @playerMovingLeft = true
+        @playerMovingUp = false
+        @playerMovingRight = false
+        @playerMovingDown = false
+      if (evt.keyCode == 38) # push up
+        @playerMovingUp = true
+        @playerMovingLeft = false
+        @playerMovingRight = false
+        @playerMovingDown = false
+      if (evt.keyCode == 39) # push right
+        @playerMovingRight = true
+        @playerMovingLeft = false
+        @playerMovingUp = false
+        @playerMovingDown = false
+      if (evt.keyCode == 40) # push down
+        @playerMovingDown = true
+        @playerMovingLeft = false
+        @playerMovingUp = false
+        @playerMovingRight = false
 
   onKeyUp: (evt) =>
-    @playerMovingLeft = false if (evt.keyCode == 37)  # left arrow key up -> playerMovingLeft becomes false
-    @playerMovingUp = false if (evt.keyCode == 38)    # up arrow key up -> playerMovingUp becomes false
-    @playerMovingRight = false if (evt.keyCode == 39) # right arrow key up -> playerMovingRight becomes false
-    @playerMovingDown = false if (evt.keyCode == 40)  # down arrow key up -> playerMovingDown becomes false
+    if @alive
+      @playerMovingLeft = false if (evt.keyCode == 37)  # left arrow key up -> playerMovingLeft becomes false
+      @playerMovingUp = false if (evt.keyCode == 38)    # up arrow key up -> playerMovingUp becomes false
+      @playerMovingRight = false if (evt.keyCode == 39) # right arrow key up -> playerMovingRight becomes false
+      @playerMovingDown = false if (evt.keyCode == 40)  # down arrow key up -> playerMovingDown becomes false
 
   update: =>
     @updatePlayerMovement()

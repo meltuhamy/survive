@@ -39,9 +39,11 @@ class BuildBoobyTrapAction extends Action
 
 class DrinkWaterAction extends Action
   constructor: -> 
-    super('Drink water', (x,y) -> 
-    	Game.player.thirst = 100
-    	alert("Drinking water at #{x},#{y}")
+    super('Drink water', (x,y) ->
+      Game.player.thirst = 90
+      Game.player.health += 5
+      if Game.player.health > maxHealth then Game.player.health = maxHealth 
+      alert("Drinking water at #{x},#{y}")
     )
 
 class DrinkPoisonedWaterAction extends Action

@@ -6,7 +6,7 @@ class PlayerInput
   @focusOnCanvas: true
 
   @onKeyUp: (evt) =>
-  	if @focusOnCanvas
+    if @focusOnCanvas && Game.player.alive
       if (evt.keyCode == 87) #w pressed
         makemenu(Game.player.tilex, Game.player.tiley-1)
       if (evt.keyCode == 83) #s pressed
@@ -22,7 +22,7 @@ class PlayerInput
       Game.player.onKeyUp(evt)
 
   @onKeyDown: (evt) =>
-  	if @focusOnCanvas
+  	if @focusOnCanvas && Game.player.alive
       Game.player.onKeyDown(evt)
       if(evt.keyCode == 82) # press r
         replayGameTick = 0
