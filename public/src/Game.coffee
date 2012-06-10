@@ -9,7 +9,6 @@ class Game
   @replayGameTick = 0
   @mainLoopIntervalId = 0
   @replayLoopIntervalId = 0
-  @DEBUGMODE = on
   @filterImage = new Image()
   @filterImage.onload = => @filterReady = true
   @filterImage.src = "#{Settings.assetDir}/filter.png"
@@ -45,7 +44,7 @@ class Game
     });
     $('#inventorymenu').hide()
     $('#actionmenu').fadeOut()
-    if(!@DEBUGMODE)
+    if(!Settings.DEBUGMODE)
       $('.game').hide();
   @announce: (content) => 
     $('#playerAnnouncementList').prepend("<li class=\"playerAnnouncement\">#{content}</li>")
@@ -86,7 +85,10 @@ class Game
     @stage.add @itemLayer
     @stage.add @playerLayer
 
-  @start = (allplayers) =>
+  @start = (allplayers, gameMap) =>
+    if gameMap?
+      console.log gameMap
+      map = new Map(new Grid(gameMap.tiles, gameMap.mapwidth, gameMap.mapheight), new Grid(gameMap.items, gameMap.mapwidth, gameMap.mapheight))
     @setOpponents allplayers
     @gamestarted = true
     NetworkClient.sendPlayerData()
@@ -112,6 +114,7 @@ class Game
     return ids.indexOf(id)
 
   @render = =>
+    if (!@gamestarted && !Settings.DEBUGMODE) then return
     mapContext = @mapLayer.getContext() # get map
     mapContext.fillStyle = "#000000" 
     mapContext.fillRect(0,0,Settings.canvasWidth,Settings.canvasHeight) # fill map black
@@ -160,7 +163,7 @@ class Game
     $('.debugbar').html("inventory = #{@player.inventory}, @player.tilex = #{@player.tilex}, @player.tiley = #{@player.tiley} \n
       health = #{@player.health}, stamina = #{@player.stamina}, hunger = #{@player.hunger}, thirst = #{@player.thirst}")
     # call update methods
-    if(@gamestarted || @DEBUGMODE)
+    if(@gamestarted || Settings.DEBUGMODE)
       @player.update()
       Camera.updateScroll()
 
@@ -221,13 +224,14 @@ class Game
   @mainLoop = =>
     now = Date.now()
     delta = now - then_
-    @update delta / 1000
-    @render()
-    then_ = now
-    if @count == 100
+    if @gamestarted
+      @update delta / 1000
+      @render()
+      if @count == 100
         @player.decrement()
         @count = 0
-    @count += 1
+      @count += 1
+    then_ = now
   then_ = Date.now()
 
   @beginMainLoop = =>
