@@ -21,6 +21,8 @@ class Game
   @hoverSelectBox = null
   @hoverSelectLayer = null
   @onload: =>
+    Settings.canvasWidth = $("##{Settings.canvasIDName}").width()
+    Settings.canvasHeight = $("##{Settings.canvasIDName}").height()
     @gameloaded = true
     @createStage()
 
