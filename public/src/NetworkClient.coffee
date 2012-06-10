@@ -1,5 +1,5 @@
 class NetworkClient
-  @OFFLINEMODE: false
+  @OFFLINEMODE: true
 
   @log = (message) =>
     li = document.createElement("li")

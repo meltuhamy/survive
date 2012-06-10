@@ -9,13 +9,21 @@ maxHunger = 100
 
 class Player
   constructor: (id, roomNumber, tilex, tiley, image, inventory, health, stamina, hunger, thirst, speed) -> 
-    @playerImage = new Image()
-    @playerImage.onload = => @imgReady = true
-    @playerImage.src = if image? then image else "#{Settings.spriteDir}/sprite.png"
+    baseSource = if image? then image else "#{Settings.spriteDir}/sprite"
+    @playerImages = [new Image(), new Image(), new Image(), new Image()]
+    for x in [0..3]
+      @playerImages[x].src = baseSource + x + ".png"
+      @playerImages[x].isReady = false
+      @playerImages[x].index = x
+      y = x
+      @playerImages[x].onload = ->
+        console.log @index
+        @isReady = true
+    @turnDown()
     @inventory = if inventory? then inventory else []
     @health = if health? then health else maxHealth
     maxHealth = @health
-    @stamina = if stamina? then stamina else 20
+    @stamina = if stamina? then stamina else maxStamina
     maxStamina = @stamina
     @hunger = if hunger? then hunger else maxHunger
     maxHunger = @hunger
@@ -34,9 +42,22 @@ class Player
     @playerMovingUp = false
     @playerMovingRight = false
     @playerMovingDown = false
-    @alive = true;
-  imgReady: false
-  statchange: (tile) -> 
+    @alive = true
+  turnLeft: ->
+    @playerImage = @playerImages[3]
+    @direction = 3
+  turnRight: ->
+    @playerImage = @playerImages[1]
+    @direction = 1
+  turnDown: ->
+    @playerImage = @playerImages[2]
+    @direction = 2
+  turnUp: ->
+    @playerImage = @playerImages[0]
+    @direction = 0
+  #imgReady: -> @playerImages[0].isReady && @playerImages[1].isReady && @playerImages[2].isReady && @playerImages[3].isReady
+  imgReady: -> @playerImage.isReady
+  statchange: (tile) ->
     @health = @health - tile.health_cost
     @stamina = @stamina - tile.stamina_cost
     @hunger = @hunger - tile.hunger_cost
@@ -79,21 +100,25 @@ class Player
         @playerMovingUp = false
         @playerMovingRight = false
         @playerMovingDown = false
+        @turnLeft()
       if (evt.keyCode == KEYCODE.uparrow) # push up
         @playerMovingUp = true
         @playerMovingLeft = false
         @playerMovingRight = false
         @playerMovingDown = false
+        @turnUp()
       if (evt.keyCode == KEYCODE.rightarrow) # push right
         @playerMovingRight = true
         @playerMovingLeft = false
         @playerMovingUp = false
         @playerMovingDown = false
+        @turnRight()
       if (evt.keyCode == KEYCODE.downarrow) # push down
         @playerMovingDown = true
         @playerMovingLeft = false
         @playerMovingUp = false
         @playerMovingRight = false
+        @turnDown()
 
   onKeyUp: (evt) =>
     if @alive

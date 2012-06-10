@@ -41,7 +41,7 @@ class KEYCODE
   @num4           : 52
   @num5           : 53
   @num6           : 54
-  @num7           : 55
+  @num7   yer Diedinventory = , @player.tilex = 3, @player.tiley = 3 health = 0, stamina = 20, hunger = 0, thirst = 0        : 55
   @num8           : 56
   @num9           : 57
   @a              : 65
@@ -113,3 +113,5 @@ class KEYCODE
   @backslash      : 220
   @closebraket    : 221
   @singlequote    : 222
+  @action         : @a
+  @attack         : @s
