@@ -1,155 +1,137 @@
 body{
-	margin: 0px;
+    margin: 0px;
 
 }
 
-*{padding:0px; margin:0px;}
-
-#containerbox{
-	width: 900px;
-	height: 600px;
-	position: relative;
-	z-index: 1;
-	margin: 0px;
-	border: 0px;
+.listTypeNone{
+    list-style-type: none;
 }
 
-#container{
-	margin: 0px !important;
-	border: 0px ;
-	padding: 0px;
+#mainContainer{
+    width: 1000px;
+
+    margin: 0px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-#uibar{
-	margin: 0px;
-	padding: 0px;
-	float: left;
-	height: 35px;
-	background-color: rgb(131, 131, 131);
-	width: 100%;
-	position: absolute;
-	z-index: 99;
-	top:600px;
+#gameContainer{
+    width: 900px;
+
+    margin: 0px;
+    height: 500px;
+    margin-top: 10px;
+    box-shadow: 1px 1px 5px black;
 }
 
-#inventory{
-	margin:0px;
-	width: 35px;
-	height: 35px;
-	cursor: pointer;
-	background-color: gray;
-}
-
-#inventorymenu{
-	position: relative;
-	margin:0px;
-	height:45px;
-	width:100%;
-	z-index:100;
-	top:600px;
-	float: left;
-	background-color: green;
-}
-
-#inventorymenu ul{
-	padding-left: 0;
-	margin-left: 0;
-	float: left;
-	width: 100%;
-}
-
-#inventorymenu ul#inventoryImages li{
-	background: #CCC;
-	list-style-type: none;
-	float:left;
-	padding:1px;
-	margin: 5px 2px 5px 2px;
-	width: 30px;
-	height: 30px;
-	text-align:center;
-	border:1px solid #CCC;
-}
-
-#inventorymenu ul li.selected{
-	border:1px solid red;
-}
-
-
-#actionmenu{
-	position: absolute;
-	margin:0px;
-	z-index:120;
-	top:200px;
-	left:100px;
-	width:140px;
-	background: rgba(216, 177, 100, 0.5);
-	font-size: 12px;
-	text-shadow: 1px 1px 1px black;
-}
-
-#actionmenu ul {
-	list-style-type: none;
-}
-
-#actionmenu ul li{
-}
-
-#actionmenu ul li.selected{
-	background-color: red;
-}
-
-
-
-#lobby {
-	width: 800px;
-	margin: 0 auto;
-}
-
-#rooms{
-	width: 800px;
-	border:0px;
-	background: #FFF;
-}
-
-#rooms td{
-	width: 800px;
-	padding:3px;
-	background: #CCC;
-	text-align:center;
-}
-
-#rooms th td{
-	font-weight:bold;
-}
-
-
-
-
-
-#debugbar{
-	padding-top: 5px;
-	
-	text-align: center;
-	text-shadow: 1px 1px 1px black;
-	color: white;
-	width: 900px;
-	margin: 0px;
-	font-size: 12px;
-	position: absolute;
-	z-index:99;
-	background: rgba(51,204,255,0.5);
-	height:30px;
+#canvasContainer{
+    width: 900px;
+    position:relative;
 
 }
 
-#inventoryActionsMenu{
-	position: absolute;
-	margin:0px;
-	z-index:120;
-	top:200px;
-	left:100px;
-	width:140px;
-	background: rgba(216, 177, 100, 0.5);
-	font-size: 12px;
-	text-shadow: 1px 1px 1px black;
+#canvas{
+    background-color: green;
+    width: 900px;
+
+    height: 450px;
+    float: left;
+    clear: right;
+}
+
+#playerAnnouncements{
+    position: relative;
+    margin-top: -25px;
+    text-align: center;
+    color: white;
+    text-shadow: 1px 1px 1px black;
+    float: left;
+    clear: both;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+
+#playerAnnouncementList{
+    margin: 0px;
+    padding: 0px;
+    vertical-align: bottom;
+    list-style-type: none;
+    float:left;
+}
+
+.playerAnnouncement, .debugbar{
+    height: 25px;
+    float: left;
+    display: inline-block;
+    width: 900px;
+}
+
+#statsAndInventoryBar{
+    background-image: url('../assets/ui/uibarbackground.png');
+    float: left;
+
+    width: 900px;
+    height: 50px;
+}
+
+.statsBar{
+    float: left;
+
+    width: 200px;
+    height: 50px;
+    color:;
+}
+
+#inventoryBar{
+    float: left;
+
+    clear: right;
+    width: 300px;
+
+}
+
+#inventorySlots{
+    margin: 0px;
+
+    padding: 0px;
+    height: 50px;
+    float: left;
+    clear: right;
+}
+
+#inventorySlots li{
+    display: block;
+
+    list-style-type: none;
+    width: 50px;
+    height: 50px;
+    float: left;
+    padding: 0px;
+    margin: 0px;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
+}
+
+
+/**WARNING, DIRTY CSS BELOW**/
+
+#actionmenu, #inventoryactionmenu{
+    position: absolute;
+    margin:0px;
+    z-index:120;
+    top:200px;
+    left:100px;
+    width:140px;
+    background: rgba(216, 177, 100, 0.5);
+    font-size: 12px;
+    text-shadow: 1px 1px 1px black;
+}
+#inventoryactionmenu{
+    top:50px;
+}
+
+
+#actionmenu ul li.selected, #inventoryactionmenu ul li.selected{
+    background-color: red;
 }
