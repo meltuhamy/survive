@@ -43,6 +43,9 @@ class Player
     @thirst = @thirst - tile.thirst_cost
   decrement: ->
     if @alive
+      if(map.getTileElement(@tilex, @tiley) == 1)
+        @health -= 2 if @health > 1
+        @thirst -= 2 if @thirst > 1
       @stamina += 1 if @stamina < maxStamina
       @thirst -= 1 if @thirst > 0
       @hunger -= 1 if @hunger > 0
