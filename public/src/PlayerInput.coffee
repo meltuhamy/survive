@@ -1,3 +1,4 @@
+directions = [{x:0,y:-1},{x:1,y:0},{x:0,y:1},{x:-1,y:0}]
 
 class PlayerInput
   @mousex: 0
@@ -8,17 +9,12 @@ class PlayerInput
 
   @onKeyUp: (evt) =>
     if @focusOnCanvas && Game.player.alive
-      if (evt.keyCode == KEYCODE.w) #w pressed
-        makemenu(Game.player.tilex, Game.player.tiley-1)
-      if (evt.keyCode == KEYCODE.s) #s pressed
-        makemenu(Game.player.tilex, Game.player.tiley+1)
-      if (evt.keyCode == KEYCODE.a) #a
-        makemenu(Game.player.tilex-1, Game.player.tiley)
-      if (evt.keyCode == KEYCODE.d) #d
-        makemenu(Game.player.tilex+1, Game.player.tiley)
-      if (KEYCODE.num1 <= evt.keyCode <= KEYCODE.num6)
-        inventorymakemenu(evt.keyCode - KEYCODE.num1)
-      Game.player.onKeyUp(evt)
+      if (evt.keyCode == KEYCODE.action)
+        actionx = Game.player.tilex + directions[Game.player.direction].x
+        actiony = Game.player.tiley + directions[Game.player.direction].y
+        makemenu actionx, actiony
+      else
+        Game.player.onKeyUp(evt)
 
   @onKeyDown: (evt) =>
   	if @focusOnCanvas && Game.player.alive

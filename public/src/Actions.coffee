@@ -136,9 +136,10 @@ class EatItemAction extends Action
   constructor: (@healthgain, @staminagain, @hungergain) ->
     super('Eat Item', (slotIndex)->
       Game.player.health += @healthgain
-      if Game.player.health > maxHealth then Game.player.health = maxHealth 
+      if Game.player.health > maxHealth then Game.player.health = maxHealth
       Game.player.stamina += @staminagain
-      if Game.player.stamina > maxStamina then Game.player.stamina = maxStamina 
+      if Game.player.stamina > maxStamina then Game.player.stamina = maxStamina
       Game.player.hunger += @hungergain
-      if Game.player.hunger > maxHunger then Game.player.hunger = maxHunger 
+      if Game.player.hunger > maxHunger then Game.player.hunger = maxHunger
+      Game.player.removeitemIndex(slotIndex)
     )

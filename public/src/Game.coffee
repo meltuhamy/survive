@@ -141,7 +141,7 @@ class Game
         # draw other players that are in our view
         for p in @opponents
           if (p.tilex == visionx && p.tiley == visiony)
-            playerContext.drawImage @player.playerImage, visionx*Settings.tileWidth-Camera.scrollx, visiony*Settings.tileHeight-Camera.scrolly if @player.imgReady
+            playerContext.drawImage @player.playerImage, visionx*Settings.tileWidth-Camera.scrollx, visiony*Settings.tileHeight-Camera.scrolly if @player.imgReady()
 
     # draw the yellow square for the tile the player is currently standing on
     @hoverSelectBox.setX @player.tilex*Settings.tileWidth - Math.floor(Camera.scrollx)
@@ -149,7 +149,7 @@ class Game
     @hoverSelectLayer.draw()
 
     # draw the player that the client is controlling
-    playerContext.drawImage @player.playerImage, @player.posx-Camera.scrollx, @player.posy-Camera.scrolly if @player.imgReady
+    playerContext.drawImage @player.playerImage, @player.posx-Camera.scrollx, @player.posy-Camera.scrolly if @player.imgReady()
 
 
 
@@ -180,9 +180,9 @@ class Game
           mapContext.drawImage map.getTile(x,y).tileImage, x*Settings.tileWidth-Camera.scrollx, y*Settings.tileHeight-Camera.scrolly
           if !map.noItem(x,y)
              itemContext.drawImage map.getItem(x,y).tileImage, x*Settings.tileWidth-Camera.scrollx, y*Settings.tileHeight-Camera.scrolly
-    playerContext.drawImage @player.playerImage, @player.posx-Camera.scrollx, @player.posy-Camera.scrolly if @player.imgReady
+    playerContext.drawImage @player.playerImage, @player.posx-Camera.scrollx, @player.posy-Camera.scrolly if @player.imgReady()
     for p in @opponents
-      playerContext.drawImage @player.playerImage, p.tilex*Settings.tileWidth-Camera.scrollx, p.tiley*Settings.tileHeight-Camera.scrolly if @player.imgReady
+      playerContext.drawImage @player.playerImage, p.tilex*Settings.tileWidth-Camera.scrollx, p.tiley*Settings.tileHeight-Camera.scrolly if @player.imgReady()
 
 
   @replayGameUpdate = =>
