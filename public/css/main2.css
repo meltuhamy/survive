@@ -87,7 +87,7 @@ body{
 
     clear: right;
     width: 300px;
-    background-color: darkgray;
+
 }
 
 #inventorySlots{
@@ -108,12 +108,15 @@ body{
     float: left;
     padding: 0px;
     margin: 0px;
+    -moz-box-shadow:    inset 0 0 10px #000000;
+    -webkit-box-shadow: inset 0 0 10px #000000;
+    box-shadow:         inset 0 0 10px #000000;
 }
 
 
 /**WARNING, DIRTY CSS BELOW**/
 
-#actionmenu{
+#actionmenu, #inventoryactionmenu{
     position: absolute;
     margin:0px;
     z-index:120;
@@ -124,8 +127,11 @@ body{
     font-size: 12px;
     text-shadow: 1px 1px 1px black;
 }
+#inventoryactionmenu{
+    top:50px;
+}
 
 
-#actionmenu ul li.selected{
+#actionmenu ul li.selected, #inventoryactionmenu ul li.selected{
     background-color: red;
 }

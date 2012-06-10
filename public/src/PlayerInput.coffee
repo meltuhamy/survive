@@ -1,3 +1,4 @@
+
 class PlayerInput
   @mousex: 0
   @mousey: 0
@@ -7,29 +8,29 @@ class PlayerInput
 
   @onKeyUp: (evt) =>
     if @focusOnCanvas && Game.player.alive
-      if (evt.keyCode == 87) #w pressed
+      if (evt.keyCode == KEYCODE.w) #w pressed
         makemenu(Game.player.tilex, Game.player.tiley-1)
-      if (evt.keyCode == 83) #s pressed
+      if (evt.keyCode == KEYCODE.s) #s pressed
         makemenu(Game.player.tilex, Game.player.tiley+1)
-      if (evt.keyCode == 65) #a
+      if (evt.keyCode == KEYCODE.a) #a
         makemenu(Game.player.tilex-1, Game.player.tiley)
-      if (evt.keyCode == 68) #d
+      if (evt.keyCode == KEYCODE.d) #d
         makemenu(Game.player.tilex+1, Game.player.tiley)
-      if (evt.keyCode == 49)
-        makeInventoryMenu(0)
+      if (KEYCODE.num1 <= evt.keyCode <= KEYCODE.num6)
+        inventorymakemenu(evt.keyCode - KEYCODE.num1)
       Game.player.onKeyUp(evt)
 
   @onKeyDown: (evt) =>
   	if @focusOnCanvas && Game.player.alive
       Game.player.onKeyDown(evt)
-      if(evt.keyCode == 82) # press r
+      if(evt.keyCode == KEYCODE.r) # press r
         replayGameTick = 0
         socket.emit "clientSendingReplayRequest", {roomNumber: Game.player.roomNumber}
     else
       if actionMenuVisible
         actionMenuKeyDown(evt)
       else
-        inventoryActionKeyDown(evt)
+        inventoryactionMenuKeyDown(evt)
 
   @onMouseMove: (evt, elem) =>
     # mouse move event within 'container' div

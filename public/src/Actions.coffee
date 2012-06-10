@@ -122,21 +122,19 @@ class PickUpItemAction extends Action
   constructor: -> 
     super('Pick Up Item', (x,y) -> 
       pickedItem = map.getItemElement(x,y)
-      pushInventory(pickedItem)
-      Game.player.inventory.push(pickedItem)
-      map.removeItem(x,y)
+      if Game.player.additem pickedItem then map.removeItem(x,y)
     )
 
 class DropItemAction extends Action
   constructor: ->
-    super('Drop Item', (itemNum) ->
-      player.removeItem(itemNum)
-      map.setItemElement(player.tilex,player.tiley,itemNum)
+    super('Drop Item', (slotIndex) ->
+      map.setItemElement(Game.player.tilex,Game.player.tiley,Game.player.inventory[slotIndex])
+      Game.player.removeitemIndex(slotIndex)
     )
 
 class EatItemAction extends Action
   constructor: (@healthgain, @staminagain, @hungergain) ->
-    super('Eat Item', ->
+    super('Eat Item', (slotIndex)->
       Game.player.health += @healthgain
       if Game.player.health > maxHealth then Game.player.health = maxHealth 
       Game.player.stamina += @staminagain

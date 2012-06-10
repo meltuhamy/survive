@@ -51,7 +51,18 @@ class Player
       @setDead() if @health <= 0
   removeitem: (itemNo) ->
     @inventory.splice @inventory.indexOf(itemNo), 1
-    $(".item#{itemNo}").first().remove()
+    $("#inventorySlots li").eq(@inventory.indexOf(itemNo)).remove()
+  removeitemIndex: (itemindex) ->
+    @inventory.splice itemindex, 1
+    $("#inventorySlots li").eq(itemindex).remove()
+  additem: (itemNo) ->
+    if(@inventory.length < 6)
+      @inventory.push itemNo
+      $("#inventorySlots").append("<li><img src=\"#{map.getItemFromNumber(itemNo).tileImage.src}\" /></li>")
+      true
+    else
+      Game.announce "Inventory is full"
+      false
   setDead: ->
     Game.announce 'Player Died'
     @alive = false
@@ -60,22 +71,22 @@ class Player
     #set corresponding moving direction boolean to true
     #set all others to false
     if @alive
-      if (evt.keyCode == 37) # push left
+      if (evt.keyCode == KEYCODE.leftarrow) # push left
         @playerMovingLeft = true
         @playerMovingUp = false
         @playerMovingRight = false
         @playerMovingDown = false
-      if (evt.keyCode == 38) # push up
+      if (evt.keyCode == KEYCODE.uparrow) # push up
         @playerMovingUp = true
         @playerMovingLeft = false
         @playerMovingRight = false
         @playerMovingDown = false
-      if (evt.keyCode == 39) # push right
+      if (evt.keyCode == KEYCODE.rightarrow) # push right
         @playerMovingRight = true
         @playerMovingLeft = false
         @playerMovingUp = false
         @playerMovingDown = false
-      if (evt.keyCode == 40) # push down
+      if (evt.keyCode == KEYCODE.downarrow) # push down
         @playerMovingDown = true
         @playerMovingLeft = false
         @playerMovingUp = false
@@ -83,10 +94,10 @@ class Player
 
   onKeyUp: (evt) =>
     if @alive
-      @playerMovingLeft = false if (evt.keyCode == 37)  # left arrow key up -> playerMovingLeft becomes false
-      @playerMovingUp = false if (evt.keyCode == 38)    # up arrow key up -> playerMovingUp becomes false
-      @playerMovingRight = false if (evt.keyCode == 39) # right arrow key up -> playerMovingRight becomes false
-      @playerMovingDown = false if (evt.keyCode == 40)  # down arrow key up -> playerMovingDown becomes false
+      @playerMovingLeft = false if (evt.keyCode == KEYCODE.leftarrow)  # left arrow key up -> playerMovingLeft becomes false
+      @playerMovingUp = false if (evt.keyCode == KEYCODE.uparrow)    # up arrow key up -> playerMovingUp becomes false
+      @playerMovingRight = false if (evt.keyCode == KEYCODE.rightarrow) # right arrow key up -> playerMovingRight becomes false
+      @playerMovingDown = false if (evt.keyCode == KEYCODE.downarrow)  # down arrow key up -> playerMovingDown becomes false
 
   update: =>
     @updatePlayerMovement()
