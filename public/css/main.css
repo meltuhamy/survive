@@ -1,5 +1,22 @@
+
+
+html {
+    background: url('../assets/ui/background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 body{
     margin: 0px;
+    background: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 
 }
 
@@ -7,8 +24,9 @@ body{
     list-style-type: none;
 }
 
-#mainContainer{
+.mainContainer{
     width: 991px;
+    height: 724px;
     margin: 0px;
     margin-left: auto;
     margin-right: auto;
@@ -16,13 +34,67 @@ body{
     background-image: url('../assets/ui/container.png');
 }
 
-#gameContainer{
+.gameContainer{
     width: 900px;
     margin: 0px;
     height: 650px;
     padding-top: 36px;
     margin-left: 40px;
 }
+
+/* --------------------------------------------------*/
+/* ------------------ LOBBY -------------------------*/
+/* --------------------------------------------------*/
+
+#lobby{
+    width:1580px;
+    margin: 0px auto;
+}
+
+#lobbytitle{
+    width:100%;
+    height:127px;
+    float:left;
+    background-image:url('../assets/ui/lobby-title.png');
+    background-repeat:no-repeat;
+    background-position:center; 
+}
+
+#torchleft{
+    float:left;
+    width:290px;
+    height:485px;
+    background-image: url('../assets/ui/left-torch.png');
+    background-position: 35px 0px;
+    background-repeat:no-repeat;
+}
+
+#roomcontainer{
+    float:left;
+    width: 991px;
+    height: 724px;
+    margin: 0px !important;
+    background-image: url('../assets/ui/container.png');
+    background-repeat:no-repeat;
+}
+
+#roomlist{
+    height: 650px;
+    padding-top: 36px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 340px;
+}
+
+#torchright{
+    float:left;
+    width:290px;
+    height:485px;
+    background-image: url('../assets/ui/right-torch.png');
+    background-position: -35px 0px;
+    background-repeat:no-repeat;
+}
+
 
 #canvasContainer{
     width: 900px;
@@ -31,7 +103,6 @@ body{
 }
 
 #canvas{
-    background-color: green;
     width: 900px;
     height: 600px;
     float: left;
