@@ -79,8 +79,10 @@ class Game
     @setOpponents allplayers
     @gamestarted = true
     NetworkClient.sendPlayerData()
-    $("#lobby").hide()
-    $(".game").fadeIn("slow")
+    $("#lobby").fadeOut(1000)
+    setTimeout (->
+      $(".game").fadeIn(2000)
+    ), 1000
 
 
   @spawnPlayer = (spawnData) ->
