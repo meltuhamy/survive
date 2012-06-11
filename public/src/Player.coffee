@@ -89,9 +89,10 @@ class Player
     Game.announce 'Player Died'
     @alive = false
   sendAttack: ->
-    NetworkClient.SendAttackData(1)
+    NetworkClient.sendAttackData(1)
   attack: (damage) -> #method called when attack received
-    if !@alive
+    if @alive
+      Game.announce "You were attacked!!!"
       @health -= damage
       if (@health <= 0)
         @setDead()

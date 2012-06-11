@@ -49,7 +49,6 @@ class NetworkClient
 
   @receiveAttackData = (attackData) ->
     if ((attackData.id != Game.player.id) && (attackData.tilex == Game.player.tilex) && (attackData.tiley == Game.player.tiley))
-      Game.announce "You were attacked!!!"
       Game.player.attack(attackData.damage)
 
   @receiveTileData = (tileData) ->
