@@ -80,16 +80,22 @@ class Player
   additem: (itemNo) ->
     if(@inventory.length < 6)
       @inventory.push itemNo
-      $("#inventorySlots").append("<li><img src=\"#{map.getItemFromNumber(itemNo).tileImage.src}\" /></li>")
+      $("#inventorySlots").append("<li style=\"background-image:url('#{map.getItemFromNumber(itemNo).tileImage.src}');\"></li>")
       true
     else
       Game.announce "Inventory is full"
       false
   setDead: ->
     Game.announce 'Player Died'
+    Game.player.playerMovingLeft = false
+    Game.player.playerMovingUp = false
+    Game.player.playerMovingRight = false
+    Game.player.playerMovingDown = false
     @alive = false
   sendAttack: ->
-    NetworkClient.sendAttackData(1)
+    if @stamina >= 5
+      @stamina -= 5
+      NetworkClient.sendAttackData(3)
   attack: (damage) -> #method called when attack received
     if @alive
       Game.announce "You were attacked!!!"
