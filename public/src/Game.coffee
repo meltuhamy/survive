@@ -76,9 +76,7 @@ class Game
     @stage.add @itemLayer
     @stage.add @playerLayer
 
-  @start = (allplayers, gameMap) =>
-    if gameMap?
-      map = new Map(new Grid(gameMap.tiles, gameMap.mapwidth, gameMap.mapheight), new Grid(gameMap.items, gameMap.mapwidth, gameMap.mapheight))
+  @start = (allplayers) =>
     @setOpponents allplayers
     @gamestarted = true
     NetworkClient.sendPlayerData()

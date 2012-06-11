@@ -22,11 +22,14 @@ class NetworkClient
       attackData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex + directions[Game.player.direction].x, tiley: Game.player.tiley + directions[Game.player.direction].y, damage: dmg}
       socket.emit "clientSendingAttackData", attackData
 
-  @receiveRoomJoin = (spawnData) ->
-    Game.spawnPlayer(spawnData)
+  @receiveRoomJoin = (initialData) ->
+    if initialData.themap?
+      gameMap = initialData.themap
+      map = new Map(new Grid(gameMap.tiles, gameMap.mapwidth, gameMap.mapheight), new Grid(gameMap.items, gameMap.mapwidth, gameMap.mapheight))
+    Game.spawnPlayer(initialData.spawn)
     
-  @receiveGameStart = (allplayers, gameMap) ->
-    Game.start(allplayers, gameMap)
+  @receiveGameStart = (allplayers) ->
+    Game.start(allplayers)
 
   @receivePlayerData = (playerData) ->
     if playerData.id != Game.player.id
@@ -66,6 +69,9 @@ class NetworkClient
       $("#roomlist").append("<tr>#{tableData}</tr>") 
     $("#roomlist").append("</table>")
 
+endingGame = ->
+  socket.disconnect()
+  Game.announce "<span style=\"color:red;\">There are no other players in this room and the game has ended. You have been disconnected. Refresh your browser to join another room</span>"
 
 socket = io.connect()
 
@@ -76,11 +82,11 @@ socket.on "connect", ->
 socket.on "serverSendingRooms", (rooms) ->
   NetworkClient.receiveRooms(rooms)
 
-socket.on "serverSendingAcceptJoin", (spawnData) ->
-  NetworkClient.receiveRoomJoin(spawnData)
+socket.on "serverSendingAcceptJoin", (initialData) ->
+  NetworkClient.receiveRoomJoin(initialData)
   
-socket.on "serverSendingBeginGame", (gamestartdata) ->
-  NetworkClient.receiveGameStart(gamestartdata.allplayers, gamestartdata.mapData)
+socket.on "serverSendingBeginGame", (allplayers) ->
+  NetworkClient.receiveGameStart(allplayers)
   #NetworkClient.log "<span style=\"color:red;\">Other Players Received! #{Game.opponents}</span>"
 
 socket.on "disconnect", ->
@@ -105,7 +111,7 @@ socket.on "serverSendingPlayerDisconnected", (id) ->
   NetworkClient.receiveOpponentDisconnect(id)
 
 socket.on "serverSendingReload", (data) ->
-  window.location.reload()
+  endingGame()
 
 socket.on "serverSendingReplay", (replayData) ->
   NetworkClient.receiveReplay(replayData)
