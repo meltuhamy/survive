@@ -220,5 +220,5 @@ io.sockets.on "connection", (client) ->
         leavingRoom.removePlayer()
         # if two people currently connected in room and one leaves, end the game
         if leavingRoom.getPlayerCount() == 2
-          console.log "GAME ENDED"
+          console.log "<<<<<<<<<<<<<<<GAME ENDED>>>>>>>>>>>>>>>>"
           leavingRoom.endGame()
