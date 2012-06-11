@@ -80,7 +80,7 @@ class Player
   additem: (itemNo) ->
     if(@inventory.length < 6)
       @inventory.push itemNo
-      $("#inventorySlots").append("<li><img src=\"#{map.getItemFromNumber(itemNo).tileImage.src}\" /></li>")
+      $("#inventorySlots").append("<li style=\"background-image:url('#{map.getItemFromNumber(itemNo).tileImage.src}');\"></li>")
       true
     else
       Game.announce "Inventory is full"
