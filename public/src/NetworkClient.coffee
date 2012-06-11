@@ -73,8 +73,6 @@ socket.on "connect", ->
   #NetworkClient.onConnectToServer()
   #NetworkClient.log "<span style=\"color:green;\">Client has connected to the server!</span>"
 
-socket.on "serverSendingMap", (gameMap) ->
-  console.log gameMap
 socket.on "serverSendingRooms", (rooms) ->
   NetworkClient.receiveRooms(rooms)
 

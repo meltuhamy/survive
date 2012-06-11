@@ -33,7 +33,6 @@ class Game
 
     $("##{Settings.canvasIDName}").mousemove (evt) ->
       PlayerInput.onMouseMove(evt, @)
-
     $('#inventorymenu').hide()
     $('#actionmenu').fadeOut()
     if(!Settings.DEBUGMODE)
@@ -79,7 +78,6 @@ class Game
 
   @start = (allplayers, gameMap) =>
     if gameMap?
-      console.log gameMap
       map = new Map(new Grid(gameMap.tiles, gameMap.mapwidth, gameMap.mapheight), new Grid(gameMap.items, gameMap.mapwidth, gameMap.mapheight))
     @setOpponents allplayers
     @gamestarted = true

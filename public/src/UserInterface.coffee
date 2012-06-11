@@ -57,18 +57,23 @@ actionMenuKeyDown = (evt) ->
   if(!actionMenuVisible) then return
   $('#actionlist li').eq(actionMenuSelected).toggleClass('selected')
   if(evt.keyCode == KEYCODE.uparrow)
+    console.log "Pressed uparrow on actionmenu"
     actionMenuSelected = (actionMenuSelected-1+actionMenuTotal) % actionMenuTotal
   else if(evt.keyCode == KEYCODE.downarrow)
+    console.log "Pressed downarrow on actionmenu"
     actionMenuSelected = (actionMenuSelected+1) % actionMenuTotal
   else if(evt.keyCode == KEYCODE.enter)
+    console.log "Pressed enter on actionmenu"
     PlayerInput.focusOnCanvas = true
     actions = map.getActions(actionMenuTileX, actionMenuTileY)
     selectedAction = actions[actionMenuSelected]
     $('#actionmenu').fadeOut("fast")
     $('#actionlist').empty()
     actionmenuVisible = false
+    console.log "UI.coffee actionmenuVisible=#{actionmenuVisible}"
     selectedAction.doFn(actionMenuTileX, actionMenuTileY)
   else if(evt.keyCode == KEYCODE.escape)
+    console.log "Pressed escape on actionmenu"
     PlayerInput.focusOnCanvas = true
     $('#actionmenu').fadeOut("fast")
     actionmenuVisible = false

@@ -13,6 +13,8 @@ class PlayerInput
         actionx = Game.player.tilex + directions[Game.player.direction].x
         actiony = Game.player.tiley + directions[Game.player.direction].y
         makemenu actionx, actiony
+      else if (KEYCODE.num1 <= evt.keyCode <= KEYCODE.num6)
+        inventorymakemenu(evt.keyCode - KEYCODE.num1)
       else if (evt.keyCode == KEYCODE.attack)
         Game.player.sendAttack()
         #NetworkClient.sendAttackData(3)
