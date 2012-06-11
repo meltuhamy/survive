@@ -99,14 +99,14 @@ class Room
       randomx = Math.floor(Math.random() * 20)
       randomy = Math.floor(Math.random() * 20)
       spawnData = {id: parseInt(client.id), roomNumber: @roomNumber, tilex: randomx, tiley:randomy}
-      client.emit('serverSendingAcceptJoin', spawnData)
+      client.emit('serverSendingAcceptJoin', {spawn: spawnData, themap: @mapData})
       # if the room is full *after* he has joined - then start the game
       if(@isFull())
         @startGame()
 
   startGame: =>
     console.log ">>>>>>>>>>>>>>>>>>>>>>>>STARTING GAME!! :D"
-    @emit('serverSendingBeginGame', {allplayers:@getPlayerIds(), mapData: @mapData})
+    @emit('serverSendingBeginGame', @getPlayerIds())
     @ingame = true
     @intervalid = setInterval @roomLoop, 1000
 
