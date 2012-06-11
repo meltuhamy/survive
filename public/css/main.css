@@ -75,22 +75,35 @@ body{
 .statsBar{
     float: left;
 
-    width: 200px;
+    width: 150px;
     height: 50px;
     color:;
+}
+#healthBar{
+    background-image: url('../assets/ui/health_bar.png');
+}
+
+#waterBar{
+    background-image: url('../assets/ui/thirst_bar.png');
+}
+
+#foodBar{
+    background-image: url('../assets/ui/hunger_bar.png');
+}
+
+#staminaBar{
+    background-image: url('../assets/ui/stamina_bar.png');
 }
 
 #inventoryBar{
     float: left;
-
     clear: right;
     width: 300px;
-
+    background-image: url('../assets/ui/inventory_bar.png');
 }
 
 #inventorySlots{
     margin: 0px;
-
     padding: 0px;
     height: 50px;
     float: left;
