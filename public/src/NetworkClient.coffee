@@ -30,8 +30,8 @@ class NetworkClient
   @receiveRoomJoin = (spawnData) ->
     Game.spawnPlayer(spawnData)
     
-  @receiveGameStart = (allplayers) ->
-    Game.start(allplayers)
+  @receiveGameStart = (allplayers, gameMap) ->
+    Game.start(allplayers, gameMap)
 
   @receivePlayerData = (playerData) ->
     if playerData.id != Game.player.id
@@ -79,14 +79,16 @@ socket.on "connect", ->
   #NetworkClient.onConnectToServer()
   #NetworkClient.log "<span style=\"color:green;\">Client has connected to the server!</span>"
 
+socket.on "serverSendingMap", (gameMap) ->
+  console.log gameMap
 socket.on "serverSendingRooms", (rooms) ->
   NetworkClient.receiveRooms(rooms)
 
 socket.on "serverSendingAcceptJoin", (spawnData) ->
   NetworkClient.receiveRoomJoin(spawnData)
   
-socket.on "beginGame", (allplayers) ->
-  NetworkClient.receiveGameStart(allplayers)
+socket.on "serverSendingBeginGame", (gamestartdata) ->
+  NetworkClient.receiveGameStart(gamestartdata.allplayers, gamestartdata.mapData)
   #NetworkClient.log "<span style=\"color:red;\">Other Players Received! #{Game.opponents}</span>"
 
 socket.on "disconnect", ->
