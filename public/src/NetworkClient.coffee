@@ -66,6 +66,9 @@ class NetworkClient
       $("#roomlist").append("<tr>#{tableData}</tr>") 
     $("#roomlist").append("</table>")
 
+endingGame = ->
+  socket.disconnect()
+  Game.announce "<span style=\"color:red;\">There are no other players in this room and the game has ended. You have been disconnected. Refresh your browser to join another room</span>"
 
 socket = io.connect()
 
@@ -105,7 +108,7 @@ socket.on "serverSendingPlayerDisconnected", (id) ->
   NetworkClient.receiveOpponentDisconnect(id)
 
 socket.on "serverSendingReload", (data) ->
-  window.location.reload()
+  endingGame()
 
 socket.on "serverSendingReplay", (replayData) ->
   NetworkClient.receiveReplay(replayData)

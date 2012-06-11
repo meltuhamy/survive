@@ -99,3 +99,6 @@ inventoryactionMenuKeyDown = (evt) ->
     $('#inventoryactionmenu').fadeOut("fast")
     inventoryactionmenuVisible = false
   $('#inventoryactionlist li').eq(inventoryactionMenuSelected).toggleClass('selected')
+
+reloadPage = ->
+  window.location.reload()

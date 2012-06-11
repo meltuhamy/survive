@@ -68,6 +68,10 @@ class Room
     sockets = []
     io.sockets.clients(@getName()).forEach((s) ->  sockets.push s)
     return sockets
+  getSocketsExceptFor: (searchId) ->
+    sockets = []
+    io.sockets.clients(@getName()).forEach((s) ->  sockets.push s if s.id isnt searchId)
+    return sockets
   getPlayerIdsExceptFor: (searchId) ->
     ids = []
     ids.push {id: parseInt(c.id)} for c in @getSockets() when c.id isnt searchId
@@ -77,13 +81,11 @@ class Room
     ids.push {id: parseInt(c.id)} for c in @getSockets()
     return ids
 
-  getPlayerCount: -> @numberplayers
+  getPlayerCount: -> @getPlayerIds().length
   addPlayer: (client) -> 
     client.join(@getName())
-    @numberplayers += 1
-  removePlayer: -> 
-    @numberplayers -= 1
-    ingame = (@numberplayers > 0)
+    client.emit("serverSendingRooms", roomsToSend())
+    client.broadcast.emit("serverSendingRooms", roomsToSend())
 
   emit: (eventName, data) -> io.sockets.in(@getName()).emit(eventName, data)
   
@@ -120,13 +122,9 @@ class Room
       itemData = {id: 60, roomNumber:@roomNumber, tilex: randomx, tiley: randomy, itemNumber: 2}
       @sendItem itemData
 
-  endGame: =>
-    # ensure to disconnect remaining players from the room
-    @removePlayer()
-    s.disconnect() for s in @getSockets()
-    # now say that the game is over and tell 
+  endGame: (clientId)=>
     @ingame = false
-    #@emit("serverSendingReload", '')
+    @emit("serverSendingReload", '')
     clearInterval @intervalid
 
   sendPlayer: (playerData, clientid) ->
@@ -164,13 +162,8 @@ numRooms = 10
 rooms = []
 rooms.push new Room(i) for i in [0...numRooms]
 
-
-io.sockets.on "connection", (client) ->
-  # Lobby stuff
-  client.join('lobby')
-
-  # Send the list of rooms to the client
-  roomsToSend = []
+roomsToSend = ->
+  roomsData = []
   for r in rooms
     roomData = {
       name: r.getName(),
@@ -180,8 +173,16 @@ io.sockets.on "connection", (client) ->
       maxPlayerCount: r.maxPlayerCount,
       ingame: r.ingame
     }
-    roomsToSend.push roomData
-  client.emit("serverSendingRooms", roomsToSend)
+    roomsData.push roomData
+  return roomsData
+
+io.sockets.on "connection", (client) ->
+  # Lobby stuff
+  client.join('lobby')
+
+  # Send the list of rooms to the client
+
+  client.emit("serverSendingRooms", roomsToSend())
 
   # The client has request to join a room
   client.on "clientSendingRoomNumber", (roomNumber) ->
@@ -210,15 +211,12 @@ io.sockets.on "connection", (client) ->
 
   client.on "disconnect", ->
     console.log "<<<<<<<CLIENT DISCONNECTED>>>>>>> "
-    # determine which game rooms the client was connected to. 
-    # loop through each socket.io room the client was connected to
-    # if the socket.io room isn't called '' or 'lobby' then it is a game room
+    client.broadcast.emit("serverSendingRooms", roomsToSend())
     for key, val of io.sockets.manager.roomClients[client.id]
       if (key isnt '' && key isnt '/lobby')
         leavingRoom = getRoomByName(key.substring(1))
         leavingRoom.emit("serverSendingPlayerDisconnected", client.id)
-        leavingRoom.removePlayer()
         # if two people currently connected in room and one leaves, end the game
-        if leavingRoom.getPlayerCount() == 2
+        if  0<leavingRoom.getPlayerCount()<=2
           console.log "<<<<<<<<<<<<<<<GAME ENDED>>>>>>>>>>>>>>>>"
           leavingRoom.endGame()
