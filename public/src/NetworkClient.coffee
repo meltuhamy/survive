@@ -2,10 +2,7 @@ class NetworkClient
   @OFFLINEMODE: false
 
   @log = (message) =>
-    li = document.createElement("li")
-    li.innerHTML = message
-    document.getElementById("message-list").appendChild li
-    $('#message-list').prepend(li)
+    $('.serverdebugbar').append("<li>#{message}</li>")
 
   @sendJoinRoomRequest = (roomNumber) ->
     socket.emit "clientSendingRoomNumber", roomNumber

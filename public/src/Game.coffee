@@ -34,14 +34,6 @@ class Game
     $("##{Settings.canvasIDName}").mousemove (evt) ->
       PlayerInput.onMouseMove(evt, @)
 
-
-    $("#dialog").dialog({
-      autoOpen: false
-    });
-    $("#message-list").dialog({
-      autoOpen: true,
-      height: 530
-    });
     $('#inventorymenu').hide()
     $('#actionmenu').fadeOut()
     if(!Settings.DEBUGMODE)
