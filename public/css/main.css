@@ -144,28 +144,69 @@ body{
     height: 50px;
 }
 
-.statsBar{
-    float: left;
 
+
+/*Styles all the contaienrs in which the moving bars reside */
+.fluidcontainer{
+
+}
+
+/* Styles the large box that has everything to do with the bar */
+.statsBarContainer{
+    float: left;
     width: 150px;
     height: 50px;
-    color:;
 }
-#healthBar{
+
+#healthBarContainer{
     background-image: url('../assets/ui/health_bar.png');
+}
+#waterBarContainer{
+    background-image: url('../assets/ui/thirst_bar.png');
+}
+#foodBarContainer{
+    background-image: url('../assets/ui/hunger_bar.png');
+}
+#staminaBarContainer{
+    background-image: url('../assets/ui/stamina_bar.png');
+}
+
+/* Styles a general bar backgrounds */
+.statsBarBackground{
+    margin-left:15px;
+    margin-top:30px;
+    float:left;
+    width:120px;
+    background-image: url('../assets/ui/stats-bar-bg.png');
+    background-repeat:repeat-x;
+    height:11px;
+}
+
+.statsBar{
+    height:11px;
+    width: 30%;
+    float: left;
+    background-repeat:repeat-x;
+}
+
+/* Styles a specific stat bar (the thing that changes) */
+#healthBar{
+    background-image: url('../assets/ui/health-bar-fill.png');
 }
 
 #waterBar{
-    background-image: url('../assets/ui/thirst_bar.png');
+    background-image: url('../assets/ui/thirst-bar-fill.png');
 }
 
 #foodBar{
-    background-image: url('../assets/ui/hunger_bar.png');
+    background-image: url('../assets/ui/hunger-bar-fill.png');
 }
 
 #staminaBar{
-    background-image: url('../assets/ui/stamina_bar.png');
+    background-image: url('../assets/ui/stamina-bar-fill.png');
 }
+
+
 
 #inventoryBar{
     float: left;
