@@ -88,10 +88,13 @@ class Player
   setDead: ->
     Game.announce 'Player Died'
     @alive = false
-  attack: (damage) ->
-    @health -= damage
-    if (@health <= 0)
-      @setDead()
+  sendAttack: ->
+    NetworkClient.SendAttackData(1)
+  attack: (damage) -> #method called when attack received
+    if !@alive
+      @health -= damage
+      if (@health <= 0)
+        @setDead()
 
   onKeyDown: (evt) =>
     #set corresponding moving direction boolean to true

@@ -14,13 +14,10 @@ class PlayerInput
         actiony = Game.player.tiley + directions[Game.player.direction].y
         makemenu actionx, actiony
       else if (evt.keyCode == KEYCODE.attack)
-        NetworkClient.sendAttackData(3)
+        Game.player.sendAttack()
+        #NetworkClient.sendAttackData(3)
       else
         Game.player.onKeyUp(evt)
-      #else if (evt.keyCode = KEYCODE.attack)
-        #console.log "attack!!!!"
-        #Game.announce "attack!!!!!!"
-        #NetworkClient.sendAttackData(3)
 
   @onKeyDown: (evt) =>
   	if @focusOnCanvas && Game.player.alive
@@ -28,7 +25,6 @@ class PlayerInput
         replayGameTick = 0
         socket.emit "clientSendingReplayRequest", {roomNumber: Game.player.roomNumber}
       else
-        console.log "player key down"
         Game.player.onKeyDown(evt)
     else
       if actionMenuVisible

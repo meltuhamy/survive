@@ -23,8 +23,6 @@ class NetworkClient
   @sendAttackData = (dmg) ->
     if !@OFFLINEMODE
       attackData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex + directions[Game.player.direction].x, tiley: Game.player.tiley + directions[Game.player.direction].y, damage: dmg}
-      console.log "sending attack data"
-      console.log attackData
       socket.emit "clientSendingAttackData", attackData
 
   @receiveRoomJoin = (spawnData) ->
