@@ -27,7 +27,7 @@ class Player
     maxHunger = @hunger
     @thirst = if thirst? then thirst else maxThirst
     maxThirst = @thirst
-    @speed = if speed? then speed else 0.8
+    @speed = if speed? then speed else 2.8
     @posx = if posx? then posx else 0
     @posy = if posy? then posy else 0
     @id = if id? then id else -1

@@ -224,7 +224,7 @@ class Game
   then_ = Date.now()
 
   @beginMainLoop = =>
-    @mainLoopIntervalId = setInterval @mainLoop, 10
+    @mainLoopIntervalId = setInterval @mainLoop, 30
 
   @replayLoop = =>
     @replayGameRender()
