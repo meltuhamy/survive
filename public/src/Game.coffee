@@ -20,6 +20,7 @@ class Game
   @hoverSelectBox = null
   @hoverSelectLayer = null
   @onload: =>
+    $('.actionmenu').hide()
     Settings.canvasWidth = $("##{Settings.canvasIDName}").width()
     Settings.canvasHeight = $("##{Settings.canvasIDName}").height()
     @gameloaded = true
