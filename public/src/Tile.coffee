@@ -109,4 +109,14 @@ class Poison extends itemTile
 class Chicken extends itemTile
   constructor: ->
     super("#{Settings.itemDir}/chicken.png",'Chicken')
-    @inventoryActions = @inventoryActions.concat(new EatItemAction(10,10,20))
+    @inventoryActions = @inventoryActions.concat(new EatItemAction(15,20,20))
+
+class Berries extends itemTile
+  constructor: ->
+    super("#{Settings.itemDir}/berries.png",'Berries')
+    @inventoryActions = @inventoryActions.concat(new EatItemAction(10,10,10))
+
+class PoisonBerries extends itemTile
+  constructor: ->
+    super("#{Settings.itemDir}/poisonberries.png",'Poison Berries')
+    @inventoryActions = @inventoryActions.concat(new EatItemAction(-10,0,5))

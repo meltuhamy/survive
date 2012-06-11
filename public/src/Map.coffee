@@ -11,7 +11,8 @@ class Grid
 class Map
         tileArray: [new GrassTile(), new FireTile(), new HillTile(), new ShallowWaterTile(), new DeepWaterTile(), 
                     new TreeTile() , new HoleTrapTile(), new BoobyTrapTile(), new PoisonWaterTile(), new PoisonDeepWaterTile()]
-        itemArray: [0, new GreenHelm(), new WaterBottle(), new Shovel(), new Log(), new Axe(), new Torch(), new Poison(), new Chicken()]
+        itemArray: [0, new GreenHelm(), new WaterBottle(), new Shovel(), new Log(), new Axe(), new Torch(), new Poison(), new Chicken(), new Berries(), new PoisonBerries()]
+#current length 11
         constructor: (@tileGrid, @itemGrid) ->
                 @tileGridOriginal = new Grid([],@tileGrid.numrows,@tileGrid.numcols)
                 @itemGridOriginal = new Grid([],@itemGrid.numrows,@itemGrid.numcols)

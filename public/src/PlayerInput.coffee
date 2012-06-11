@@ -30,6 +30,7 @@ class PlayerInput
       if actionMenuVisible
         actionMenuKeyDown(evt)
       else
+        console.log "create inventory menu"
         inventoryactionMenuKeyDown(evt)
 
   @onMouseMove: (evt, elem) =>
