@@ -135,9 +135,12 @@ class PickUpItemAction extends Action
 
 class DropItemAction extends Action
   constructor: ->
-    super('Drop Item', (slotIndex) ->
-      map.setItemElement(Game.player.tilex,Game.player.tiley,Game.player.inventory[slotIndex])
-      Game.player.removeitemIndex(slotIndex)
+    super('Drop Item', (slotIndex) -> 
+      if (map.getItemElement(Game.player.tilex,Game.player.tiley) == 0)
+        map.setItemElement(Game.player.tilex,Game.player.tiley,Game.player.inventory[slotIndex])
+        Game.player.removeitemIndex(slotIndex)
+      else
+        Game.announce("Can't drop item at #{Game.player.tilex},#{Game.player.tiley}. There is already another one there.")
     )
 
 class EatItemAction extends Action
