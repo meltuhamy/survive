@@ -148,6 +148,8 @@ class Room
       console.log "INSERTED ROW"
     printRowCount()
 
+  sendAttack: (attackData) ->
+    @emit('serverSendingAttackData', attackData)
 
 getRoomByName = (name) ->
   rooms[parseInt(name.substring(4))]
@@ -189,7 +191,10 @@ io.sockets.on "connection", (client) ->
 
   client.on "clientSendingTileData", (tileData) ->
     rooms[itemData.roomNumber].sendTile(tileData, client.id)
-    
+
+  client.on "clientSendingAttackData", (attackData) ->
+    rooms[attackData.roomNumber].sendAttack(attackData)
+
   client.on "clientSendingReplayRequest", (deathData) ->
     query = dbClient.query("SELECT * FROM actions WHERE gameid = #{deathData.roomNumber}");
     replayData = []

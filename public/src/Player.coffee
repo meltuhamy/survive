@@ -15,9 +15,7 @@ class Player
       @playerImages[x].src = baseSource + x + ".png"
       @playerImages[x].isReady = false
       @playerImages[x].index = x
-      y = x
       @playerImages[x].onload = ->
-        console.log @index
         @isReady = true
     @turnDown()
     @inventory = if inventory? then inventory else []
@@ -90,6 +88,10 @@ class Player
   setDead: ->
     Game.announce 'Player Died'
     @alive = false
+  attack: (damage) ->
+    @health -= damage
+    if (@health <= 0)
+      @setDead()
 
   onKeyDown: (evt) =>
     #set corresponding moving direction boolean to true

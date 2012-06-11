@@ -1,5 +1,5 @@
 class NetworkClient
-  @OFFLINEMODE: true
+  @OFFLINEMODE: false
 
   @log = (message) =>
     li = document.createElement("li")
@@ -19,6 +19,13 @@ class NetworkClient
 
   @sendTileData = (tileData) ->
     if !@OFFLINEMODE then socket.emit "clientSendingTileData", tileData
+
+  @sendAttackData = (dmg) ->
+    if !@OFFLINEMODE
+      attackData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex + directions[Game.player.direction].x, tiley: Game.player.tiley + directions[Game.player.direction].y, damage: dmg}
+      console.log "sending attack data"
+      console.log attackData
+      socket.emit "clientSendingAttackData", attackData
 
   @receiveRoomJoin = (spawnData) ->
     Game.spawnPlayer(spawnData)
@@ -41,6 +48,11 @@ class NetworkClient
   @receiveItemData = (itemData) ->
     if itemData.id != Game.player.id
       map.setItemElement itemData.tilex, itemData.tiley, itemData.itemNumber, false
+
+  @receiveAttackData = (attackData) ->
+    if ((attackData.id != Game.player.id) && (attackData.tilex == Game.player.tilex) && (attackData.tiley == Game.player.tiley))
+      Game.announce "You were attacked!!!"
+      Game.player.attack(attackData.damage)
 
   @receiveTileData = (tileData) ->
     if tileData.id != Game.player.id
@@ -88,6 +100,9 @@ socket.on "serverSendingItemData", (itemData) ->
 
 socket.on "serverSendingTileData", (tileData) ->
   NetworkClient.receiveTileData(tileData)
+
+socket.on "serverSendingAttackData", (attackData) ->
+  NetworkClient.receiveAttackData(attackData)
 
 socket.on "message", (data) ->
   NetworkClient.log "Received: #{data}"
