@@ -93,7 +93,11 @@ class PoisonWaterAction extends Action
       for i in [0...Game.player.inventory.length]
         if (Game.player.inventory[i] == 7)
           hasPoison = true
-          Game.player.removeitem(7)
+          #Game.player.removeitem(7)
+          Game.player.removeitemIndex(i)
+          console.log "removed Item"
+          Game.player.additem(11)
+          console.log "added Item"
           break
       if (hasPoison)
         map.setTileElement(x,y,8)
@@ -110,9 +114,9 @@ class PoisonDeepWaterAction extends Action
         if (Game.player.inventory[i] == 7)
           hasPoison = true
           #Game.player.removeitem(7)
-          Game.player.removeItemIndex(i)
+          Game.player.removeitemIndex(i)
           console.log "removed Item"
-          Game.player.additem(2)
+          Game.player.additem(11)
           console.log "added Item"
           break
       if (hasPoison)
