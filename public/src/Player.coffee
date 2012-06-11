@@ -87,9 +87,15 @@ class Player
       false
   setDead: ->
     Game.announce 'Player Died'
+    Game.player.playerMovingLeft = false
+    Game.player.playerMovingUp = false
+    Game.player.playerMovingRight = false
+    Game.player.playerMovingDown = false
     @alive = false
   sendAttack: ->
-    NetworkClient.sendAttackData(1)
+    if @stamina >= 5
+      @stamina -= 5
+      NetworkClient.sendAttackData(3)
   attack: (damage) -> #method called when attack received
     if @alive
       Game.announce "You were attacked!!!"

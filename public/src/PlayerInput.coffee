@@ -10,6 +10,10 @@ class PlayerInput
   @onKeyUp: (evt) =>
     if @focusOnCanvas && Game.player.alive
       if (evt.keyCode == KEYCODE.action)
+        Game.player.playerMovingLeft = false
+        Game.player.playerMovingUp = false
+        Game.player.playerMovingRight = false
+        Game.player.playerMovingDown = false
         actionx = Game.player.tilex + directions[Game.player.direction].x
         actiony = Game.player.tiley + directions[Game.player.direction].y
         makemenu actionx, actiony
@@ -33,6 +37,10 @@ class PlayerInput
         actionMenuKeyDown(evt)
       else
         console.log "create inventory menu"
+        Game.player.playerMovingLeft = false
+        Game.player.playerMovingUp = false
+        Game.player.playerMovingRight = false
+        Game.player.playerMovingDown = false
         inventoryactionMenuKeyDown(evt)
 
   @onMouseMove: (evt, elem) =>
