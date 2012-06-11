@@ -88,9 +88,6 @@ class itemTile extends Tile
 class GreenHelm extends itemTile
   constructor: -> super("#{Settings.itemDir}/greenhelm.gif", 'Green helmet')
 
-class WaterBottle extends itemTile
-  constructor: -> super("#{Settings.itemDir}/waterbottle.gif",'Water bottle')
-
 class Shovel extends itemTile
   constructor: -> super("#{Settings.itemDir}/shovel.png",'Shovel')
 
@@ -120,3 +117,20 @@ class PoisonBerries extends itemTile
   constructor: ->
     super("#{Settings.itemDir}/poisonberries.png",'Poison Berries')
     @inventoryActions = @inventoryActions.concat(new EatItemAction(-10,0,5))
+
+class WaterBottle extends itemTile
+  constructor: ->
+    super("#{Settings.itemDir}/waterbottle.gif",'Water bottle')
+    @inventoryActions = @inventoryActions.concat(new DrinkBottleAction(5,5,20))
+
+class PoisonWaterBottle extends itemTile
+  constructor: ->
+    super("#{Settings.itemDir}/waterbottle.gif",'Water bottle')
+    @inventoryActions = @inventoryActions.concat(new DrinkBottleAction(-2,0,10))
+
+
+class EmptyBottle  extends itemTile
+  constructor: ->
+    super("#{Settings.itemDir}/emptybottle.png",'Empty bottle')
+    @inventoryActions = @inventoryActions.concat(new FillBottleAction())
+

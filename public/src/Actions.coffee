@@ -109,7 +109,11 @@ class PoisonDeepWaterAction extends Action
       for i in [0...Game.player.inventory.length]
         if (Game.player.inventory[i] == 7)
           hasPoison = true
-          Game.player.removeitem(7)
+          #Game.player.removeitem(7)
+          Game.player.removeItemIndex(i)
+          console.log "removed Item"
+          Game.player.additem(2)
+          console.log "added Item"
           break
       if (hasPoison)
         map.setTileElement(x,y,9)
@@ -135,6 +139,8 @@ class DropItemAction extends Action
 class EatItemAction extends Action
   constructor: (@healthgain, @staminagain, @hungergain) ->
     super('Eat Item', (slotIndex)->
+      #announce that we're eting item
+      #Game.announce "Eating " + Game.player.inventory
       Game.player.health += @healthgain
       if Game.player.health > maxHealth then Game.player.health = maxHealth
       Game.player.stamina += @staminagain
@@ -142,4 +148,29 @@ class EatItemAction extends Action
       Game.player.hunger += @hungergain
       if Game.player.hunger > maxHunger then Game.player.hunger = maxHunger
       Game.player.removeitemIndex(slotIndex)
+    )
+
+class DrinkBottleAction extends Action
+  constructor: (@healthgain, @staminagain, @thirstgain) ->
+    super('Drink Water', (slotIndex)->
+      #announce that we're drinkin water
+      Game.player.health += @healthgain
+      if Game.player.health > maxHealth then Game.player.health = maxHealth
+      Game.player.stamina += @staminagain
+      if Game.player.stamina > maxStamina then Game.player.stamina = maxStamina
+      Game.player.thirst += @thirstgain
+      if Game.player.thirst > maxThirst then Game.player.thirst = maxThirst
+      Game.player.removeitemIndex(slotIndex)
+      Game.player.additem(11)
+    )
+
+class FillBottleAction extends Action
+  constructor: ->
+    super('Fill Bottle', (slotIndex)->
+      nextTile = map.getTileElement(Game.player.tilex + directions[Game.player.direction].x ,  Game.player.tiley + directions[Game.player.direction].y)
+      if (nextTile == 3)
+        Game.player.removeitemIndex(slotIndex)
+        Game.player.additem(2)
+      else
+        Game.announce "You need open water to fill an empty bottle"
     )

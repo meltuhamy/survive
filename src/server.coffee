@@ -195,7 +195,7 @@ io.sockets.on "connection", (client) ->
     rooms[itemData.roomNumber].sendItem(itemData, client.id)
 
   client.on "clientSendingTileData", (tileData) ->
-    rooms[itemData.roomNumber].sendTile(tileData, client.id)
+    rooms[tileData.roomNumber].sendTile(tileData, client.id)
 
   client.on "clientSendingAttackData", (attackData) ->
     rooms[attackData.roomNumber].sendAttack(attackData)
