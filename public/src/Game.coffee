@@ -34,8 +34,6 @@ class Game
 
     $("##{Settings.canvasIDName}").mousemove (evt) ->
       PlayerInput.onMouseMove(evt, @)
-    $('#inventorymenu').hide()
-    $('#actionmenu').fadeOut()
     if(!Settings.DEBUGMODE)
       $('.game').hide();
   @announce: (content) => 
@@ -81,8 +79,8 @@ class Game
     @setOpponents allplayers
     @gamestarted = true
     NetworkClient.sendPlayerData()
-    $("#lobby").fadeOut()
-    $(".game").fadeIn()
+    $("#lobby").hide()
+    $(".game").fadeIn("slow")
 
 
   @spawnPlayer = (spawnData) ->
