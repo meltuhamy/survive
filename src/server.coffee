@@ -226,7 +226,7 @@ map9 = {tiles: tile9, items: item9, mapwidth: 20, mapheight: 30, spawnSpots:[{ti
 numRooms = 10
 rooms = []
 rooms.push new Room(0,map0)
-rooms.push new Room(1,map1,4)
+rooms.push new Room(1,map1,2)
 rooms.push new Room(2,map2)
 rooms.push new Room(3,map3)
 rooms.push new Room(4,map4)

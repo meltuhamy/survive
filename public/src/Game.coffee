@@ -244,6 +244,7 @@ class Game
     if @gamestarted
       @update delta / 1000
       @render()
+      Camera.updateScroll()
       if @count == 100
         @player.decrement()
         @count = 0
