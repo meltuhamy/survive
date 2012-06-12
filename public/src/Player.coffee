@@ -20,9 +20,9 @@ class Player
   directions: {up:0, right:1, down:2, left:3}
   directionDeltas: [{x:0,y:-1},{x:1,y:0},{x:0,y:1},{x:-1,y:0}]
 
-
   constructor: (@id, @roomNumber) -> 
-    baseSource = if image? then image else "#{Settings.spriteDir}/sprite"
+    @spriteNumber = Math.floor(Math.random() * 9)
+    baseSource = "#{Settings.spriteDir}#{@spriteNumber}/sprite"
     @playerImages = [new Image(), new Image(), new Image(), new Image()]
     for x in [0..3]
       @playerImages[x].src = baseSource + x + ".png"
