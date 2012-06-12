@@ -40,16 +40,15 @@ class BuildBoobyTrapAction extends Action
 class DrinkWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) ->
-      Game.player.changeThirst(90)
-      Game.player.increaseHealth(5)
+      Game.player.increaseThirst(5)
       Game.announce("Drinking water at #{x},#{y}")
     )
 
 class DrinkPoisonedWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) -> 
-      Game.player.increaseThirst(10)
-      Game.player.decreaseHealth(10)
+      Game.player.increaseThirst(5)
+      Game.player.decreaseHealth(5)
       Game.announce("Drinking poisoned water at #{x},#{y}")
     )
 
@@ -62,7 +61,6 @@ class ChopTreeAction extends Action
           hasAxe = true
           break
       if (hasAxe)
-        console.log "has axe"
         map.setTileElement(x,y,TileType.grass)
         map.setItemElement(x,y,TileType.log)
         Game.announce("Chopped down tree at #{x},#{y}.")
