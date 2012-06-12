@@ -40,17 +40,15 @@ class BuildBoobyTrapAction extends Action
 class DrinkWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) ->
-      Game.player.thirst = 90
-      Game.player.health += 5
-      if Game.player.health > maxHealth then Game.player.health = maxHealth 
+      Game.player.increaseThirst(5)
       Game.announce("Drinking water at #{x},#{y}")
     )
 
 class DrinkPoisonedWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) -> 
-      Game.player.thirst += 10 if Game.player.thirst < 90
-      Game.player.health = Game.player.health - 2
+      Game.player.increaseThirst(5)
+      Game.player.decreaseHealth(5)
       Game.announce("Drinking poisoned water at #{x},#{y}")
     )
 
@@ -63,7 +61,6 @@ class ChopTreeAction extends Action
           hasAxe = true
           break
       if (hasAxe)
-        console.log "has axe"
         map.setTileElement(x,y,TileType.grass)
         map.setItemElement(x,y,TileType.log)
         Game.announce("Chopped down tree at #{x},#{y}.")
@@ -149,12 +146,9 @@ class EatItemAction extends Action
     super('Eat Item', (slotIndex)->
       #announce that we're eting item
       #Game.announce "Eating " + Game.player.inventory
-      Game.player.health += @healthgain
-      if Game.player.health > maxHealth then Game.player.health = maxHealth
-      Game.player.stamina += @staminagain
-      if Game.player.stamina > maxStamina then Game.player.stamina = maxStamina
-      Game.player.hunger += @hungergain
-      if Game.player.hunger > maxHunger then Game.player.hunger = maxHunger
+      Game.player.increaseHealth(@healthgain)
+      Game.player.increaseStamina(@staminagain)
+      Game.player.increaseHunger(@hungergain)
       Game.player.removeitemIndex(slotIndex)
     )
 
@@ -162,12 +156,9 @@ class DrinkBottleAction extends Action
   constructor: (@healthgain, @staminagain, @thirstgain) ->
     super('Drink Water', (slotIndex)->
       #announce that we're drinkin water
-      Game.player.health += @healthgain
-      if Game.player.health > maxHealth then Game.player.health = maxHealth
-      Game.player.stamina += @staminagain
-      if Game.player.stamina > maxStamina then Game.player.stamina = maxStamina
-      Game.player.thirst += @thirstgain
-      if Game.player.thirst > maxThirst then Game.player.thirst = maxThirst
+      Game.player.increaseHealth(@healthgain)
+      Game.player.increaseStamina(@staminagain)
+      Game.player.increaseHunger(@hungergain)
       Game.player.removeitemIndex(slotIndex)
       Game.player.additem(11)
     )
