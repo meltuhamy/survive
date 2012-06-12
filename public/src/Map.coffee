@@ -16,10 +16,8 @@ class Map
         constructor: (@tileGrid, @itemGrid) ->
                 @tileGridOriginal = new Grid([],@tileGrid.numrows,@tileGrid.numcols)
                 @itemGridOriginal = new Grid([],@itemGrid.numrows,@itemGrid.numcols)
-                @tileGridOriginal.mapArray = []
-                @tileGridOriginal.mapArray.push arrayitem for arrayitem in @tileGrid.mapArray
-                @itemGridOriginal.mapArray = []
-                @itemGridOriginal.mapArray.push arrayitem for arrayitem in @itemGrid.mapArray
+                @tileGridOriginal.mapArray = @tileGrid.mapArray[..]
+                @itemGridOriginal.mapArray = @itemGrid.mapArray[..]
                 if @tileGrid.numrows != @itemGrid.numrows or @tileGrid.numcols != @itemGrid.numcols then console.log 'Sizes of grids dont match'
         getTileElement: (row, col) -> @tileGrid.getElement(row,col)
         getItemElement: (row, col) -> @itemGrid.getElement(row,col)
@@ -54,10 +52,8 @@ class Map
                 menuactions = menuactions.concat(tileactions)
                 return menuactions
         restore: -> 
-                @tileGrid.mapArray = []
-                @tileGrid.mapArray.push arrayitem for arrayitem in @tileGridOriginal.mapArray
-                @itemGrid.mapArray = []
-                @itemGrid.mapArray.push arrayitem for arrayitem in @itemGridOriginal.mapArray
+                @tileGrid.mapArray = @tileGridOriginal.mapArray[..] #copies an array physically
+                @itemGrid.mapArray = @itemGridOriginal.mapArray[..]
 
 
 if(Settings.DEBUGMODE)
