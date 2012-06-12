@@ -21,8 +21,6 @@ class Game
   @hoverSelectLayer = null
   @onload: =>
     $('.actionmenu').hide()
-    Settings.canvasWidth = $("##{Settings.canvasIDName}").width()
-    Settings.canvasHeight = $("##{Settings.canvasIDName}").height()
     @gameloaded = true
     @createStage()
 
@@ -150,7 +148,7 @@ class Game
   @update = (modifier) =>
     # draw onto the blue debug bar at the top of the game
     $('.debugbar').html("inventory = #{@player.inventory}, @player.tilex = #{@player.tilex}, @player.tiley = #{@player.tiley} \n
-      health = #{@player.health}, stamina = #{@player.stamina}, hunger = #{@player.hunger}, thirst = #{@player.thirst}")
+      health = #{@player.stats.health}, stamina = #{@player.stats.stamina}, hunger = #{@player.stats.hunger}, thirst = #{@player.stats.thirst}")
     # call update methods
     if(@gamestarted || Settings.DEBUGMODE)
       @player.update()
@@ -224,7 +222,7 @@ class Game
   then_ = Date.now()
 
   @beginMainLoop = =>
-    @mainLoopIntervalId = setInterval @mainLoop, 10
+    @mainLoopIntervalId = setInterval @mainLoop, 30
 
   @replayLoop = =>
     @replayGameRender()

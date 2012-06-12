@@ -19,6 +19,7 @@
     <script type="text/javascript">
       Settings.canvasIDName = 'canvas'
       //  Executes once page has loaded
+      
       $(document).ready(function(){
         Game.onload();
       });
@@ -52,10 +53,30 @@
         </div><!--/canvasContainer-->
         <div id="statsAndInventoryBar">
           <!-- Contains health, food, and water bar and 6 inventory slots. -->
-          <div id="healthBar" class="statsBar" ></div>
-          <div id="waterBar" class="statsBar"></div>
-          <div id="foodBar" class="statsBar"></div>
-          <div id="staminaBar" class="statsBar"></div>
+          <div id="healthBarContainer" class="statsBarContainer" >
+            <div class="statsBarBackground">
+              <div id="healthBar" class="statsBar">
+              </div>
+            </div>
+          </div>
+          <div id="thirstBarContainer" class="statsBarContainer">
+            <div class="statsBarBackground">
+              <div id="thirstBar" class="statsBar">
+              </div>
+            </div>
+          </div>
+          <div id="hungerBarContainer" class="statsBarContainer">
+            <div class="statsBarBackground">
+              <div id="hungerBar" class="statsBar">
+              </div>
+            </div>
+          </div>
+          <div id="staminaBarContainer" class="statsBarContainer">
+            <div class="statsBarBackground">
+              <div id="staminaBar" class="statsBar">
+              </div>
+            </div>
+          </div>
           <div id="inventoryBar">
             <ul id="inventorySlots"></ul>
             <div id="inventoryactionmenu" class="actionmenu"><ul id="inventoryactionlist" class="listTypeNone"></ul></div>

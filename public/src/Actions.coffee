@@ -11,11 +11,11 @@ class DigTrapAction extends Action
     super('Dig Trap', (x,y) -> 
       hasShovel = false
       for invItem in [0...Game.player.inventory.length]
-        if (Game.player.inventory[invItem] == 3)
+        if (Game.player.inventory[invItem] == ItemType.shovel)
           hasShovel = true
           break
       if (hasShovel) 
-        map.setTileElement(x,y,6)
+        map.setTileElement(x,y,TileType.holeTrap)
         Game.announce("Digging a trap at #{x},#{y}")
       else 
         Game.announce("Can't dig a trap at #{x},#{y}. I need a shovel.")
@@ -26,12 +26,12 @@ class BuildBoobyTrapAction extends Action
     super('Build Booby Trap', (x,y) -> 
       hasLog = false
       for invItem in [0...Game.player.inventory.length]
-        if (Game.player.inventory[invItem] == 4)
+        if (Game.player.inventory[invItem] == ItemType.log)
           hasLog = true
-          Game.player.removeitem(4)
+          Game.player.removeitem(ItemType.log)
           break
       if (hasLog) 
-        map.setTileElement(x,y,7)
+        map.setTileElement(x,y,TileType.boobyTrap)
         Game.announce("Building a booby-trap at #{x},#{y}")
       else 
         Game.announce("Can't build a booby-trap at #{x},#{y}. I need a log.")
@@ -59,13 +59,13 @@ class ChopTreeAction extends Action
     super('Chop Tree', (x,y) -> 
       hasAxe = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == 5)
+        if (Game.player.inventory[i] == ItemType.axe)
           hasAxe = true
           break
       if (hasAxe)
         console.log "has axe"
-        map.setTileElement(x,y,0)
-        map.setItemElement(x,y,4)
+        map.setTileElement(x,y,TileType.grass)
+        map.setItemElement(x,y,TileType.log)
         Game.announce("Chopped down tree at #{x},#{y}.")
       else 
         Game.announce("Can't chop down tree at #{x},#{y}. I need an axe.")
@@ -76,22 +76,23 @@ class BurnTreeAction extends Action
     super('Burn Tree', (x,y) -> 
       hasTorch = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == 6)
+        if (Game.player.inventory[i] == ItemType.torch)
           hasTorch = true
           break
       if (hasTorch)
-        map.setTileElement(x,y,1)
+        map.setTileElement(x,y,TileType.fire)
         Game.announce("Burnt down tree at #{x},#{y}.")
       else 
         Game.announce("Can't burn down tree at #{x},#{y}. I need a torch.")
     )
 
+#Could you rethink this logic
 class PoisonWaterAction extends Action
   constructor: -> 
     super('Poison Water', (x,y) -> 
       hasPoison = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == 7)
+        if (Game.player.inventory[i] == TileType.poison)
           hasPoison = true
           #Game.player.removeitem(7)
           Game.player.removeitemIndex(i)
