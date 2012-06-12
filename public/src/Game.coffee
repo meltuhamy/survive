@@ -76,7 +76,20 @@ class Game
     @stage.add @itemLayer
     @stage.add @playerLayer
 
+  @playerImages: [[],[],[],[],[],[],[],[],[]]
+
+  @loadPlayerImages: =>
+    for folder in [0..8]
+      baseSource = "#{Settings.spriteDir}" + folder + "\\"
+      for direction in [0..3]
+        @playerImages[folder].push(new Image())
+        @playerImages[folder][direction].src = baseSource + "sprite#{direction}.png"
+        @playerImages[folder][direction].isReady = false
+        @playerImages[folder][direction].onload = ->
+          @isReady = true
+
   @start = (allplayers) =>
+    @loadPlayerImages()
     @setOpponents allplayers
     @gamestarted = true
     NetworkClient.sendPlayerData()
@@ -151,7 +164,7 @@ class Game
         # draw other players that are in our view
         for p in @opponents
           if (p.tilex == visionx && p.tiley == visiony)
-            playerContext.drawImage @player.playerImage, visionx*Settings.tileWidth-Camera.scrollx, visiony*Settings.tileHeight-Camera.scrolly if @player.imgReady()
+            playerContext.drawImage @playerImages[p.spriteNumber][p.direction], visionx*Settings.tileWidth-Camera.scrollx, visiony*Settings.tileHeight-Camera.scrolly if @player.imgReady()
 
     # draw the yellow square for the tile the player is currently standing on
     @hoverSelectBox.setX @player.tilex*Settings.tileWidth - Math.floor(Camera.scrollx)

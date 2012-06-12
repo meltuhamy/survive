@@ -8,7 +8,7 @@ class NetworkClient
     socket.emit "clientSendingRoomNumber", roomNumber
 
   @sendPlayerData = ->
-    playerData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex, tiley: Game.player.tiley}
+    playerData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex, tiley: Game.player.tiley, spriteNumber: Game.player.spriteNumber, direction: Game.player.direction}
     if !@OFFLINEMODE then socket.emit "clientSendingPlayerData", playerData
 
   @sendItemData = (itemData) ->
@@ -28,6 +28,7 @@ class NetworkClient
   @receiveRoomJoin = (initialData) ->
     if initialData.themap?
       gameMap = initialData.themap
+      console.log "Received game map. Width: #{gameMap.mapwidth} Height: #{gameMap.mapheight}"
       map = new Map(new Grid(gameMap.tiles, gameMap.mapwidth, gameMap.mapheight), new Grid(gameMap.items, gameMap.mapwidth, gameMap.mapheight))
     Game.spawnPlayer(initialData.spawn)
     
@@ -39,6 +40,8 @@ class NetworkClient
       playerindex = Game.getPlayerIndexById(playerData.id)
       Game.opponents[playerindex].tilex = playerData.tilex
       Game.opponents[playerindex].tiley = playerData.tiley
+      Game.opponents[playerindex].direction = playerData.direction
+      Game.opponents[playerindex].spriteNumber = playerData.spriteNumber
 
   @receiveReplay = (replayData) =>
     Game.gameReplay(replayData)

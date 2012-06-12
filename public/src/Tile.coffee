@@ -85,9 +85,6 @@ class itemTile extends Tile
   actions: [new PickUpItemAction()]
   inventoryActions: [new DropItemAction()]
 
-class GreenHelm extends itemTile
-  constructor: -> super("#{Settings.itemDir}/greenhelm.gif", 'Green helmet')
-
 class Shovel extends itemTile
   constructor: -> super("#{Settings.itemDir}/shovel.png",'Shovel')
 
