@@ -105,18 +105,18 @@ class Game
 
   @opponentDisconnect = (id) ->
     @removeOpponent(id)
-    @checkGameover()
+    #@checkGameover()
 
   @opponentDeath = (deathData) ->
     @removeOpponent(deathData.id)
-    @checkGameover()
+    #@checkGameover()
 
-  @checkGameover = ->
-    @announce("Gameover!!")
-    if (@opponents.length == 0)
-      @announce("You win!")
-    else if (@opponents.length == 1)
-      @announce("You lose!")
+  #@checkGameover = ->
+    #@announce("Gameover!!")
+    #if (@opponents.length == 0)
+      #@announce("You win!")
+    #else if (@opponents.length == 1)
+      #@announce("You lose!")
 
   @render = =>
     if (!@gamestarted && !Settings.DEBUGMODE) then return

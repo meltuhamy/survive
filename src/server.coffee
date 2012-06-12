@@ -64,21 +64,22 @@ class Room
   getFriendlyName: -> @friendlyName
   setFriendlyName: (name) => @friendlyName = name
 
+
   getSockets: -> 
     sockets = []
     io.sockets.clients(@getName()).forEach((s) ->  sockets.push s)
     return sockets
   getSocketsExceptFor: (searchId) ->
     sockets = []
-    io.sockets.clients(@getName()).forEach((s) ->  sockets.push s if s.id isnt searchId)
+    io.sockets.clients(@getName()).forEach((s) ->  sockets.push s if s.startid isnt searchId)
     return sockets
   getPlayerIdsExceptFor: (searchId) ->
     ids = []
-    ids.push {id: parseInt(c.id)} for c in @getSockets() when c.id isnt searchId
+    ids.push {id: c.startid} for c in @getSockets() when c.startid isnt searchId
     return ids
   getPlayerIds: ->
     ids = []
-    ids.push {id: parseInt(c.id)} for c in @getSockets()
+    ids.push {id: c.startid} for c in @getSockets()
     return ids
 
   getPlayerCount: -> @getPlayerIds().length
@@ -101,9 +102,9 @@ class Room
     # if the requested game room is not full and hasn't started then he can join
     if(!@isInGame() && !@isFull())
       @addPlayer(client)
-      client.emit("message", "Welcome to room #{@friendlyName}. Your id is #{client.id}")
+      client.emit("message", "Welcome to room #{@friendlyName}. Your id is #{client.startid}")
       spawnLocation = @getSpawnLocation()
-      spawnData = {id: parseInt(client.id), roomNumber: @roomNumber, tilex: spawnLocation.tilex, tiley:spawnLocation.tiley}
+      spawnData = {id: client.startid, roomNumber: @roomNumber, tilex: spawnLocation.tilex, tiley:spawnLocation.tiley}
       client.emit('serverSendingAcceptJoin', {spawn: spawnData, themap: @mapData})
       # if the room is full *after* he has joined - then start the game
       if(@isFull())
@@ -159,9 +160,21 @@ class Room
   sendAttack: (attackData) ->
     @emit('serverSendingAttackData', attackData)
 
-  sendDeath: (deathData) ->
+  sendDeath: (deathData, client) ->
+    client.dead = true
     @emit('serverSendingDeathData', deathData)
+    console.log "TEEEEEEEEEEESTING #{deathData.id}, #{client.startid}"
+    @checkGameover()
     
+  checkGameover: ->
+    alive = []
+    alive.push s for s in @getSockets() when !s.dead?
+    if(alive.length == 1)
+      winnerid = alive[0]
+      console.log "WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HAVE A WINNER:"
+      console.log winnerid.startid
+      console.log "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WELLDONE!!!!!!!!!!!!!!!!!!!!!!!"
+      @emit('serverSendingWinnder',winnerid.startid)
 
 
 getRoomByName = (name) ->
@@ -189,6 +202,9 @@ roomsToSend = ->
 io.sockets.on "connection", (client) ->
   # Lobby stuff
   client.join('lobby')
+  client.startid = client.id
+
+  console.log "CONNECT: #{client.startid}"
 
   # Send the list of rooms to the client
 
@@ -197,22 +213,23 @@ io.sockets.on "connection", (client) ->
   # The client has request to join a room
   client.on "clientSendingRoomNumber", (roomNumber) ->
     client.leave('lobby')
+    console.log "SENDING ROOM NUMBER: #{client.startid}"
     requestedRoom = rooms[roomNumber].requestJoin(client)
     
   client.on "clientSendingPlayerData", (playerData) ->
-    rooms[playerData.roomNumber].sendPlayer(playerData, client.id)
+    rooms[playerData.roomNumber].sendPlayer(playerData, client.startid)
 
   client.on "clientSendingItemData", (itemData) ->
-    rooms[itemData.roomNumber].sendItem(itemData, client.id)
+    rooms[itemData.roomNumber].sendItem(itemData, client.startid)
 
   client.on "clientSendingTileData", (tileData) ->
-    rooms[tileData.roomNumber].sendTile(tileData, client.id)
+    rooms[tileData.roomNumber].sendTile(tileData, client.startid)
 
   client.on "clientSendingAttackData", (attackData) ->
     rooms[attackData.roomNumber].sendAttack(attackData)
 
   client.on "clientSendingDeathData", (deathData) ->
-    rooms[deathData.roomNumber].sendDeath(deathData)
+    rooms[deathData.roomNumber].sendDeath(deathData, client)
 
   client.on "clientSendingReplayRequest", (deathData) ->
     query = dbClient.query("SELECT * FROM actions WHERE gameid = #{deathData.roomNumber}");
@@ -224,11 +241,14 @@ io.sockets.on "connection", (client) ->
 
   client.on "disconnect", ->
     console.log "<<<<<<<CLIENT DISCONNECTED>>>>>>> "
+    console.log "DISCONNECTED: #{client.startid}"
     client.broadcast.emit("serverSendingRooms", roomsToSend())
+    client.dead = true
     for key, val of io.sockets.manager.roomClients[client.id]
       if (key isnt '' && key isnt '/lobby')
         leavingRoom = getRoomByName(key.substring(1))
-        leavingRoom.emit("serverSendingPlayerDisconnected", client.id)
+        leavingRoom.checkGameover()
+        leavingRoom.emit("serverSendingPlayerDisconnected", client.startid)
         # if two people currently connected in room and one leaves, end the game
         if  0<leavingRoom.getPlayerCount()<=2
           console.log "<<<<<<<<<<<<<<<GAME ENDED>>>>>>>>>>>>>>>>"
