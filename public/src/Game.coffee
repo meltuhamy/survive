@@ -19,6 +19,7 @@ class Game
   @playerLayer = null
   @hoverSelectBox = null
   @hoverSelectLayer = null
+
   @onload: =>
     $('.actionmenu').hide()
     @gameloaded = true
@@ -34,12 +35,14 @@ class Game
       PlayerInput.onMouseMove(evt, @)
     if(!Settings.DEBUGMODE)
       $('.game').hide();
+
   @announce: (content) => 
     $('#playerAnnouncementList').prepend("<li class=\"playerAnnouncement\">#{content}</li>")
     if($('.playerAnnouncement').length >= Settings.MAXANNOUNCEMENTS)
       $('.playerAnnouncement').last().remove()
     else
       $('#playerAnnouncements').css('margin-top', '-=25')
+
   @createStage : =>  
     # Map layer
     @mapLayer = new Kinetic.Layer()
@@ -92,13 +95,28 @@ class Game
     @opponents = []
     @opponents.push new Player(p.id, p.roomNumber) for p in players when p.id isnt @player.id
 
-  @removePlayerFromArray = (id) ->
+  @removeOpponent = (id) ->
     @opponents.splice @getPlayerIndexById(id), 1
-
+    
   @getPlayerIndexById = (id) ->
     ids = []
     ids.push p.id for p in @opponents
     return ids.indexOf(id)
+
+  @opponentDisconnect = (id) ->
+    @removeOpponent(id)
+    @checkGameover()
+
+  @opponentDeath = (deathData) ->
+    @removeOpponent(deathData.id)
+    @checkGameover()
+
+  @checkGameover = ->
+    @announce("Gameover!!")
+    if (@opponents.length == 0)
+      @announce("You win!")
+    else if (@opponents.length == 1)
+      @announce("You lose!")
 
   @render = =>
     if (!@gamestarted && !Settings.DEBUGMODE) then return
@@ -205,7 +223,6 @@ class Game
     @replayData = receivedReplayData
     clearInterval @mainLoopIntervalId
     @replayLoopIntervalId = setInterval @replayLoop, 40
-
 
 
   @mainLoop = =>

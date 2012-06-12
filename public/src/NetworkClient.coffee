@@ -21,6 +21,10 @@ class NetworkClient
     if !@OFFLINEMODE
       socket.emit "clientSendingAttackData", attackData
 
+  @sendDeathData = (deathData) ->
+     if !@OFFLINEMODE
+      socket.emit "clientSendingDeathData", deathData
+
   @receiveRoomJoin = (initialData) ->
     if initialData.themap?
       gameMap = initialData.themap
@@ -37,10 +41,14 @@ class NetworkClient
       Game.opponents[playerindex].tiley = playerData.tiley
 
   @receiveReplay = (replayData) =>
-    Game.gameReplay replayData
+    Game.gameReplay(replayData)
+
+  @receiveDeathData = (deathData) =>
+    if deathData.id != Game.player.id
+      Game.opponentDeath(deathData)
 
   @receiveOpponentDisconnect = (id) =>
-    Game.removePlayerFromArray id
+    Game.removeOpponent(id)
 
   @receiveItemData = (itemData) ->
     if itemData.id != Game.player.id
@@ -103,6 +111,9 @@ socket.on "serverSendingTileData", (tileData) ->
 socket.on "serverSendingAttackData", (attackData) ->
   NetworkClient.receiveAttackData(attackData)
 
+socket.on "serverSendingDeathData", (deathData) ->
+  NetworkClient.receiveDeathData(deathData)
+  
 socket.on "message", (data) ->
   NetworkClient.log "Received: #{data}"
 

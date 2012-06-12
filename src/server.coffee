@@ -159,6 +159,11 @@ class Room
   sendAttack: (attackData) ->
     @emit('serverSendingAttackData', attackData)
 
+  sendDeath: (deathData) ->
+    @emit('serverSendingDeathData', deathData)
+    
+
+
 getRoomByName = (name) ->
   rooms[parseInt(name.substring(4))]
 
@@ -205,6 +210,9 @@ io.sockets.on "connection", (client) ->
 
   client.on "clientSendingAttackData", (attackData) ->
     rooms[attackData.roomNumber].sendAttack(attackData)
+
+  client.on "clientSendingDeathData", (deathData) ->
+    rooms[deathData.roomNumber].sendDeath(deathData)
 
   client.on "clientSendingReplayRequest", (deathData) ->
     query = dbClient.query("SELECT * FROM actions WHERE gameid = #{deathData.roomNumber}");

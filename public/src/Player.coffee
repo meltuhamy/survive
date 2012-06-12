@@ -14,7 +14,6 @@ class Player
   playerImage: null
   # Movement
   speed: 2.8
-  dir: 0
   direction: 0
   playerMovingInDir: [false, false, false, false]
   directions: {up:0, right:1, down:2, left:3}
@@ -31,7 +30,7 @@ class Player
       @playerImages[x].onload = ->
         @isReady = true
     @turn(@directions.down)
-    @changeHealth(100)
+    @changeHealth(10)
     @changeStamina(100)
     @changeHunger(100)
     @changeThirst(100)
@@ -91,7 +90,6 @@ class Player
   decreaseThirst: (delta) ->
     @changeThirst(@stats.thirst - delta)
 
-
   statchange: (tile) ->
     @decreaseHealth(tile.health_cost)
     @decreaseStamina(tile.stamina_cost)
@@ -128,9 +126,11 @@ class Player
       return false
 
   setDead: ->
-    Game.announce 'Player Died'
+    Game.announce 'Your Player Died'
     @playerMovingInDir = [false, false, false, false] 
     @alive = false
+    deathData = {id:@id, roomNumber:@roomNumber, tilex:@tilex, tiley:@tiley, inventory:@inventory}
+    NetworkClient.sendDeathData(deathData)
 
   sendAttack: ->
     if @stats.stamina >= 5
