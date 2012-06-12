@@ -31,6 +31,11 @@ class Player
       @playerImages[x].onload = ->
         @isReady = true
     @turn(@directions.down)
+    @changeHealth(100)
+    @changeStamina(100)
+    @changeHunger(100)
+    @changeThirst(100)
+
 
   #imgReady: -> @playerImages[0].isReady && @playerImages[1].isReady && @playerImages[2].isReady && @playerImages[3].isReady
   imgReady: -> @playerImage.isReady
@@ -45,18 +50,22 @@ class Player
     @stats.health = @statsLimit(amt)
     if(@stats.health == 0) then @setDead()
     # change health bar
+    $('#healthBar').css('width', "#{@stats.health}%")
 
   changeStamina: (amt) ->
     @stats.stamina = @statsLimit(amt)
     # change stamina bar
+    $('#staminaBar').css('width', "#{@stats.stamina}%")
 
   changeHunger: (amt) ->
     @stats.hunger = @statsLimit(amt)
     # change hunger bar
+    $('#hungerBar').css('width', "#{@stats.hunger}%")
 
   changeThirst: (amt) ->
     @stats.thirst = @statsLimit(amt)
     # change thirst bar
+    $('#thirstBar').css('width', "#{@stats.thirst}%")
 
   increaseHealth: (delta) ->
     @changeHealth(@stats.health + delta)

@@ -161,10 +161,10 @@ body{
 #healthBarContainer{
     background-image: url('../assets/ui/health_bar.png');
 }
-#waterBarContainer{
+#thirstBarContainer{
     background-image: url('../assets/ui/thirst_bar.png');
 }
-#foodBarContainer{
+#hungerBarContainer{
     background-image: url('../assets/ui/hunger_bar.png');
 }
 #staminaBarContainer{
@@ -194,11 +194,11 @@ body{
     background-image: url('../assets/ui/health-bar-fill.png');
 }
 
-#waterBar{
+#thirstBar{
     background-image: url('../assets/ui/thirst-bar-fill.png');
 }
 
-#foodBar{
+#hungerBar{
     background-image: url('../assets/ui/hunger-bar-fill.png');
 }
 
