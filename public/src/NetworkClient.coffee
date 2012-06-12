@@ -8,7 +8,7 @@ class NetworkClient
     socket.emit "clientSendingRoomNumber", roomNumber
 
   @sendPlayerData = ->
-    playerData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex, tiley: Game.player.tiley}
+    playerData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex, tiley: Game.player.tiley, direction: Game.player.direction}
     if !@OFFLINEMODE then socket.emit "clientSendingPlayerData", playerData
 
   @sendItemData = (itemData) ->
@@ -35,6 +35,7 @@ class NetworkClient
       playerindex = Game.getPlayerIndexById(playerData.id)
       Game.opponents[playerindex].tilex = playerData.tilex
       Game.opponents[playerindex].tiley = playerData.tiley
+      Game.opponents[playerindex].direction = playerData.direction
 
   @receiveReplay = (replayData) =>
     Game.gameReplay replayData

@@ -11,11 +11,11 @@ class DigTrapAction extends Action
     super('Dig Trap', (x,y) -> 
       hasShovel = false
       for invItem in [0...Game.player.inventory.length]
-        if (Game.player.inventory[invItem] == ItemType.shovel)
+        if (Game.player.inventory[invItem] == map.ItemType.shovel)
           hasShovel = true
           break
       if (hasShovel) 
-        map.setTileElement(x,y,TileType.holeTrap)
+        map.setTileElement(x,y,map.TileType.holeTrap)
         Game.announce("Digging a trap at #{x},#{y}")
       else 
         Game.announce("Can't dig a trap at #{x},#{y}. I need a shovel.")
@@ -26,12 +26,12 @@ class BuildBoobyTrapAction extends Action
     super('Build Booby Trap', (x,y) -> 
       hasLog = false
       for invItem in [0...Game.player.inventory.length]
-        if (Game.player.inventory[invItem] == ItemType.log)
+        if (Game.player.inventory[invItem] == map.ItemType.log)
           hasLog = true
-          Game.player.removeitem(ItemType.log)
+          Game.player.removeitem(map.ItemType.log)
           break
       if (hasLog) 
-        map.setTileElement(x,y,TileType.boobyTrap)
+        map.setTileElement(x,y,map.TileType.boobyTrap)
         Game.announce("Building a booby-trap at #{x},#{y}")
       else 
         Game.announce("Can't build a booby-trap at #{x},#{y}. I need a log.")
@@ -40,14 +40,14 @@ class BuildBoobyTrapAction extends Action
 class DrinkWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) ->
-      Game.player.increaseThirst(5)
+      Game.player.increaseThirst(10)
       Game.announce("Drinking water at #{x},#{y}")
     )
 
 class DrinkPoisonedWaterAction extends Action
   constructor: -> 
     super('Drink water', (x,y) -> 
-      Game.player.increaseThirst(5)
+      Game.player.increaseThirst(10)
       Game.player.decreaseHealth(5)
       Game.announce("Drinking poisoned water at #{x},#{y}")
     )
@@ -57,12 +57,12 @@ class ChopTreeAction extends Action
     super('Chop Tree', (x,y) -> 
       hasAxe = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == ItemType.axe)
+        if (Game.player.inventory[i] == map.ItemType.axe)
           hasAxe = true
           break
       if (hasAxe)
-        map.setTileElement(x,y,TileType.grass)
-        map.setItemElement(x,y,TileType.log)
+        map.setTileElement(x,y,map.TileType.grass)
+        map.setItemElement(x,y,map.TileType.log)
         Game.announce("Chopped down tree at #{x},#{y}.")
       else 
         Game.announce("Can't chop down tree at #{x},#{y}. I need an axe.")
@@ -73,11 +73,11 @@ class BurnTreeAction extends Action
     super('Burn Tree', (x,y) -> 
       hasTorch = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == ItemType.torch)
+        if (Game.player.inventory[i] == map.ItemType.torch)
           hasTorch = true
           break
       if (hasTorch)
-        map.setTileElement(x,y,TileType.fire)
+        map.setTileElement(x,y,map.TileType.fire)
         Game.announce("Burnt down tree at #{x},#{y}.")
       else 
         Game.announce("Can't burn down tree at #{x},#{y}. I need a torch.")
@@ -89,7 +89,7 @@ class PoisonWaterAction extends Action
     super('Poison Water', (x,y) -> 
       hasPoison = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == TileType.poison)
+        if (Game.player.inventory[i] == map.TileType.poison)
           hasPoison = true
           #Game.player.removeitem(7)
           Game.player.removeitemIndex(i)
@@ -158,7 +158,7 @@ class DrinkBottleAction extends Action
       #announce that we're drinkin water
       Game.player.increaseHealth(@healthgain)
       Game.player.increaseStamina(@staminagain)
-      Game.player.increaseHunger(@hungergain)
+      Game.player.increaseThirst(@thirstgain)
       Game.player.removeitemIndex(slotIndex)
       Game.player.additem(11)
     )
@@ -166,8 +166,8 @@ class DrinkBottleAction extends Action
 class FillBottleAction extends Action
   constructor: ->
     super('Fill Bottle', (slotIndex)->
-      nextTile = map.getTileElement(Game.player.tilex + directions[Game.player.direction].x ,  Game.player.tiley + directions[Game.player.direction].y)
-      if (nextTile == 3)
+      nextTile = map.getTileElement(Game.player.tilex + Game.player.directionDeltas[Game.player.direction].x ,  Game.player.tiley + Game.player.directionDeltas[Game.player.direction].y)
+      if (nextTile == map.TileType.shallowWater || nextTile == map.TileType.deepWater)
         Game.player.removeitemIndex(slotIndex)
         Game.player.additem(2)
       else
