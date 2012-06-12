@@ -100,14 +100,13 @@ class Player
 
   decrement: ->
     if @alive
-      if(map.getTileElement(@tilex, @tiley) == 1)
-        @decreaseHealth(2)
-        @decreaseThirst(2)
-      @increaseStamina(1)
-      @decreaseThirst(1)
-      @decreaseHunger(1)
-      @decreaseHealth(1) if(@stats.hunger == 0)
-      @decreaseHealth(1) if(@stats.thirst == 0)
+      if(map.getTileElement(@tilex, @tiley) == 2)
+        @decreaseHealth(10)
+      @increaseStamina(5)
+      @decreaseThirst(5)
+      @decreaseHunger(5)
+      @decreaseHealth(5) if(@stats.hunger == 0)
+      @decreaseHealth(5) if(@stats.thirst == 0)
 
 
   removeitem: (itemNo) ->
