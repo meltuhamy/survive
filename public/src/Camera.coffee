@@ -15,32 +15,32 @@ class Camera
    @scrollxvel += @scrollxacc
    @scrolly += @scrollyvel
    @scrollyvel += @scrollyacc
-   if (Settings.canvasWidth < Settings.fullWidth)
+   if (Settings.canvasWidth < map.fullWidth())
     if (@scrollx < 0)
       @scrollx = 0
       @scrollxvel = 0
       @scrollxacc = 0
     else if (PlayerInput.mousex < Settings.canvasWidth * @scrollRegion)
       @scrollxacc = -@scrollAccConst
-    else if (@scrollx > Settings.fullWidth - Settings.canvasWidth)
-      @scrollx = Settings.fullWidth - Settings.canvasWidth 
+    else if (@scrollx > map.fullWidth() - Settings.canvasWidth)
+      @scrollx = map.fullWidth() - Settings.canvasWidth 
       @scrollxvel = 0
       @scrollxacc = 0
     else if (PlayerInput.mousex > Settings.canvasWidth * (1 - @scrollRegion))
-      @scrollxacc = scrollAccConst
+      @scrollxacc = @scrollAccConst
     else 
       @scrollxacc = 0
    else 
-     @scrollx = -(Settings.canvasWidth-Settings.fullWidth)/2  
-   if (Settings.canvasHeight < Settings.fullHeight)
+     @scrollx = -(Settings.canvasWidth-map.fullWidth())/2  
+   if (Settings.canvasHeight < map.fullHeight())
     if(@scrolly < 0)
       @scrolly = 0
       @scrollyvel = 0
       @scrollyacc = 0
     else if (PlayerInput.mousey < Settings.canvasHeight * @scrollRegion)
       @scrollyacc = -@scrollAccConst
-    else if (@scrolly > Settings.fullHeight - Settings.canvasHeight)
-      @scrolly = Settings.fullHeight - Settings.canvasHeight 
+    else if (@scrolly > map.fullHeight() - Settings.canvasHeight)
+      @scrolly = map.fullHeight() - Settings.canvasHeight 
       @scrollyvel = 0
       @scrollyacc = 0
     else if (PlayerInput.mousey > Settings.canvasHeight * (1 - @scrollRegion))
@@ -48,6 +48,6 @@ class Camera
     else 
       @scrollyacc = 0
    else 
-    @scrolly = -(Settings.canvasHeight-Settings.fullHeight)/2
+    @scrolly = -(Settings.canvasHeight-map.fullHeight())/2
    mouseSquarex = Math.floor(PlayerInput.mousex / Settings.tileWidth)
    mouseSquarey = Math.floor(PlayerInput.mousey / Settings.tileHeight)

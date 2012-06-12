@@ -34,7 +34,8 @@ makemenu = (x,y) ->
 
 # Makes the inventoryaction menu for given coordinates
 inventorymakemenu = (itemIndex) ->
-   inventorymenuactions = (map.getItemFromNumber Game.player.inventory[itemIndex]).inventoryActions   #first we get all actions available at given coordinates
+   $('#inventorySlots li').eq(itemIndex).css('box-shadow','inset 0 0 10px red')
+   inventorymenuactions = (map.getItemFromNumber Game.player.inventory[itemIndex]).inventoryActions
    console.log inventorymenuactions
    inventoryinputSelect = ''
    if (inventorymenuactions.length == 0) then return
@@ -92,11 +93,13 @@ inventoryactionMenuKeyDown = (evt) ->
     inventoryselectedAction = inventoryactions[inventoryactionMenuSelected]
     $('#inventoryactionmenu').fadeOut("fast")
     $('#inventoryactionlist').empty()
+    $('#inventorySlots li').eq(inventoryactionMenuChoosenSlot).css('box-shadow','inset 0 0 10px #000000')
     inventoryactionmenuVisible = false
     inventoryselectedAction.doFn(inventoryactionMenuChoosenSlot)
   else if(evt.keyCode == KEYCODE.escape)
     PlayerInput.focusOnCanvas = true
     $('#inventoryactionmenu').fadeOut("fast")
+    $('#inventorySlots li').eq(inventoryactionMenuChoosenSlot).css('box-shadow','inset 0 0 10px #000000')
     inventoryactionmenuVisible = false
   $('#inventoryactionlist li').eq(inventoryactionMenuSelected).toggleClass('selected')
 

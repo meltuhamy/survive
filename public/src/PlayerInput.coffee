@@ -42,3 +42,4 @@ class PlayerInput
     offset = $(elem).offset()
     @mousex = Math.floor(evt.pageX - offset.left)    # sets mousex var to new mouse position
     @mousey = Math.floor(evt.pageY - offset.top)     # sets mousey var to new mouse position
+    #console.log "Mousex, mousey #{@mousex},#{@mousey}"

@@ -9,6 +9,8 @@ class Grid
         setElement: (row,col,item) -> @mapArray[@gridIndex(row,col)] = item
 
 class Map
+        tileWidth: 25
+        tileHeight: 25
         tileArray: [0,new GrassTile(), new FireTile(), new HillTile(), new ShallowWaterTile(), new DeepWaterTile(), 
                     new TreeTile() , new HoleTrapTile(), new BoobyTrapTile(), new PoisonWaterTile(), new PoisonDeepWaterTile()]
         TileType: {none:0, grass:1, fire:2, hill:3, shallowWater: 4, deepWater:5, tree:6, holeTrap:7, boobyTrap:8, poisonWater:9, poisonDeepWater:10}
@@ -45,7 +47,7 @@ class Map
         removeItem: (row,col) -> @setItemElement row, col, 0, true
         noItem: (row,col) -> @itemGrid.getElement(row,col) == 0
 
-        inBounds: (col,row) -> (row >= 0) && (row < @tileGrid.numrows) && (col >= 0) && (col < @tileGrid.numcols)
+        inBounds: (col,row) -> (row >= 0) && (row < @numrows()) && (col >= 0) && (col < @numcols())
 
         getActions: (x,y) ->
                 tileactions = @getTile(x, y).actions
@@ -55,6 +57,10 @@ class Map
         restore: -> 
                 @tileGrid.mapArray = @tileGridOriginal.mapArray[..] #copies an array physically
                 @itemGrid.mapArray = @itemGridOriginal.mapArray[..]
+        numrows: -> @tileGrid.numrows
+        numcols: -> @tileGrid.numcols
+        fullWidth: -> @tileWidth*@numcols()
+        fullHeight: -> @tileHeight*@numrows()
 
 
 if(Settings.DEBUGMODE)

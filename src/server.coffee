@@ -168,9 +168,9 @@ class Room
     alive.push s for s in @getSockets() when !s.dead?
     if(alive.length == 1)
       winnerid = alive[0]
-      console.log "WEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE HAVE A WINNER:"
+      console.log "We have a winner>>>>>>>>>>"
       console.log winnerid.startid
-      console.log "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!WELLDONE!!!!!!!!!!!!!!!!!!!!!!!"
+      console.log alive
       @emit('serverSendingWinnder',winnerid.startid)
 
 
@@ -226,7 +226,7 @@ map9 = {tiles: tile9, items: item9, mapwidth: 20, mapheight: 30, spawnSpots:[{ti
 numRooms = 10
 rooms = []
 rooms.push new Room(0,map0)
-rooms.push new Room(1,map1,2)
+rooms.push new Room(1,map1,3)
 rooms.push new Room(2,map2)
 rooms.push new Room(3,map3)
 rooms.push new Room(4,map4)

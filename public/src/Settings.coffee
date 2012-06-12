@@ -7,11 +7,7 @@ class Settings
   @tileHeight = 25
   @canvasWidth = 900
   @canvasHeight = 600
-  @numRows = 20
-  @numCols = 30
-  @fullWidth = @tileWidth*@numCols
-  @fullHeight = @tileHeight*@numRows
-  @canvasIDName = 'container'
+  @canvasIDName = 'canvas'
   @MAXANNOUNCEMENTS = 5
   @DEBUGMODE = off
 

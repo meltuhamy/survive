@@ -62,7 +62,7 @@ class ChopTreeAction extends Action
           break
       if (hasAxe)
         map.setTileElement(x,y,map.TileType.grass)
-        map.setItemElement(x,y,map.TileType.log)
+        map.setItemElement(x,y,map.ItemType.log)
         Game.announce("Chopped down tree at #{x},#{y}.")
       else 
         Game.announce("Can't chop down tree at #{x},#{y}. I need an axe.")
@@ -89,16 +89,16 @@ class PoisonWaterAction extends Action
     super('Poison Water', (x,y) -> 
       hasPoison = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == map.TileType.poison)
+        if (Game.player.inventory[i] == map.ItemType.poison)
           hasPoison = true
           #Game.player.removeitem(7)
           Game.player.removeitemIndex(i)
           console.log "removed Item"
-          Game.player.additem(11)
+          Game.player.additem(map.ItemType.emptyBottle)
           console.log "added Item"
           break
       if (hasPoison)
-        map.setTileElement(x,y,8)
+        map.setTileElement(x,y,map.TileType.poisonWater)
         Game.announce("Poisoned water at #{x},#{y}.")
       else 
         Game.announce("Can't poison water at #{x},#{y}. I need a poison.")
@@ -109,16 +109,14 @@ class PoisonDeepWaterAction extends Action
     super('Poison Water', (x,y) -> 
       hasPoison = false
       for i in [0...Game.player.inventory.length]
-        if (Game.player.inventory[i] == 7)
+        if (Game.player.inventory[i] == map.ItemType.poison)
           hasPoison = true
           #Game.player.removeitem(7)
           Game.player.removeitemIndex(i)
-          console.log "removed Item"
-          Game.player.additem(11)
-          console.log "added Item"
+          Game.player.additem(map.ItemType.emptyBottle)
           break
       if (hasPoison)
-        map.setTileElement(x,y,9)
+        map.setTileElement(x,y,map.TileType.poisonDeepWater)
         Game.announce("Poisoned water at #{x},#{y}.")
       else 
         Game.announce("Can't poison water at #{x},#{y}. I need a poison.")
@@ -134,7 +132,7 @@ class PickUpItemAction extends Action
 class DropItemAction extends Action
   constructor: ->
     super('Drop Item', (slotIndex) -> 
-      if (map.getItemElement(Game.player.tilex,Game.player.tiley) == 0)
+      if (map.getItemElement(Game.player.tilex,Game.player.tiley) == map.ItemType.none)
         map.setItemElement(Game.player.tilex,Game.player.tiley,Game.player.inventory[slotIndex])
         Game.player.removeitemIndex(slotIndex)
       else
@@ -160,7 +158,7 @@ class DrinkBottleAction extends Action
       Game.player.increaseStamina(@staminagain)
       Game.player.increaseThirst(@thirstgain)
       Game.player.removeitemIndex(slotIndex)
-      Game.player.additem(11)
+      Game.player.additem(map.ItemType.emptyBottle)
     )
 
 class FillBottleAction extends Action
@@ -169,7 +167,7 @@ class FillBottleAction extends Action
       nextTile = map.getTileElement(Game.player.tilex + Game.player.directionDeltas[Game.player.direction].x ,  Game.player.tiley + Game.player.directionDeltas[Game.player.direction].y)
       if (nextTile == map.TileType.shallowWater || nextTile == map.TileType.deepWater)
         Game.player.removeitemIndex(slotIndex)
-        Game.player.additem(2)
+        Game.player.additem(map.ItemType.waterBottle)
       else
         Game.announce "You need open water to fill an empty bottle"
     )
