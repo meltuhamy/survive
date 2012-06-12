@@ -5,6 +5,8 @@ class Game
   @opponents: []
   @vision1 = [{x:0,y:0}, {x:1,y:0}, {x:0,y:1}, {x:-1,y:0}, {x:0,y:-1}]
   @vision2 = [{x:0,y:0},{x:-1,y:-1},{x:0,y:-1},{x:1,y:-1},{x:1,y:0},{x:1,y:1},{x:0,y:1},{x:-1,y:1},{x:-1,y:0},{x:-2,y:0},{x:0,y:-2},{x:0,y:2},{x:2,y:0}]
+  @vision3 = [{x:0,y:0},{x:-1,y:-1},{x:0,y:-1},{x:1,y:-1},{x:1,y:0},{x:1,y:1},{x:0,y:1},{x:-1,y:1},{x:-1,y:0},{x:-2,y:0},{x:0,y:-2},{x:0,y:2},{x:2,y:0},
+              {x:1,y:-2},{x:2,y:-1},{x:2,y:1},{x:1,y:2},{x:-1,y:2},{x:-2,y:1},{x:-2,y:-1},{x:-1,y:-2}]
   @replayData = []
   @replayGameTick = 0
   @mainLoopIntervalId = 0
@@ -152,7 +154,7 @@ class Game
               mapContext.drawImage @filterImage, x*Settings.tileWidth-Camera.scrollx, y*Settings.tileHeight-Camera.scrolly
 
     # for every grid location in our vision
-    for v in @vision2
+    for v in @vision3
       visionx = @player.tilex+v.x
       visiony = @player.tiley+v.y 
       if(map.inBounds(visionx,visiony))

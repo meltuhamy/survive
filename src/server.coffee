@@ -49,6 +49,7 @@ class Room
     @setFriendlyName(@getName())
     @maxPlayerCount = @maxPlayers
   ingame: false
+  gameEnded: false
   intervalid: null
   secondsElapsed: 0
   friendlyName: ""
@@ -164,14 +165,15 @@ class Room
     @checkGameover()
     
   checkGameover: ->
-    alive = []
-    alive.push s for s in @getSockets() when !s.dead?
-    if(alive.length == 1)
-      winnerid = alive[0]
-      console.log "We have a winner>>>>>>>>>>"
-      console.log winnerid.startid
-      console.log alive
-      @emit('serverSendingWinnder',winnerid.startid)
+    if(!gameEnded)
+      alive = []
+      alive.push s for s in @getSockets() when !s.dead?
+      if(alive.length == 1)
+        winnerid = alive[0]
+        console.log "We have a winner>>>>>>>>>>"
+        console.log winnerid.startid
+        @emit('serverSendingWinner',winnerid.startid)
+        gameEnded = true
 
 
 getRoomByName = (name) ->

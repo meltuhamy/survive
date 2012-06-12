@@ -6,7 +6,7 @@ class Camera
   @scrollyvel: 0.0
   @scrollyacc: 0.0
   @scrollRegion: 0.15
-  @scrollAccConst: 0.12
+  @scrollAccConst: 0.14
 
   @updateScroll: =>
    @scrollxvel = @scrollxvel * 0.92
