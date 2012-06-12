@@ -12,8 +12,8 @@ class Map
         tileArray: [0,new GrassTile(), new FireTile(), new HillTile(), new ShallowWaterTile(), new DeepWaterTile(), 
                     new TreeTile() , new HoleTrapTile(), new BoobyTrapTile(), new PoisonWaterTile(), new PoisonDeepWaterTile()]
         TileType: {none:0, grass:1, fire:2, hill:3, shallowWater: 4, deepWater:5, tree:6, holeTrap:7, boobyTrap:8, poisonWater:9, poisonDeepWater:10}
-        itemArray: [0, new GreenHelm(), new WaterBottle(), new Shovel(), new Log(), new Axe(), new Torch(), new Poison(), new Chicken(), new Berries(), new PoisonBerries(), new EmptyBottle()]
-        ItemType: {none:0,greenHelm:1,waterBottle:2,shovel:3,log:4,axe:5,torch:6,poison:7,chicken:8,berries:9,poisonBerries:10,emptyBottle:11}
+        itemArray: [0, new WaterBottle(), new Shovel(), new Log(), new Axe(), new Torch(), new Poison(), new Chicken(), new Berries(), new PoisonBerries(), new EmptyBottle()]
+        ItemType: {none:0,waterBottle:1,shovel:2,log:3,axe:4,torch:5,poison:6,chicken:7,berries:8,poisonBerries:9,emptyBottle:10}
         constructor: (@tileGrid, @itemGrid) ->
                 @tileGridOriginal = new Grid([],@tileGrid.numrows,@tileGrid.numcols)
                 @itemGridOriginal = new Grid([],@itemGrid.numrows,@itemGrid.numcols)

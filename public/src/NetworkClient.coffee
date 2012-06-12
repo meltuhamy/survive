@@ -24,6 +24,7 @@ class NetworkClient
   @receiveRoomJoin = (initialData) ->
     if initialData.themap?
       gameMap = initialData.themap
+      console.log "Received game map. Width: #{gameMap.mapwidth} Height: #{gameMap.mapheight}"
       map = new Map(new Grid(gameMap.tiles, gameMap.mapwidth, gameMap.mapheight), new Grid(gameMap.items, gameMap.mapwidth, gameMap.mapheight))
     Game.spawnPlayer(initialData.spawn)
     
