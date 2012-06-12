@@ -1,5 +1,3 @@
-directions = [{x:0,y:-1},{x:1,y:0},{x:0,y:1},{x:-1,y:0}]
-
 class PlayerInput
   @mousex: 0
   @mousey: 0
@@ -7,21 +5,20 @@ class PlayerInput
   @mouseSquarey: 0
   @focusOnCanvas: true
 
+  #@focus:0
+  #@focusEnum = {player:0, actionmenu:1, inventoryactionmenu:2}
+
   @onKeyUp: (evt) =>
     if @focusOnCanvas && Game.player.alive
       if (evt.keyCode == KEYCODE.action)
-        Game.player.playerMovingLeft = false
-        Game.player.playerMovingUp = false
-        Game.player.playerMovingRight = false
-        Game.player.playerMovingDown = false
-        actionx = Game.player.tilex + directions[Game.player.direction].x
-        actiony = Game.player.tiley + directions[Game.player.direction].y
+        Game.player.setNotMovingInAnyDir()
+        actionx = Game.player.tilex + Game.player.directionDeltas[Game.player.direction].x
+        actiony = Game.player.tiley + Game.player.directionDeltas[Game.player.direction].y
         makemenu actionx, actiony
       else if (KEYCODE.num1 <= evt.keyCode <= KEYCODE.num6)
         inventorymakemenu(evt.keyCode - KEYCODE.num1)
       else if (evt.keyCode == KEYCODE.attack)
         Game.player.sendAttack()
-        #NetworkClient.sendAttackData(3)
       else
         Game.player.onKeyUp(evt)
 
@@ -37,10 +34,7 @@ class PlayerInput
         actionMenuKeyDown(evt)
       else
         console.log "create inventory menu"
-        Game.player.playerMovingLeft = false
-        Game.player.playerMovingUp = false
-        Game.player.playerMovingRight = false
-        Game.player.playerMovingDown = false
+        Game.player.setNotMovingInAnyDir()
         inventoryactionMenuKeyDown(evt)
 
   @onMouseMove: (evt, elem) =>

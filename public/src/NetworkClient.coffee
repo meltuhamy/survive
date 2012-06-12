@@ -17,9 +17,8 @@ class NetworkClient
   @sendTileData = (tileData) ->
     if !@OFFLINEMODE then socket.emit "clientSendingTileData", tileData
 
-  @sendAttackData = (dmg) ->
+  @sendAttackData = (attackData) ->
     if !@OFFLINEMODE
-      attackData = {id: Game.player.id, roomNumber: Game.player.roomNumber, tilex: Game.player.tilex + directions[Game.player.direction].x, tiley: Game.player.tiley + directions[Game.player.direction].y, damage: dmg}
       socket.emit "clientSendingAttackData", attackData
 
   @receiveRoomJoin = (initialData) ->
