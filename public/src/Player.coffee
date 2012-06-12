@@ -98,7 +98,7 @@ class Player
 
   decrement: ->
     if @alive
-      if(map.getTileElement(@tilex, @tiley) == Game.TileType.fire)
+      if(map.getTileElement(@tilex, @tiley) == map.TileType.fire)
         @decreaseHealth(10)
       @increaseStamina(5)
       @decreaseThirst(5)
