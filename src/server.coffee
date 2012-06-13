@@ -128,10 +128,10 @@ class Room
       @sendItem itemData
 
   endGame: (clientId)=>
+    dbClient.query "delete from actions where gameid = #{@roomNumber};"
     @ingame = false
     @emit("serverSendingReload", '')
     clearInterval @intervalid
-
   sendPlayer: (playerData, clientid) ->
     @emit('serverSendingPlayerData', playerData)
     sqlString = "insert into actions values (NOW(), #{playerData.roomNumber}, '#{clientid}', 'p', #{playerData.tilex}, #{playerData.tiley});"
