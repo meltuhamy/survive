@@ -53,7 +53,12 @@ class NetworkClient
 
   @receiveWinner = (winnerID) =>
     if !@winnerRecieved
-      if winnerID == Game.player.id then Game.announce "You won!" else Game.announce "Everyone is good at something. You're good at losing. #{winnerID} won!"
+      if winnerID == Game.player.id
+        Game.announce "You won!" 
+        showYouWinText()
+      else 
+        Game.announce "Everyone is good at something. You're good at losing. #{winnerID} won!"
+        showYouLoseText()
       @winnerRecieved = true
 
   @receiveOpponentDisconnect = (id) =>
