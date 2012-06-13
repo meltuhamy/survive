@@ -19,15 +19,26 @@ sources = {
   yousuck: "you-suck-text.png"
 };
 fightText = null
+youwinText = null
+youloseText = null
 
 
 createTextEffects = (stage) =>
   @textUiLayer = new Kinetic.Layer()
   fightText = new Kinetic.Image({
     image: textImages.fight
-    alpha: 0
+  })
+  youwinText = new Kinetic.Image({
+    alpha: 0,
+    image: textImages.youwin
+  })
+  youloseText = new Kinetic.Image({
+    alpha: 0,
+    image: textImages.youlose
   })
   @textUiLayer.add fightText
+  @textUiLayer.add youwinText
+  @textUiLayer.add youloseText
   stage.add @textUiLayer
 
 
@@ -50,8 +61,9 @@ loadImages(sources);
 showFightText = =>
   #console.log (Settings.canvasWidth - textImages.fight.width) / 2
   fightText.setAttrs({
-    x: Settings.canvasWidth / 2
-    y: Settings.canvasHeight / 2
+    x: Settings.canvasWidth / 2,
+    y: Settings.canvasHeight / 2,
+    alpha: 0,
     scale: {
       x: 4,
       y: 4
@@ -63,7 +75,7 @@ showFightText = =>
       x: 1,
       y: 1
     },
-    duration: 0.5
+    duration: 0.5,
     alpha: 1,
     easing: 'elastic-ease-out',
     callback: ->
@@ -74,30 +86,37 @@ showFightText = =>
   })
 
 
-###
+
 showYouWinText = ->
-  winText.transitionTo({
-    scale: {
-      x: 1,
-      y: 1
-    },
+  youwinText.setAttrs({
+    x: Settings.canvasWidth / 2 - 150,
+    y: Settings.canvasHeight / 2,
+    alpha: 0,
+    centerOffset: [textImages.youwin.width / 2, textImages.youwin.height / 2]
+  })
+  youwinText.transitionTo({
+    x: Settings.canvasWidth / 2
+    y: Settings.canvasHeight / 2
     duration: 1
     alpha: 1,
     easing: 'elastic-ease-out',
   });
+
 
 showYouLoseText = ->
-  loseText.transitionTo({
-    scale: {
-      x: 1,
-      y: 1
-    },
-    duration: 1
+  youloseText.setAttrs({
+    x: Settings.canvasWidth / 2 - 50,
+    y: Settings.canvasHeight / 2,
+    alpha: 0,
+    centerOffset: [textImages.youlose.width / 2, textImages.youlose.height / 2]
+  })
+  youloseText.transitionTo({
+    x: Settings.canvasWidth / 2,
+    y: Settings.canvasHeight / 2,
+    duration: 2,
     alpha: 1,
-    easing: 'elastic-ease-out',
-  });
-###
-
+    easing: 'ease-out',
+  })
 
 
 
