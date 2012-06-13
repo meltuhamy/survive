@@ -23,20 +23,22 @@ class PlayerInput
         Game.player.onKeyUp(evt)
 
   @onKeyDown: (evt) =>
-  	if @focusOnCanvas && Game.player.alive && !NetworkClient.winnerRecieved
-      if(evt.keyCode == KEYCODE.r) # press r
+    if(evt.keyCode == KEYCODE.r && NetworkClient.winnerRecieved) # press r
         replayGameTick = 0
         socket.emit "clientSendingReplayRequest", {roomNumber: Game.player.roomNumber}
-      else
-        Game.player.onKeyDown(evt)
-    else
+    else if (Game.player.alive && !NetworkClient.winnerRecieved)
       if actionMenuVisible
         actionMenuKeyDown(evt)
-      else
+      if inventoryactionMenuVisible
         console.log "create inventory menu"
         Game.player.setNotMovingInAnyDir()
         inventoryactionMenuKeyDown(evt)
-
+      if @focusOnCanvas
+        Game.player.onKeyDown(evt)
+    else
+      console.warn "Uncaught onkeydown input"
+      console.warn evt
+      
   @onMouseMove: (evt, elem) =>
     # mouse move event within 'container' div
     offset = $(elem).offset()

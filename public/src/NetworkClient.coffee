@@ -39,10 +39,12 @@ class NetworkClient
   @receivePlayerData = (playerData) ->
     if playerData.id != Game.player.id
       playerindex = Game.getPlayerIndexById(playerData.id)
-      Game.opponents[playerindex].tilex = playerData.tilex
-      Game.opponents[playerindex].tiley = playerData.tiley
-      Game.opponents[playerindex].direction = playerData.direction
-      Game.opponents[playerindex].spriteNumber = playerData.spriteNumber
+      opponent = Game.opponents[playerindex]
+      if(opponent.alive)
+        opponent.tilex = playerData.tilex
+        opponent.tiley = playerData.tiley
+        opponent.direction = playerData.direction
+        opponent.spriteNumber = playerData.spriteNumber
 
   @receiveReplay = (replayData) =>
     Game.gameReplay(replayData)
@@ -57,7 +59,7 @@ class NetworkClient
       @winnerRecieved = true
 
   @receiveOpponentDisconnect = (id) =>
-    Game.removeOpponent(id)
+    Game.opponentDisconnect(id)
 
   @receiveItemData = (itemData) ->
     if itemData.id != Game.player.id

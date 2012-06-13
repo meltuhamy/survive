@@ -115,28 +115,19 @@ class Game
     @opponents = []
     @opponents.push new Player(p.id, p.roomNumber) for p in players when p.id isnt @player.id
 
-  @removeOpponent = (id) ->
-    @opponents.splice @getPlayerIndexById(id), 1
-    
+  @removeAliveOpponent = (id) ->
+    @opponents[@getPlayerIndexById(id)].alive = false
+
   @getPlayerIndexById = (id) ->
     ids = []
     ids.push p.id for p in @opponents
     return ids.indexOf(id)
 
   @opponentDisconnect = (id) ->
-    @removeOpponent(id)
-    #@checkGameover()
+    @removeAliveOpponent(id)
 
   @opponentDeath = (deathData) ->
-    @removeOpponent(deathData.id)
-    #@checkGameover()
-
-  #@checkGameover = ->
-    #@announce("Gameover!!")
-    #if (@opponents.length == 0)
-      #@announce("You win!")
-    #else if (@opponents.length == 1)
-      #@announce("You lose!")
+    @removeAliveOpponent(deathData.id)
 
   @render = =>
     if (!@gamestarted && !Settings.DEBUGMODE) then return
@@ -170,7 +161,7 @@ class Game
           itemContext.drawImage map.getItem(visionx,visiony).tileImage, visionx*Settings.tileWidth-Camera.scrollx, visiony*Settings.tileHeight-Camera.scrolly
         # draw other players that are in our view
         for p in @opponents
-          if (p.tilex == visionx && p.tiley == visiony)
+          if (p.tilex == visionx && p.tiley == visiony && p.alive)
             playerContext.drawImage @playerImages[p.spriteNumber][p.direction], visionx*Settings.tileWidth-Camera.scrollx, visiony*Settings.tileHeight-Camera.scrolly if @player.imgReady()
 
     # draw the yellow square for the tile the player is currently standing on

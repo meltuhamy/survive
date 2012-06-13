@@ -134,7 +134,7 @@ class Room
 
   sendPlayer: (playerData, clientid) ->
     @emit('serverSendingPlayerData', playerData)
-    sqlString = "insert into actions values (NOW(), #{playerData.roomNumber}, #{clientid}, 'p', #{playerData.tilex}, #{playerData.tiley});"
+    sqlString = "insert into actions values (NOW(), #{playerData.roomNumber}, '#{clientid}', 'p', #{playerData.tilex}, #{playerData.tiley});"
     console.log sqlString
     dbClient.query sqlString
     printRowCount()
@@ -144,7 +144,7 @@ class Room
     # if this is the case, itemData.id will be 0
     @emit('serverSendingItemData', itemData)
     clientidstr = if(clientid?) then "#{clientid}" else "NULL" 
-    dbClient.query "insert into actions values (NOW(), #{itemData.roomNumber}, #{clientidstr}, 'i', #{itemData.tilex}, #{itemData.tiley}, #{itemData.itemNumber});", (err, result) -> 
+    dbClient.query "insert into actions values (NOW(), #{itemData.roomNumber}, '#{clientidstr}', 'i', #{itemData.tilex}, #{itemData.tiley}, #{itemData.itemNumber});", (err, result) -> 
       console.log "INSERTED ROW"
     printRowCount()
 
@@ -153,7 +153,7 @@ class Room
     # if this is the case, tileData.id will be 0
     @emit('serverSendingTileData', tileData)
     clientidstr = if(clientid?) then "#{clientid}" else "NULL" 
-    dbClient.query "insert into actions values (NOW(), #{tileData.roomNumber}, #{clientidstr}, 't', #{tileData.tilex}, #{tileData.tiley}, #{tileData.tileNumber});", (err, result) ->
+    dbClient.query "insert into actions values (NOW(), #{tileData.roomNumber}, '#{clientidstr}', 't', #{tileData.tilex}, #{tileData.tiley}, #{tileData.tileNumber});", (err, result) ->
       console.log "INSERTED ROW"
     printRowCount()
 
