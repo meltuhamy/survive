@@ -208,8 +208,8 @@ class Game
              itemContext.drawImage map.getItem(x,y).tileImage, x*Settings.tileWidth-Camera.scrollx, y*Settings.tileHeight-Camera.scrolly
     playerContext.drawImage @player.playerImage, @player.posx-Camera.scrollx, @player.posy-Camera.scrolly if @player.imgReady()
     for p in @opponents
-      playerContext.drawImage @player.playerImage, p.tilex*Settings.tileWidth-Camera.scrollx, p.tiley*Settings.tileHeight-Camera.scrolly if @player.imgReady()
-
+      playerContext.drawImage @playerImages[p.spriteNumber][p.direction], p.tilex*Settings.tileWidth-Camera.scrollx, p.tiley*Settings.tileHeight-Camera.scrolly if @player.imgReady()
+   
 
   @replayGameUpdate = =>
     if @replayGameTick < @replayData.length
@@ -246,7 +246,7 @@ class Game
     delta = now - then_
     if @gamestarted
       @update delta / 1000
-      @render()
+      if Game.player.stats.health <= 0 or NetworkClient.winnerRecieved then @replayGameRender() else @render()
       Camera.updateScroll()
       if @count == 100
         @player.decrement()

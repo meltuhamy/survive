@@ -30,7 +30,7 @@ class Player
       @playerImages[x].onload = ->
         @isReady = true
     @turn(@directions.down)
-    @changeHealth(10)
+    @changeHealth(100)
     @changeStamina(100)
     @changeHunger(100)
     @changeThirst(100)
@@ -97,7 +97,7 @@ class Player
     @decreaseThirst(tile.thirst_cost)
 
   decrement: ->
-    if @alive
+    if @alive && !NetworkClient.winnerRecieved
       if(map.getTileElement(@tilex, @tiley) == map.TileType.fire)
         @decreaseHealth(10)
       @increaseStamina(5)

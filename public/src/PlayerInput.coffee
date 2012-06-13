@@ -9,7 +9,7 @@ class PlayerInput
   #@focusEnum = {player:0, actionmenu:1, inventoryactionmenu:2}
 
   @onKeyUp: (evt) =>
-    if @focusOnCanvas && Game.player.alive
+    if @focusOnCanvas && Game.player.alive && !NetworkClient.winnerRecieved
       if (evt.keyCode == KEYCODE.action)
         Game.player.setNotMovingInAnyDir()
         actionx = Game.player.tilex + Game.player.directionDeltas[Game.player.direction].x
@@ -23,7 +23,7 @@ class PlayerInput
         Game.player.onKeyUp(evt)
 
   @onKeyDown: (evt) =>
-  	if @focusOnCanvas && Game.player.alive
+  	if @focusOnCanvas && Game.player.alive && !NetworkClient.winnerRecieved
       if(evt.keyCode == KEYCODE.r) # press r
         replayGameTick = 0
         socket.emit "clientSendingReplayRequest", {roomNumber: Game.player.roomNumber}
