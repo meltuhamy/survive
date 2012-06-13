@@ -24,8 +24,11 @@ class PlayerInput
 
   @onKeyDown: (evt) =>
     if(evt.keyCode == KEYCODE.r && NetworkClient.winnerRecieved) # press r
-        replayGameTick = 0
-        socket.emit "clientSendingReplayRequest", {roomNumber: Game.player.roomNumber}
+        Game.replayGameTick = 0
+        if(Game.replayData.length == 0)
+          socket.emit "clientSendingReplayRequest", {roomNumber: Game.player.roomNumber}
+        else
+          Game.gameReplay(Game.replayData)
     else if (Game.player.alive && !NetworkClient.winnerRecieved)
       if actionMenuVisible
         actionMenuKeyDown(evt)
