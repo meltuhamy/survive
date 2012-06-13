@@ -245,7 +245,7 @@ class Game
     delta = now - then_
     if @gamestarted
       @update delta / 1000
-      if Game.player.stats.health <= 0 then @replayGameRender() else @render()
+      if Game.player.stats.health <= 0 or NetworkClient.winnerRecieved then @replayGameRender() else @render()
       Camera.updateScroll()
       if @count == 100
         @player.decrement()

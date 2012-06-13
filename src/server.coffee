@@ -175,6 +175,7 @@ class Room
         console.log winnerid.startid
         @emit('serverSendingWinner',winnerid.startid)
         gameEnded = true
+        clearInterval @intervalid
 
 
 getRoomByName = (name) ->
