@@ -1,5 +1,6 @@
 class NetworkClient
   @OFFLINEMODE: false
+  @winnerRecieved: false
 
   @log = (message) =>
     $('.serverdebugbar').append("<li>#{message}</li>")
@@ -49,11 +50,12 @@ class NetworkClient
   @receiveDeathData = (deathData) =>
     if deathData.id != Game.player.id
       Game.opponentDeath(deathData)
+
   @receiveWinner = (winnerID) =>
-    if winnerID == Game.player.id
-      Game.announce "You won!" 
-    else 
-      Game.announce "Everyone is good at something. You're good at losing. #{winnerID} won!"
+    if !@winnerRecieved
+      if winnerID == Game.player.id then Game.announce "You won!" else Game.announce "Everyone is good at something. You're good at losing. #{winnerID} won!"
+      @winnerRecieved = true
+
   @receiveOpponentDisconnect = (id) =>
     Game.removeOpponent(id)
 

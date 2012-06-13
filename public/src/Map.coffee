@@ -62,6 +62,36 @@ class Map
         fullWidth: -> @tileWidth*@numcols()
         fullHeight: -> @tileHeight*@numrows()
 
+        fireLife: ->
+          @treesToBurn = []
+          # for every grid location
+          for y in [0...@tileGrid.numrows]
+            for x in [0...@tileGrid.numcols]
+              if (@getTileElement(x,y) == @TileType.tree)
+                @fireCount = @adjacentFires(x,y)
+                if(@fireCount > 0)
+                  @treesToBurn.push({x,y})
+              if (@getTileElement(x,y) == @TileType.grass)
+                @fireCount = @adjacentFires(x,y)
+                if(@fireCount == 3)
+                  @setTileElement(x,y,@TileType.fire)
+              if(@getTileElement(x,y) == @TileType.fire)
+                @fireCount = @adjacentFires(x,y)
+                if !(@fireCount == 3 || @fireCount == 4)
+                  @setTileElement(x,y,@TileType.grass)
+          for t in @treesToBurn
+            @setTileElement(t.x,t.y,@TileType.fire)
+
+        adjacentFires: (x,y) =>
+          @adjacentTiles = [{x:-1,y:-1}, {x:-1,y:0}, {x:-1,y:1}, {x:0,y:-1}, {x:0,y:1}, {x:1,y:-1}, {x:1,y:0}, {x:1,y:1}]
+          @count = 0
+          for t in @adjacentTiles
+            if (@inBounds(x + t.x, y + t.y))
+              if(@getTileElement(x + t.x, y + t.y) == @TileType.fire)
+                @count++
+          return @count
+
+
 
 if(Settings.DEBUGMODE)
         map0 =  [1,2,3,4,5,6,7,8,9,6,7,8,9,4,4,4,5,5,5,5,5,5,5,5,5,5,3,3,3,3,1,1,1,1,1,1,1,3,3,3,4,4,4,4,4,4,5,5,1,1,1,1,1,1,3,5,3,3,3,3,1,1,1,1,1,1,1,3,3,4,4,3,3,4,4,5,5,5,1,1,1,3,3,3,5,5,3,1,1,3,1,1,1,1,1,1,1,1,4,4,3,3,3,3,3,5,5,5,5,3,3,3,3,5,5,1,1,1,1,3,1,1,1,1,1,1,1,1,4,4,1,3,3,3,3,3,3,3,3,3,3,5,5,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,4,4,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,3,3,1,1,1,1,1,1,1,4,4,4,4,4,5,5,5,5,5,1,1,3,3,3,3,3,3,3,1,1,1,3,3,1,1,1,1,1,1,1,1,4,4,4,5,5,5,5,5,5,1,3,3,4,4,3,3,2,3,1,3,1,3,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,1,3,3,4,4,3,3,2,1,3,3,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,4,4,3,3,2,2,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,5,5,5,5,5,5,5,5,5,5,5,3]
@@ -69,3 +99,4 @@ if(Settings.DEBUGMODE)
         mapwidth = 20
         mapheight = 30
         map = new Map(new Grid(map0, mapwidth, mapheight), new Grid(item0, mapwidth, mapheight))
+

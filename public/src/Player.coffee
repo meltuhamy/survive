@@ -97,7 +97,7 @@ class Player
     @decreaseThirst(tile.thirst_cost)
 
   decrement: ->
-    if @alive
+    if @alive && !NetworkClient.winnerRecieved
       if(map.getTileElement(@tilex, @tiley) == map.TileType.fire)
         @decreaseHealth(10)
       @increaseStamina(5)

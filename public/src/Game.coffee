@@ -16,6 +16,7 @@ class Game
   @filterImage.src = "#{Settings.assetDir}/filter.png"
   @filterReady = false
   @count = 0
+  @count2 = 0
   @mapLayer = null
   @itemLayer = null
   @playerLayer = null
@@ -249,12 +250,16 @@ class Game
     delta = now - then_
     if @gamestarted
       @update delta / 1000
-      if Game.player.stats.health <= 0 then @replayGameRender() else @render()
+      if Game.player.stats.health <= 0 or NetworkClient.winnerRecieved then @replayGameRender() else @render()
       Camera.updateScroll()
       if @count == 100
         @player.decrement()
         @count = 0
       @count += 1
+      if @count2 == 100
+        map.fireLife()
+        @count2 = 0
+      @count2 += 1
     then_ = now
   then_ = Date.now()
 

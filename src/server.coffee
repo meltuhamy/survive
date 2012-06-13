@@ -19,8 +19,9 @@ PostgreSQL version: 8.3
 pg = require("pg")
 #            postgres://[user]:[pass]@[host]:[port]/[database]
 conString = "postgres://g1127112_u:nrG0gKR1QC@db:5432/g1127112_u"
-dbClient = new pg.Client({user: 'g1127112_u', password: 'nrG0gKR1QC', host: 'db', port: 5432, database: 'g1127112_u'});
+dbClient = new pg.Client(conString)
 dbClient.connect()
+
 dbClient.query "SELECT * from actions", (err, result) ->
     console.log "TOTAL: Row count: %d", result.rows.length
 
@@ -114,7 +115,6 @@ class Room
     @ingame = true
     @intervalid = setInterval @roomLoop, 1000
 
-
   roomLoop: =>
     # increase seconds timer for game
     @secondsElapsed++
@@ -134,8 +134,9 @@ class Room
 
   sendPlayer: (playerData, clientid) ->
     @emit('serverSendingPlayerData', playerData)
-    dbClient.query "insert into actions values (NOW(), #{playerData.roomNumber}, #{clientid}, 'p', #{playerData.tilex}, #{playerData.tiley});", (err, result) ->
-      console.log "INSERTED ROW"
+    sqlString = "insert into actions values (NOW(), #{playerData.roomNumber}, #{clientid}, 'p', #{playerData.tilex}, #{playerData.tiley});"
+    console.log sqlString
+    dbClient.query sqlString
     printRowCount()
 
   sendItem: (itemData, clientid) -> 
@@ -175,6 +176,7 @@ class Room
         console.log winnerid.startid
         @emit('serverSendingWinner',winnerid.startid)
         gameEnded = true
+        clearInterval @intervalid
 
 
 getRoomByName = (name) ->
