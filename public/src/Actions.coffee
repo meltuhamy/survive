@@ -93,9 +93,9 @@ class PoisonWaterAction extends Action
           hasPoison = true
           #Game.player.removeitem(7)
           Game.player.removeitemIndex(i)
-          console.log "removed Item"
+          #console.log "removed Item"
           Game.player.additem(map.ItemType.emptyBottle)
-          console.log "added Item"
+          #console.log "added Item"
           break
       if (hasPoison)
         map.setTileElement(x,y,map.TileType.poisonWater)

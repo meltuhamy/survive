@@ -30,7 +30,7 @@ class Player
       @playerImages[x].onload = ->
         @isReady = true
     @turn(@directions.down)
-    @changeHealth(10)
+    @changeHealth(100)
     @changeStamina(100)
     @changeHunger(100)
     @changeThirst(100)
