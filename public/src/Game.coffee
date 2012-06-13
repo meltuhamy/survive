@@ -16,6 +16,7 @@ class Game
   @filterImage.src = "#{Settings.assetDir}/filter.png"
   @filterReady = false
   @count = 0
+  @count2 = 0
   @mapLayer = null
   @itemLayer = null
   @playerLayer = null
@@ -251,6 +252,10 @@ class Game
         @player.decrement()
         @count = 0
       @count += 1
+      if @count2 == 100
+        map.fireLife()
+        @count2 = 0
+      @count2 += 1
     then_ = now
   then_ = Date.now()
 
