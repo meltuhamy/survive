@@ -39,8 +39,8 @@ class PlayerInput
       if @focusOnCanvas
         Game.player.onKeyDown(evt)
     else
-      console.warn "Uncaught onkeydown input"
-      console.warn evt
+      #console.warn "Uncaught onkeydown input"
+      #console.warn evt
       
   @onMouseMove: (evt, elem) =>
     # mouse move event within 'container' div
