@@ -123,7 +123,8 @@ class Room
       # 0 <= randomx < 20
       randomx = Math.floor(Math.random() * 20)
       randomy = Math.floor(Math.random() * 20)
-      itemData = {id: 60, roomNumber:@roomNumber, tilex: randomx, tiley: randomy, itemNumber: 2}
+      randomItem = Math.floor(Math.random() * 11)
+      itemData = {id: 60, roomNumber:@roomNumber, tilex: randomx, tiley: randomy, itemNumber: randomItem}
       @sendItem itemData
 
   endGame: (clientId)=>
@@ -229,7 +230,7 @@ numRooms = 10
 rooms = []
 rooms.push new Room(0,map0)
 rooms.push new Room(1,map1,3)
-rooms.push new Room(2,map2)
+rooms.push new Room(2,map2,3)
 rooms.push new Room(3,map3)
 rooms.push new Room(4,map4)
 rooms.push new Room(5,map5)

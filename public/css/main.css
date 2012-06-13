@@ -102,6 +102,17 @@ body{
 
 }
 
+#textEffects{
+    width:900px;
+    height:600px;
+    position:absolute;
+    z-index:200;
+    background: rgba(216, 177, 100, 0.5);
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
 #canvas{
     width: 900px;
     height: 600px;

@@ -77,7 +77,7 @@ class Camera
   @calculatePanLocation: (centerx, centery) ->
     @panx = centerx - Settings.canvasWidth/2;
     @pany = centery - Settings.canvasHeight/2;
-    console.log @panx
+    #console.log @panx
     @panx = 0 if @panx < 0
     @pany = 0 if @pany < 0
     @panx = map.fullWidth() - Settings.canvasWidth if (@panx > map.fullWidth() - Settings.canvasWidth)
