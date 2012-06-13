@@ -50,7 +50,10 @@ class NetworkClient
     if deathData.id != Game.player.id
       Game.opponentDeath(deathData)
   @receiveWinner = (winnerID) =>
-    if winnerID == Game.player.id then Game.announce "You won!" else Game.announce "Everyone is good at something. You're good at losing. #{winnerID} won!"
+    if winnerID == Game.player.id
+      Game.announce "You won!" 
+    else 
+      Game.announce "Everyone is good at something. You're good at losing. #{winnerID} won!"
   @receiveOpponentDisconnect = (id) =>
     Game.removeOpponent(id)
 

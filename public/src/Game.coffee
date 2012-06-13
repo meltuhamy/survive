@@ -45,7 +45,7 @@ class Game
     else
       $('#playerAnnouncements').css('margin-top', '-=25')
 
-  @createStage : =>  
+  @createStage: =>  
     # Map layer
     @mapLayer = new Kinetic.Layer()
 
@@ -77,6 +77,8 @@ class Game
     @stage.add @hoverSelectLayer
     @stage.add @itemLayer
     @stage.add @playerLayer
+    createTextEffects(@stage)
+
 
   @playerImages: [[],[],[],[],[],[],[],[],[]]
 
@@ -93,13 +95,15 @@ class Game
   @start = (allplayers) =>
     @loadPlayerImages()
     @setOpponents allplayers
-    @gamestarted = true
-    NetworkClient.sendPlayerData()
-    $("#lobby").fadeOut(1000)
-    setTimeout (->
-      $(".game").fadeIn(2000)
-    ), 1000
+    $("#lobby").fadeOut(1000, Game.lobbyFadedOut)
 
+  @lobbyFadedOut = =>
+    @gamestarted = true
+    $(".game").fadeIn(1000, Game.startGameplay)
+
+  @startGameplay = =>
+    showFightText()
+    NetworkClient.sendPlayerData()
 
   @spawnPlayer = (spawnData) ->
     @player = new Player(spawnData.id, spawnData.roomNumber)

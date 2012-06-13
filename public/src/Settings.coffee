@@ -3,6 +3,7 @@ class Settings
   @terrainDir = "#{@assetDir}/terrain"
   @itemDir = "#{@assetDir}/items"
   @spriteDir = "#{@assetDir}/sprites"
+  @uiDir = "#{@assetDir}/ui"
   @tileWidth = 25
   @tileHeight = 25
   @canvasWidth = 900

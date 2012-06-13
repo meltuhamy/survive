@@ -10,6 +10,97 @@ inventoryactionMenuSelected = 0
 inventoryactionMenuTotal = 0
 inventoryactionMenuChoosenSlot = 0
 
+textImages = {}
+sources = {
+  gameover: "game-over-text.png",
+  fight: "fight-text.png",
+  youwin: "you-win-text.png",
+  youlose: "you-lose-text.png",
+  yousuck: "you-suck-text.png"
+};
+fightText = null
+
+
+createTextEffects = (stage) =>
+  @textUiLayer = new Kinetic.Layer()
+  fightText = new Kinetic.Image({
+    image: textImages.fight
+    alpha: 0
+  })
+  @textUiLayer.add fightText
+  stage.add @textUiLayer
+
+
+  
+loadImages = (sources) ->
+  loadedImages = 0
+  numImages = 0
+  for src of sources
+    numImages++
+  for src of sources
+    textImages[src] = new Image()
+    textImages[src].onload = ->
+      #callback(textImages)  if ++loadedImages >= numImages
+    textImages[src].src = Settings.uiDir + "/" + sources[src]
+
+
+loadImages(sources);
+
+
+showFightText = =>
+  #console.log (Settings.canvasWidth - textImages.fight.width) / 2
+  fightText.setAttrs({
+    x: Settings.canvasWidth / 2
+    y: Settings.canvasHeight / 2
+    scale: {
+      x: 4,
+      y: 4
+    },
+    centerOffset: [textImages.fight.width / 2, textImages.fight.height / 2]
+  })
+  fightText.transitionTo({
+    scale: {
+      x: 1,
+      y: 1
+    },
+    duration: 0.5
+    alpha: 1,
+    easing: 'elastic-ease-out',
+    callback: ->
+      fightText.transitionTo({
+        alpha: 0,
+        duration: 2
+      })
+  })
+
+
+###
+showYouWinText = ->
+  winText.transitionTo({
+    scale: {
+      x: 1,
+      y: 1
+    },
+    duration: 1
+    alpha: 1,
+    easing: 'elastic-ease-out',
+  });
+
+showYouLoseText = ->
+  loseText.transitionTo({
+    scale: {
+      x: 1,
+      y: 1
+    },
+    duration: 1
+    alpha: 1,
+    easing: 'elastic-ease-out',
+  });
+###
+
+
+
+
 
 # Makes the action menu for given coordinates
 makemenu = (x,y) ->
