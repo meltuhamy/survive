@@ -247,7 +247,7 @@ class Game
         @player.decrement()
         @count = 0
       @count += 1
-      if @count2 == 100
+      if !NetworkClient.winnerRecieved && @count2 == 500
         map.fireLife()
         @count2 = 0
       @count2 += 1
