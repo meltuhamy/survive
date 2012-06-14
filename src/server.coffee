@@ -59,7 +59,7 @@ class Room
 
   isEmpty: -> @getPlayerCount() == 0
   isFull: ->  @getPlayerCount() == @maxPlayers
-  getName: -> "room#{@roomNumber}"
+  getName: -> "Room #{@roomNumber+1}"
   getFriendlyName: -> @friendlyName
   setFriendlyName: (name) => @friendlyName = name
 

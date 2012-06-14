@@ -79,18 +79,20 @@ class NetworkClient
       map.setTileElement tileData.tilex, tileData.tiley, tileData.tileNumber, false
 
   @receiveRooms = (roomData) =>
+    thetable = ""
     $("#roomlist").empty()
-    $("#roomlist").append("<table id=\"rooms\">")
+    thetable += '<table id="rooms" class="bordered">'
     # header row
-    $("#roomlist").append("<tr><th>No.</th><th>Room Name</th><th>Players</th><th>Status</th></tr>")
+    thetable += "<thead><tr><th>&nbsp;</th><th>Name</th><th>Players</th><th>Status</th></tr></thead>"
     # one row for each room
     for r in roomData
       tableData = "<td>#{r.roomNumber}</td>"
-      tableData += "<td><a onclick=\"NetworkClient.sendJoinRoomRequest(#{r.roomNumber})\">#{r.friendlyName}</a></td>"
+      tableData += "<td>#{r.friendlyName}</td>"
       tableData += "<td>#{r.playerCount} / #{r.maxPlayerCount}</td>"
       tableData += if (r.ingame) then "<td>Playing!</td>" else "<td>Waiting for more players</td>"
-      $("#roomlist").append("<tr>#{tableData}</tr>") 
-    $("#roomlist").append("</table>")
+      thetable   += "<tr onclick=\"NetworkClient.sendJoinRoomRequest(#{r.roomNumber})\">#{tableData}</tr>"
+    thetable += "</table>"
+    $("#roomlist").append(thetable)
 
 endingGame = ->
   socket.disconnect()
