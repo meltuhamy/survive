@@ -63,24 +63,27 @@ class Map
         fullHeight: -> @tileHeight*@numrows()
 
         fireLife: ->
-          @treesToBurn = []
+          @newFire = []
+          @newGrass = []
           # for every grid location
           for y in [0...@tileGrid.numrows]
             for x in [0...@tileGrid.numcols]
               if (@getTileElement(x,y) == @TileType.tree)
                 @fireCount = @adjacentFires(x,y)
                 if(@fireCount > 0)
-                  @treesToBurn.push({x,y})
+                  @newFire.push({xf : x ,yf : y})
               if (@getTileElement(x,y) == @TileType.grass)
                 @fireCount = @adjacentFires(x,y)
                 if(@fireCount == 3)
-                  @setTileElement(x,y,@TileType.fire)
+                  @newFire.push({xf : x, yf : y})
               if(@getTileElement(x,y) == @TileType.fire)
                 @fireCount = @adjacentFires(x,y)
-                if !(@fireCount == 3 || @fireCount == 4)
-                  @setTileElement(x,y,@TileType.grass)
-          for t in @treesToBurn
-            @setTileElement(t.x,t.y,@TileType.fire)
+                if !(@fireCount == 2 || @fireCount == 3)
+                  @newGrass.push({xg : x, yg : y})
+          for f in @newFire
+            @setTileElement(f.xf,f.yf,@TileType.fire)
+          for g in @newGrass
+            @setTileElement(g.xg,g.yg,@TileType.grass)
 
         adjacentFires: (x,y) =>
           @adjacentTiles = [{x:-1,y:-1}, {x:-1,y:0}, {x:-1,y:1}, {x:0,y:-1}, {x:0,y:1}, {x:1,y:-1}, {x:1,y:0}, {x:1,y:1}]
