@@ -83,15 +83,15 @@ class NetworkClient
     $("#roomlist").empty()
     thetable += '<table id="rooms" class="bordered">'
     # header row
-    thetable += "<thead><tr><th>&nbsp;</th><th>Name</th><th>Players</th><th>Status</th></tr></thead>"
+    thetable += "<thead><tr><th>Name</th><th>Players</th><th>Status</th></tr></thead>"
     # one row for each room
     for r in roomData
-      tableData = "<td>#{r.roomNumber}</td>"
-      tableData += "<td>#{r.friendlyName}</td>"
+      tableData = "<td>#{r.friendlyName}</td>"
       tableData += "<td>#{r.playerCount} / #{r.maxPlayerCount}</td>"
       tableData += if (r.ingame) then "<td>Playing!</td>" else "<td>Waiting for more players</td>"
       thetable   += "<tr onclick=\"NetworkClient.sendJoinRoomRequest(#{r.roomNumber})\">#{tableData}</tr>"
     thetable += "</table>"
+    console.log thetable
     $("#roomlist").append(thetable)
 
 endingGame = ->
@@ -142,6 +142,7 @@ socket.on "serverSendingPlayerDisconnected", (id) ->
   NetworkClient.receiveOpponentDisconnect(id)
 
 socket.on "serverSendingReload", (data) ->
+  console.warn "Server sent reload!!"
   endingGame()
 
 socket.on "serverSendingReplay", (replayData) ->

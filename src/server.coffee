@@ -47,7 +47,7 @@ pg.connect conString, (err, dbClient) ->
 
 class Room
   constructor: (@roomNumber, @mapData = map0, @maxPlayers = 2) ->
-    @setFriendlyName(@getName())
+    @setFriendlyName("Room #{@roomNumber+1}")
     @maxPlayerCount = @maxPlayers
   ingame: false
   gameEnded: false
@@ -59,7 +59,7 @@ class Room
 
   isEmpty: -> @getPlayerCount() == 0
   isFull: ->  @getPlayerCount() == @maxPlayers
-  getName: -> "Room #{@roomNumber+1}"
+  getName: -> "room#{@roomNumber}"
   getFriendlyName: -> @friendlyName
   setFriendlyName: (name) => @friendlyName = name
 
@@ -127,7 +127,7 @@ class Room
       itemData = {id: 60, roomNumber:@roomNumber, tilex: randomx, tiley: randomy, itemNumber: randomItem}
       @sendItem itemData
 
-  endGame: (clientId)=>
+  endGame: =>
     dbClient.query "delete from actions where gameid = #{@roomNumber};"
     @ingame = false
     @emit("serverSendingReload", '')
@@ -270,7 +270,10 @@ io.sockets.on "connection", (client) ->
   client.on "clientSendingRoomNumber", (roomNumber) ->
     client.leave('lobby')
     console.log "SENDING ROOM NUMBER: #{client.startid}"
-    requestedRoom = rooms[roomNumber].requestJoin(client)
+    numRoomsJoined = 0
+    numRoomsJoined++ for roomname of io.sockets.manager.roomClients[client.id]
+    console.log "NUM ROOMS JOINED: #{numRoomsJoined}"
+    if(numRoomsJoined <= 1) then requestedRoom = rooms[roomNumber].requestJoin(client)
     
   client.on "clientSendingPlayerData", (playerData) ->
     rooms[playerData.roomNumber].sendPlayer(playerData, client.startid)
@@ -305,7 +308,9 @@ io.sockets.on "connection", (client) ->
         leavingRoom = getRoomByName(key.substring(1))
         leavingRoom.checkGameover()
         leavingRoom.emit("serverSendingPlayerDisconnected", client.startid)
+        console.log "<<>><><<><><>Player Disconnected sent!"
         # if two people currently connected in room and one leaves, end the game
-        if  0<leavingRoom.getPlayerCount()<=2
+        if 0<leavingRoom.getPlayerCount()<=2
           console.log "<<<<<<<<<<<<<<<GAME ENDED>>>>>>>>>>>>>>>>"
           leavingRoom.endGame()
+    console.log "<<<>><<>>>END OF DICSONNECT CODE >>>>>>>>>>"
