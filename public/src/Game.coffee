@@ -176,8 +176,8 @@ class Game
 
   @update = (modifier) =>
     # draw onto the blue debug bar at the top of the game
-    $('.debugbar').html("inventory = #{@player.inventory}, @player.tilex = #{@player.tilex}, @player.tiley = #{@player.tiley} \n
-      health = #{@player.stats.health}, stamina = #{@player.stats.stamina}, hunger = #{@player.stats.hunger}, thirst = #{@player.stats.thirst}")
+    #$('.debugbar').html("inventory = #{@player.inventory}, @player.tilex = #{@player.tilex}, @player.tiley = #{@player.tiley} \n
+    #  health = #{@player.stats.health}, stamina = #{@player.stats.stamina}, hunger = #{@player.stats.hunger}, thirst = #{@player.stats.thirst}")
     # call update methods
     if(@gamestarted || Settings.DEBUGMODE)
       @player.update()
