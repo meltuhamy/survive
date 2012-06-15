@@ -23,6 +23,7 @@ class PlayerInput
         Game.player.onKeyUp(evt)
 
   @onKeyDown: (evt) =>
+    if(evt.keyCode == KEYCODE.rightarrow || evt.keyCode == KEYCODE.downarrow) then event.preventDefault();
     if(evt.keyCode == KEYCODE.r && NetworkClient.winnerRecieved) # press r
         Game.replayGameTick = 0
         if(Game.replayData.length == 0)
