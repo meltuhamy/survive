@@ -10,6 +10,10 @@ class PlayerInput
 
   @onKeyUp: (evt) =>
     if @focusOnCanvas && Game.player.alive && !NetworkClient.winnerRecieved
+      ###<presentation-only>###
+      if (evt.keyCode == KEYCODE.home) then Game.player.increment()
+      if (evt.keyCode == KEYCODE.end) then Game.player.decrement(on)
+      ###</presentation-only>###
       if (evt.keyCode == KEYCODE.action)
         Game.player.setNotMovingInAnyDir()
         actionx = Game.player.tilex + Game.player.directionDeltas[Game.player.direction].x

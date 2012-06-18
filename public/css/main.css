@@ -205,7 +205,7 @@ table {
 
 #playerAnnouncements{
     position: relative;
-    margin-top: -25px;
+    margin-top: 0px;
     text-align: center;
     color: white;
     text-shadow: 1px 1px 1px black;

@@ -96,16 +96,20 @@ class Player
     @decreaseHunger(tile.hunger_cost)
     @decreaseThirst(tile.thirst_cost)
 
-  decrement: ->
+  decrement: (strong) ->
     if @alive && !NetworkClient.winnerRecieved
       if(map.getTileElement(@tilex, @tiley) == map.TileType.fire)
-        @decreaseHealth(10)
+        @decreaseHealth(15)
       @increaseStamina(5)
-      @decreaseThirst(5)
-      @decreaseHunger(5)
-      @decreaseHealth(5) if(@stats.hunger == 0)
-      @decreaseHealth(5) if(@stats.thirst == 0)
-
+      @decreaseThirst(3)
+      @decreaseHunger(3)
+      @decreaseHealth(2) if(strong? or @stats.hunger == 0)
+      @decreaseHealth(2) if(strong? or @stats.thirst == 0)
+  increment: ->
+    @increaseStamina(10)
+    @increaseHealth(10)
+    @increaseHunger(10)
+    @increaseThirst(10)
 
   removeitem: (itemNo) ->
     @inventory.splice @inventory.indexOf(itemNo), 1

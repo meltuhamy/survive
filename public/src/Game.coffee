@@ -17,6 +17,7 @@ class Game
   @filterReady = false
   @count = 0
   @count2 = 0
+  @announcementCounter = 0
   @mapLayer = null
   @itemLayer = null
   @playerLayer = null
@@ -39,13 +40,38 @@ class Game
     if(!Settings.DEBUGMODE)
       $('.game').hide();
 
-  @announce: (content) => 
-    $('#playerAnnouncementList').prepend("<li class=\"playerAnnouncement\">#{content}</li>")
+  @announce: (content) =>
+    if $('.playerAnnouncement').length == 0 then $('#playerAnnouncements').css('margin-top', '0px')
+    $('#playerAnnouncementList').prepend($("<li class=\"playerAnnouncement\">#{content}</li>").hide().fadeIn(150))
+    $('#playerAnnouncements').css('margin-top', '-=25')
     if($('.playerAnnouncement').length >= Settings.MAXANNOUNCEMENTS)
-      $('.playerAnnouncement').last().remove()
+      $('.playerAnnouncement').last().fadeOut 300, -> 
+        $('.playerAnnouncement').remove()
+        $('#playerAnnouncements').css('margin-top', '+=25')
+  @reduceAnnouncementNext = false
+  @reduceList = []
+  @reduceInSeconds = 0
+  @reduceAnnouncements: ->
+    console.log "Removing announcements"
+    if $('.playerAnnouncement').length == 0 then $('#playerAnnouncements').css('margin-top', '0px')
+    @reduceList.push $('.playerAnnouncement').last()
+    if(@reduceList.length >=1)
+      reduceItem = @reduceList.pop()
+      $(reduceItem).last().fadeOut 300, -> 
+        $('.playerAnnouncement').remove()
+        $('#playerAnnouncements').css('margin-top', '+=25')
+        @announcementCounter = 0
+    ###if(@reduceAnnouncementNext)
+      console.log "Time to remove an announcement!"
+      @reduceAnnouncementNext = false
+      #Get rid of the last (i.e. li:last) announcement made)
+      $('.playerAnnouncement').last().fadeOut 300, -> 
+        $('.playerAnnouncement').remove()
+        $('#playerAnnouncements').css('margin-top', '+=25')
     else
-      $('#playerAnnouncements').css('margin-top', '-=25')
-
+      #There's a new announcement(s) since the last check!
+      if($('.playerAnnouncement').length >= 1) then @reduceAnnouncementNext = true
+    ###
   @createStage: =>  
     # Map layer
     @mapLayer = new Kinetic.Layer()
@@ -243,6 +269,9 @@ class Game
       @update delta / 1000
       if Game.player.stats.health <= 0 or NetworkClient.winnerRecieved then @replayGameRender() else @render()
       Camera.updateScroll()
+      if @announcementCounter == 100
+        @reduceAnnouncements()
+      @announcementCounter++
       if @count == 100
         @player.decrement()
         @count = 0
