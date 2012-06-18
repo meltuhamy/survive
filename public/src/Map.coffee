@@ -62,38 +62,6 @@ class Map
         fullWidth: -> @tileWidth*@numcols()
         fullHeight: -> @tileHeight*@numrows()
 
-        fireLife: ->
-          @newFire = []
-          @newGrass = []
-          # for every grid location
-          for y in [0...@tileGrid.numrows]
-            for x in [0...@tileGrid.numcols]
-              if (@getTileElement(x,y) == @TileType.tree)
-                @fireCount = @adjacentFires(x,y)
-                if(@fireCount > 0)
-                  @newFire.push({xf : x ,yf : y})
-              if (@getTileElement(x,y) == @TileType.grass)
-                @fireCount = @adjacentFires(x,y)
-                if(@fireCount == 3)
-                  @newFire.push({xf : x, yf : y})
-              if(@getTileElement(x,y) == @TileType.fire)
-                @fireCount = @adjacentFires(x,y)
-                if !(@fireCount == 2 || @fireCount == 3)
-                  @newGrass.push({xg : x, yg : y})
-          for f in @newFire
-            @setTileElement(f.xf,f.yf,@TileType.fire)
-          for g in @newGrass
-            @setTileElement(g.xg,g.yg,@TileType.grass)
-
-        adjacentFires: (x,y) =>
-          @adjacentTiles = [{x:-1,y:-1}, {x:-1,y:0}, {x:-1,y:1}, {x:0,y:-1}, {x:0,y:1}, {x:1,y:-1}, {x:1,y:0}, {x:1,y:1}]
-          @count = 0
-          for t in @adjacentTiles
-            if (@inBounds(x + t.x, y + t.y))
-              if(@getTileElement(x + t.x, y + t.y) == @TileType.fire)
-                @count++
-          return @count
-
 
 
 if(Settings.DEBUGMODE)

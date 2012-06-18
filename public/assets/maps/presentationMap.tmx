@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="30" height="20" tilewidth="25" tileheight="25">
+<map version="1.0" orientation="orthogonal" width="37" height="25" tilewidth="25" tileheight="25">
  <tileset firstgid="1" name="ourset" tilewidth="25" tileheight="25">
   <image source="tileset.png" width="250" height="25"/>
  </tileset>
  <tileset firstgid="11" name="itemset" tilewidth="25" tileheight="25">
   <image source="itemset.png" width="250" height="25"/>
  </tileset>
- <layer name="tiles" width="30" height="20">
+ <layer name="tiles" width="37" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjZmBgYB4EmJFIzEaCWkYq2IdsL6l2o9tPqj/YaGQvunnkhgmx9lLiD0r9Sw881OxlQcL0tpdrgOwdCP/SKn5p7R585tMyn2EzFxuf2nZj8xOtyxNC9RGl9RWx9tIjXVOrDqbUvoHAAD7mA8o=
+   eJzd1jEOgCAMBdASlMH7H9hFE2Ko9JcWi0M3tY8PCJmIcvBKwirAs8nZUptQF2JDx19Ib5Iae+PXZtkzSEyW45eaOJdX/5Gs/mDaqopkOgKaouVksZ44I2eaZX37H0jytbYgZwuX62wTl6HXfGnvBV77ADF9sf8kRu++Vrl5vONh2q9awdTqc59B3L3Mas0j68Pa9Mym5Rj55kp1Apq4BzE=
   </data>
  </layer>
- <layer name="items" width="30" height="20">
+ <layer name="items" width="37" height="25">
   <data encoding="base64" compression="zlib">
-   eJxjYBgF5ABBJLYwkXr4iTCLFIDLPHIBHxl6BMi0i4dMfSD7uKGYGgCf+4lxI7n+H0qAlPSJrJaUsBHCIkYoPWKTJzddDQeAK7yx5RWQGLYwpwZALw/Jzavkug+Xf2ltLz0BchjjSvPk1ivkAHLsonb9NRgBAAb+Ahw=
+   eJxjYBgF9ASCSGxhKpjHT4Q91DCPFoCPDD0CVHcFAwMPmfpAbuGGYloDfP4mxv20CLfhAsjNK/jMISW8hbCIkZM38OklN42PZIArDrHld5AYtnikNUCvQ2hRFpHrL1zhRA0wEGFNTYAcb7jyJrXKJUoBtd1BzzbGKBgFo2BwAQCVogIc
   </data>
  </layer>
 </map>
