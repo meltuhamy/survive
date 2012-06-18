@@ -134,6 +134,7 @@ class Player
     @alive = false
     deathData = {id:@id, roomNumber:@roomNumber, tilex:@tilex, tiley:@tiley, inventory:@inventory}
     NetworkClient.sendDeathData(deathData)
+    Camera.currentMode = Camera.modes.mouseMove
 
   sendAttack: ->
     if @stats.stamina >= 5

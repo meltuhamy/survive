@@ -55,6 +55,7 @@ class NetworkClient
 
   @receiveWinner = (winnerID) =>
     if !@winnerRecieved
+      Camera.currentMode = Camera.modes.mouseMove
       if winnerID == Game.player.id
         Game.announce "You won!" 
         showYouWinText()
