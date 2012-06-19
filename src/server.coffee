@@ -6,41 +6,19 @@ server.listen 8080
 io = socketiolib.listen(server)
 
 
-###
-Database Stuff
-Server:             db
-Port:               5432
-Database:           g1127112_u
-Account:            g1127112_u
-Password:           nrG0gKR1QC
-PostgreSQL version: 8.3
+mdb = require('mongojs').connect('localhost/tradersgame')
+actionsCollection = mdb.collection('actions')
+actionsCollection.find (err, docs) ->
+    console.log "Total number of rows: #{docs.length}"
+    console.log docs
 
-###
-pg = require("pg")
-#            postgres://[user]:[pass]@[host]:[port]/[database]
-conString = "postgres://g1127112_u:nrG0gKR1QC@db:5432/g1127112_u"
-dbClient = new pg.Client(conString)
-dbClient.connect()
-
-dbClient.query "SELECT * from actions", (err, result) ->
-    console.log "TOTAL: Row count: %d", result.rows.length
-
-
-dbClient.on('error', (error) -> 
-  console.log "<><><><><><><><ERRROR><><><><><><><>"
-  console.log(error)
-  console.log "<><><><><><><><><><><><><><><><><><>"
-)
+actionsCollection.remove({}) #Remove all rows
 
 printRowCount = (thegameid=0)->
-  dbClient.query "SELECT * from actions where gameid=#{thegameid}", (err, result) ->
-    console.log "Row count for game #{thegameid}: %d", result.rows.length
-###
-pg.connect conString, (err, dbClient) ->
-  dbClient.query "SELECT * from actions", (err, result) ->
-    console.log "Row count: %d", result.rows.length
-    #console.log "Current year: %d", result.rows[0].when.getYear()
-###
+  actionsCollection.find {gameid: thegameid}, (err, docs) ->
+    if(err?) then console.warn err
+    console.log "Game #{thegameid}: #{docs.length} moves inserted"
+    
 
 tile0 =  [1,2,3,4,5,6,7,8,9,6,7,8,9,4,4,4,5,5,5,5,5,5,5,5,5,5,3,3,3,3,1,1,1,1,1,1,1,3,3,3,4,4,4,4,4,4,5,5,1,1,1,1,1,1,3,5,3,3,3,3,1,1,1,1,1,1,1,3,3,4,4,3,3,4,4,5,5,5,1,1,1,3,3,3,5,5,3,1,1,3,1,1,1,1,1,1,1,1,4,4,3,3,3,3,3,5,5,5,5,3,3,3,3,5,5,1,1,1,1,3,1,1,1,1,1,1,1,1,4,4,1,3,3,3,3,3,3,3,3,3,3,5,5,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,4,4,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,3,3,1,1,1,1,1,1,1,4,4,4,4,4,5,5,5,5,5,1,1,3,3,3,3,3,3,3,1,1,1,3,3,1,1,1,1,1,1,1,1,4,4,4,5,5,5,5,5,5,1,3,3,4,4,3,3,2,3,1,3,1,3,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,1,3,3,4,4,3,3,2,1,3,3,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,4,4,3,3,2,2,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,5,5,5,5,5,5,5,5,5,5,5,3]
 item0 = [9, 10, 3, 5, 4, 5, 6, 7, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -114,7 +92,9 @@ class Room
   getName: -> "room#{@roomNumber}"
   getFriendlyName: -> @friendlyName
   setFriendlyName: (name) => @friendlyName = name
-
+  newRow: (rsocketid, rtype, rtilex, rtiley, rvalue) ->
+    newData = {time: new Date(), gameid: @roomNumber, socketid: rsocketid, type: rtype, tilex: rtilex, tiley: rtiley, value: rvalue}
+    actionsCollection.save(newData)
 
   getSockets: -> 
     sockets = []
@@ -162,7 +142,7 @@ class Room
         @startGame()
 
   startGame: =>
-    console.log ">>>>>>>>>>>>>>>>>>>>>>>>STARTING GAME!! :D"
+    actionsCollection.remove({gameid:@roomNumber})
     @emit('serverSendingBeginGame', @getPlayerIds())
     @ingame = true
     @intervalid = setInterval @roomLoop, 1000
@@ -181,15 +161,13 @@ class Room
       @sendItem itemData
 
   endGame: =>
-    dbClient.query "delete from actions where gameid = #{@roomNumber};"
+    actionsCollection.remove({gameid:@roomNumber})
     @ingame = false
-    @emit("serverSendingReload", '')
     clearInterval @intervalid
+    @emit("serverSendingReload", '')
   sendPlayer: (playerData, clientid) ->
     @emit('serverSendingPlayerData', playerData)
-    sqlString = "insert into actions values (NOW(), #{playerData.roomNumber}, '#{clientid}', 'p', #{playerData.tilex}, #{playerData.tiley});"
-    console.log sqlString
-    dbClient.query sqlString
+    @newRow(clientid, 'p', playerData.tilex, playerData.tiley, -1)
     printRowCount()
 
   sendItem: (itemData, clientid) -> 
@@ -197,8 +175,7 @@ class Room
     # if this is the case, itemData.id will be 0
     @emit('serverSendingItemData', itemData)
     clientidstr = if(clientid?) then "#{clientid}" else "NULL" 
-    dbClient.query "insert into actions values (NOW(), #{itemData.roomNumber}, '#{clientidstr}', 'i', #{itemData.tilex}, #{itemData.tiley}, #{itemData.itemNumber});", (err, result) -> 
-      console.log "INSERTED ROW"
+    @newRow(clientidstr, 'i', itemData.tilex, itemData.tiley, itemData.itemNumber)
     printRowCount()
 
   sendTile: (tileData, clientid) -> 
@@ -206,12 +183,7 @@ class Room
     # if this is the case, tileData.id will be 0
     @emit('serverSendingTileData', tileData)
     clientidstr = if(clientid?) then "#{clientid}" else "NULL" 
-    sqlString = "insert into actions values (NOW(), #{tileData.roomNumber}, '#{clientidstr}', 't', #{tileData.tilex}, #{tileData.tiley}, #{tileData.tileNumber});"
-    console.log sqlString
-    query = dbClient.query sqlString
-    query.on 'end', (result) ->
-      console.log 'Finished'
-    query.on 'error', (err) -> console.log err
+    @newRow(clientidstr, 't', tileData.tilex, tileData.tiley, tileData.tileNumber)
     printRowCount()
 
   sendAttack: (attackData) ->
@@ -220,7 +192,6 @@ class Room
   sendDeath: (deathData, client) ->
     client.dead = true
     @emit('serverSendingDeathData', deathData)
-    console.log "TEEEEEEEEEEESTING #{deathData.id}, #{client.startid}"
     @checkGameover()
     
   checkGameover: ->
@@ -229,8 +200,6 @@ class Room
       alive.push s for s in @getSockets() when !s.dead?
       if(alive.length == 1)
         winnerid = alive[0]
-        console.log "We have a winner>>>>>>>>>>"
-        console.log winnerid.startid
         @emit('serverSendingWinner',winnerid.startid)
         gameEnded = true
         clearInterval @intervalid
@@ -253,7 +222,6 @@ class Room
       for x in [0...@mapData.mapheight]
         if (@getTileElement(x,y) == TileType.tree)
           @fireCount = @adjacentFires(x,y)
-          #console.log "#{@fireCount}"
           if(@fireCount > 0)
             @newFire.push({xf : x ,yf : y})
         if (@getTileElement(x,y) == TileType.grass || @getTileElement(x,y) == TileType.holeTrap || @getTileElement(x,y) == TileType.boobyTrap)
@@ -316,19 +284,14 @@ io.sockets.on "connection", (client) ->
   client.join('lobby')
   client.startid = client.id
 
-  console.log "CONNECT: #{client.startid}"
-
   # Send the list of rooms to the client
-
   client.emit("serverSendingRooms", roomsToSend())
 
   # The client has request to join a room
   client.on "clientSendingRoomNumber", (roomNumber) ->
     client.leave('lobby')
-    console.log "SENDING ROOM NUMBER: #{client.startid}"
     numRoomsJoined = 0
     numRoomsJoined++ for roomname of io.sockets.manager.roomClients[client.id]
-    console.log "NUM ROOMS JOINED: #{numRoomsJoined}"
     if(numRoomsJoined <= 1) then requestedRoom = rooms[roomNumber].requestJoin(client)
     
   client.on "clientSendingPlayerData", (playerData) ->
@@ -352,16 +315,10 @@ io.sockets.on "connection", (client) ->
     rooms[deathData.roomNumber].sendDeath(deathData, client)
 
   client.on "clientSendingReplayRequest", (deathData) ->
-    query = dbClient.query("SELECT * FROM actions WHERE gameid = #{deathData.roomNumber}");
-    replayData = []
-    query.on 'row', (row, result) ->
-      replayData.push(row)
-    query.on 'end', (result) ->
-      client.emit("serverSendingReplay", replayData)
+    actionsCollection.find {gameid: deathData.roomNumber}, (err, docs) ->
+      if(err?) then console.warn err else client.emit("serverSendingReplay", docs)
 
   client.on "disconnect", ->
-    console.log "<<<<<<<CLIENT DISCONNECTED>>>>>>> "
-    console.log "DISCONNECTED: #{client.startid}"
     client.broadcast.emit("serverSendingRooms", roomsToSend())
     client.dead = true
     for key, val of io.sockets.manager.roomClients[client.id]
@@ -369,9 +326,6 @@ io.sockets.on "connection", (client) ->
         leavingRoom = getRoomByName(key.substring(1))
         leavingRoom.checkGameover()
         leavingRoom.emit("serverSendingPlayerDisconnected", client.startid)
-        console.log "<<>><><<><><>Player Disconnected sent!"
         # if two people currently connected in room and one leaves, end the game
         if 0<leavingRoom.getPlayerCount()<=2
-          console.log "<<<<<<<<<<<<<<<GAME ENDED>>>>>>>>>>>>>>>>"
           leavingRoom.endGame()
-    console.log "<<<>><<>>>END OF DICSONNECT CODE >>>>>>>>>>"

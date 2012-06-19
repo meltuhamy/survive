@@ -1,5 +1,48 @@
 _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
-           New: Node.js server with socket.io and express engine
+                        NEW: mongodb instead of postgreSQL
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+
+I've switched to mongodb because it's scalable, it is noSQL, and it is closer
+to javascript. No more sql strings everywhere and hello fast databases :)
+
+To get up and running:
+1. Download and install mongodb. I recommend you go through the tutorial to
+   understand the basics. Download it here: http://www.mongodb.org/downloads
+
+2. Go through the online shell tutorial to understand all about how mongodb 
+   works. http://www.mongodb.org/ and click "TRY IT OUT"
+
+3. Once mongodb is installed, go through the Quickstart.
+   http://www.mongodb.org/display/DOCS/Quickstart (select your OS)
+
+4. Once up and running, turn on the mongod database server and in another
+   terminal, run mongo. Now type
+   > use tradersgame
+   > db.createCollection("actions")
+   Now exit mongo but keep mongod running.
+
+5. Make sure you have the required node dependencies. Go to traders game and
+   > sh install_node_modules.sh
+   The new thing here is the mongojs plugin.
+
+6. Type
+   > sh compileandrun.sh
+   To compile both public and server code and run the node server as usual.
+
+Done! Try it out and notice the speed improvement. I also encourage you to 
+look at the git diff (> git diff or on bitbucket) to see the code changes.
+
+You'll notice the code is much cleaner.
+
+Once everything's set up you dont need to install stuff anymore. To run the
+server:
+
+1. Run mongod
+2. Continue from step 5 above
+
+
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
+                Node.js server with socket.io and express engine
 _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-
 
 There's quite a lot involved here.
