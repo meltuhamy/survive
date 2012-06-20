@@ -1,23 +1,34 @@
 socketiolib = require("socket.io")
 express = require("express")
+mdb = require('mongojs').connect('mongodb://nodejitsu:1e3aa1dc97cebf2eb299379ab1986d3e@staff.mongohq.com:10056/nodejitsudb500649431094')
+actionsCollection = mdb.collection('actions')
+
 server = express.createServer()
 server.use express.static(__dirname + "/public")
-server.listen 8080
+server.listen 80
 io = socketiolib.listen(server)
 
+io.set('log level', 1) #reduce logs
+###
+log level defaults to 3
 
-mdb = require('mongojs').connect('localhost/tradersgame')
-actionsCollection = mdb.collection('actions')
-actionsCollection.find (err, docs) ->
-    console.log "Total number of rows: #{docs.length}"
-    console.log docs
+The amount of detail that the server should output to the logger.
+0 - error
+1 - warn
+2 - info
+3 - debug
+###
 
+###actionsCollection.find (err, docs) ->
+    #console.log "Total number of rows: #{docs.length}"
+    #console.log docs
+###
 actionsCollection.remove({}) #Remove all rows
 
 printRowCount = (thegameid=0)->
   actionsCollection.find {gameid: thegameid}, (err, docs) ->
     if(err?) then console.warn err
-    console.log "Game #{thegameid}: #{docs.length} moves inserted"
+    #console.log "Game #{thegameid}: #{docs.length} moves inserted"
     
 
 tile0 =  [1,2,3,4,5,6,7,8,9,6,7,8,9,4,4,4,5,5,5,5,5,5,5,5,5,5,3,3,3,3,1,1,1,1,1,1,1,3,3,3,4,4,4,4,4,4,5,5,1,1,1,1,1,1,3,5,3,3,3,3,1,1,1,1,1,1,1,3,3,4,4,3,3,4,4,5,5,5,1,1,1,3,3,3,5,5,3,1,1,3,1,1,1,1,1,1,1,1,4,4,3,3,3,3,3,5,5,5,5,3,3,3,3,5,5,1,1,1,1,3,1,1,1,1,1,1,1,1,4,4,1,3,3,3,3,3,3,3,3,3,3,5,5,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,4,4,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,4,3,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,1,3,1,3,3,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,1,1,1,1,1,1,1,1,4,4,4,4,1,1,1,1,1,1,1,1,1,3,3,3,3,3,1,1,1,1,3,3,1,1,1,1,1,1,1,4,4,4,4,4,5,5,5,5,5,1,1,3,3,3,3,3,3,3,1,1,1,3,3,1,1,1,1,1,1,1,1,4,4,4,5,5,5,5,5,5,1,3,3,4,4,3,3,2,3,1,3,1,3,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,1,3,3,4,4,3,3,2,1,3,3,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,4,4,3,3,2,2,1,1,1,1,1,1,1,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,3,3,3,3,2,2,1,1,1,1,1,1,1,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,5,5,5,5,5,5,5,5,5,5,5,3]

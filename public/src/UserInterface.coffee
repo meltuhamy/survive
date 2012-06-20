@@ -146,7 +146,7 @@ makemenu = (x,y) ->
 inventorymakemenu = (itemIndex) ->
    $('#inventorySlots li').eq(itemIndex).css('box-shadow','inset 0 0 10px red')
    inventorymenuactions = (map.getItemFromNumber Game.player.inventory[itemIndex]).inventoryActions
-   console.log inventorymenuactions
+   #console.log inventorymenuactions
    inventoryinputSelect = ''
    if (inventorymenuactions.length == 0) then return
    for i in [0...inventorymenuactions.length]
@@ -168,23 +168,23 @@ actionMenuKeyDown = (evt) ->
   if(!actionMenuVisible) then return
   $('#actionlist li').eq(actionMenuSelected).toggleClass('selected')
   if(evt.keyCode == KEYCODE.uparrow)
-    console.log "Pressed uparrow on actionmenu"
+    #console.log "Pressed uparrow on actionmenu"
     actionMenuSelected = (actionMenuSelected-1+actionMenuTotal) % actionMenuTotal
   else if(evt.keyCode == KEYCODE.downarrow)
-    console.log "Pressed downarrow on actionmenu"
+    #console.log "Pressed downarrow on actionmenu"
     actionMenuSelected = (actionMenuSelected+1) % actionMenuTotal
   else if(evt.keyCode == KEYCODE.enter)
-    console.log "Pressed enter on actionmenu"
+    #console.log "Pressed enter on actionmenu"
     PlayerInput.focusOnCanvas = true
     actions = map.getActions(actionMenuTileX, actionMenuTileY)
     selectedAction = actions[actionMenuSelected]
     $('#actionmenu').fadeOut("fast")
     $('#actionlist').empty()
     actionmenuVisible = false
-    console.log "UI.coffee actionmenuVisible=#{actionmenuVisible}"
+    #console.log "UI.coffee actionmenuVisible=#{actionmenuVisible}"
     selectedAction.doFn(actionMenuTileX, actionMenuTileY)
   else if(evt.keyCode == KEYCODE.escape)
-    console.log "Pressed escape on actionmenu"
+    #console.log "Pressed escape on actionmenu"
     PlayerInput.focusOnCanvas = true
     $('#actionmenu').fadeOut("fast")
     actionmenuVisible = false

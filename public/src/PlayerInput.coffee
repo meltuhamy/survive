@@ -38,7 +38,7 @@ class PlayerInput
       if actionMenuVisible
         actionMenuKeyDown(evt)
       if inventoryactionMenuVisible
-        console.log "create inventory menu"
+        #console.log "create inventory menu"
         Game.player.setNotMovingInAnyDir()
         inventoryactionMenuKeyDown(evt)
       if @focusOnCanvas

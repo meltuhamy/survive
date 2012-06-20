@@ -1,0 +1,4 @@
+nbproject/*
+*.sublime*
+*.sh
+src/*

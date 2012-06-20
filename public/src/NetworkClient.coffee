@@ -29,7 +29,7 @@ class NetworkClient
   @receiveRoomJoin = (initialData) ->
     if initialData.themap?
       gameMap = initialData.themap
-      console.log "Received game map. Width: #{gameMap.mapwidth} Height: #{gameMap.mapheight}"
+      #console.log "Received game map. Width: #{gameMap.mapwidth} Height: #{gameMap.mapheight}"
       map = new Map(new Grid(gameMap.tiles, gameMap.mapwidth, gameMap.mapheight), new Grid(gameMap.items, gameMap.mapwidth, gameMap.mapheight))
     Game.spawnPlayer(initialData.spawn)
     
@@ -92,7 +92,7 @@ class NetworkClient
       tableData += if (r.ingame) then "<td>Playing!</td>" else "<td>Waiting for more players</td>"
       thetable   += "<tr onclick=\"NetworkClient.sendJoinRoomRequest(#{r.roomNumber})\">#{tableData}</tr>"
     thetable += "</table>"
-    console.log thetable
+    #console.log thetable
     $("#roomlist").append(thetable)
 
 endingGame = ->
@@ -150,4 +150,4 @@ socket.on "serverSendingReplay", (replayData) ->
   NetworkClient.receiveReplay(replayData)
 
 socket.on "serverSendingDebugLog", (debugLogData) ->
-  console.log debugLogData
+  #console.log debugLogData

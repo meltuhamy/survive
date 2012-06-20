@@ -52,7 +52,7 @@ class Game
   @reduceList = []
   @reduceInSeconds = 0
   @reduceAnnouncements: ->
-    console.log "Removing announcements"
+    #console.log "Removing announcements"
     if $('.playerAnnouncement').length == 0 then $('#playerAnnouncements').css('margin-top', '0px')
     @reduceList.push $('.playerAnnouncement').last()
     if(@reduceList.length >=1)
@@ -235,8 +235,8 @@ class Game
   @replayGameUpdate = =>
     if @replayGameTick < @replayData.length
       replay = @replayData[@replayGameTick]
-      console.log "Replaying row #{@replayGameTick}:"
-      console.log replay
+      #console.log "Replaying row #{@replayGameTick}:"
+      #console.log replay
       switch @replayData[@replayGameTick].type
         when "t"
           map.setTileElement replay.tilex, replay.tiley, replay.value, false
