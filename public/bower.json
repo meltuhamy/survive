@@ -1,0 +1,21 @@
+{
+  "name": "surviveconquer",
+  "version": "2.0.0",
+  "authors": [
+    "Mohamed Eltuhamy <tuhamy@gmail.com>"
+  ],
+  "description": "Realtime multiplayer survival rpg",
+  "license": "MIT",
+  "homepage": "http://meltuhamy.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "phaser": "~2.0.4"
+  }
+}
