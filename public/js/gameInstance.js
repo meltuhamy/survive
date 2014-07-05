@@ -1,4 +1,4 @@
-define(['PlayerSprite', 'Map'], function(PlayerSprite, Map){
+define(['PlayerSprite', 'Map', 'Resources'], function(PlayerSprite, Map, Resources){
 
   var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'survive-conquer', {
     preload: preload,
@@ -8,9 +8,7 @@ define(['PlayerSprite', 'Map'], function(PlayerSprite, Map){
   });
 
   function preload() {
-    game.load.tilemap('riverpath', 'assets/map/riverpath.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.image('tilesheet', 'assets/img/tilesheet.png');
-    game.load.spritesheet('clotharmor', 'assets/img/clotharmor.png', 96, 96);
+    Resources.loadAll(game);
   }
 
 
