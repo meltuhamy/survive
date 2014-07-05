@@ -1,4 +1,5 @@
 define([], function(){
+  "use strict";
   // here we define all our resources.
   // how it works: essentially we define function calls to the load property.
   // e.g. {method: "image", resource: ['tilesheet', 'assets/img/tilesheet.png']}

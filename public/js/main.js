@@ -1,4 +1,3 @@
-require(['gameInstance'], function(gameInstance){
-  window.gameInstance = gameInstance;
-  window.game = gameInstance.game;
+require(['Game'], function(Game){
+  window.game = new Game();
 });

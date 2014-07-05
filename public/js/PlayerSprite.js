@@ -1,6 +1,8 @@
 define([], function(){
+  "use strict";
 
   var PlayerSprite = function (game, x, y, spriteresource) {
+
     Phaser.Sprite.call(this, game, x, y, spriteresource);
 
 
@@ -32,6 +34,8 @@ define([], function(){
     this.animations.add('waitup', [25, 26], 0.3, false);
     this.animations.add('movedown', [35, 36, 37, 38], 8, false);
     this.animations.add('waitdown', [40, 41], 0.3, false);
+
+    game.add.existing(this);
   };
 
   PlayerSprite.prototype = Object.create(Phaser.Sprite.prototype);
@@ -41,7 +45,7 @@ define([], function(){
     this.body.velocity.x = 0;
     this.body.velocity.y = 0;
 
-    if(this.animations.currentAnim.isFinished){
+    if(this.animations.currentAnim && this.animations.currentAnim.isFinished){
       this.animations.play("wait"+this.direction);
     }
   };
