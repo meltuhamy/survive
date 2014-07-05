@@ -57,12 +57,14 @@ define([], function(){
     this.animations.play('movedown');
     this.direction = "down";
   };
+
   PlayerSprite.prototype.moveLeft = function(){
     this.body.velocity.x = -this.moveSpeed;
     this.scale.x = -1;
     this.animations.play('moveright');
     this.direction = "left";
   };
+
   PlayerSprite.prototype.moveRight = function(){
     this.body.velocity.x = this.moveSpeed;
     this.scale.x = 1;
@@ -71,11 +73,11 @@ define([], function(){
   };
 
   PlayerSprite.prototype.getTileX = function(){
-    return game.map.floor.getTileX(this.x);
+    return game.map.layerObjects.grass.getTileX(this.x);
   };
 
   PlayerSprite.prototype.getTileY = function(){
-    return game.map.floor.getTileY(this.y);
+    return game.map.layerObjects.grass.getTileY(this.y);
   };
 
 
