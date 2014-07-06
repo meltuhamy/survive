@@ -8,6 +8,7 @@ define([], function(){
 
     this.moveSpeed = 200;
     this.direction = "down";
+    this.viewRadius = 10;
 
     this.anchor.setTo(0.5, 0.5);
 

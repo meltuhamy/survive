@@ -1,4 +1,4 @@
-define(['Map', 'PlayerSprite'], function (Map, PlayerSprite) {
+define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, PlayerSpotlight) {
   "use strict";
 
   function PlayState() {
@@ -16,28 +16,9 @@ define(['Map', 'PlayerSprite'], function (Map, PlayerSprite) {
     this.startPhysics();
     this.addMap();
     this.addPlayer();
-    this.addSpotlight();
-    this.updateSpotlight();
     this.addControls();
   };
 
-  PlayState.prototype.addSpotlight = function () {
-    this.playerSpotlight = {};
-    this.playerSpotlight.bmp = this.game.add.bitmapData(800, 600);
-    this.playerSpotlight.sprite = this.game.add.sprite(0, 0, this.playerSpotlight.bmp);
-    this.playerSpotlight.sprite.fixedToCamera = true;
-  };
-
-  PlayState.prototype.updateSpotlight = function () {
-    var c = this.game.camera;
-    this.playerSpotlight.grd = this.playerSpotlight.bmp.context.createRadialGradient(this.player.x - c.x, this.player.y - c.y, 10, this.player.x - c.x, this.player.y - c.y, 200);
-    this.playerSpotlight.grd.addColorStop(0.177, "rgba(0, 0, 0, 0)");
-    this.playerSpotlight.grd.addColorStop(0.8, "rgba(0, 0, 0, 0.7)");
-
-    this.playerSpotlight.bmp.clear();
-    this.playerSpotlight.bmp.context.fillStyle = this.playerSpotlight.grd;
-    this.playerSpotlight.bmp.context.fillRect(0, 0, 800, 600);
-  };
 
   PlayState.prototype.startPhysics = function () {
     this.physics.startSystem(Phaser.Physics.ARCADE);
@@ -53,6 +34,9 @@ define(['Map', 'PlayerSprite'], function (Map, PlayerSprite) {
     this.player = new PlayerSprite(this.game, 450, 80, 'clotharmor');
     this.camera.follow(this.player);
     window.player = this.player;
+
+    this.spotlight = new PlayerSpotlight(this.game, this.player);
+
   };
 
 
@@ -62,7 +46,6 @@ define(['Map', 'PlayerSprite'], function (Map, PlayerSprite) {
 
 
   PlayState.prototype.update = function () {
-    this.updateSpotlight();
     this.map.collideWithSprite(this.player);
 
     // by default, player is stationary.
