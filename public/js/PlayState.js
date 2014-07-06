@@ -47,6 +47,7 @@ define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, 
 
   PlayState.prototype.update = function () {
     this.map.collideWithSprite(this.player);
+    this.map.update();
 
     // by default, player is stationary.
     this.player.stopMoving();
