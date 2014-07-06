@@ -1,7 +1,7 @@
-define(['Map', 'PlayerSprite'], function(Map, PlayerSprite){
+define(['Map', 'PlayerSprite'], function (Map, PlayerSprite) {
   "use strict";
 
-  function PlayState(){
+  function PlayState() {
     Phaser.State.apply(this, arguments);
   }
 
@@ -9,14 +9,34 @@ define(['Map', 'PlayerSprite'], function(Map, PlayerSprite){
   PlayState.prototype.constructor = PlayState;
 
 
-  PlayState.prototype.preload = function(){
+  PlayState.prototype.preload = function () {
   };
 
-  PlayState.prototype.create = function(){
+  PlayState.prototype.create = function () {
     this.startPhysics();
     this.addMap();
     this.addPlayer();
+    this.addSpotlight();
+    this.updateSpotlight();
     this.addControls();
+  };
+
+  PlayState.prototype.addSpotlight = function () {
+    this.playerSpotlight = {};
+    this.playerSpotlight.bmp = this.game.add.bitmapData(800, 600);
+    this.playerSpotlight.sprite = this.game.add.sprite(0, 0, this.playerSpotlight.bmp);
+    this.playerSpotlight.sprite.fixedToCamera = true;
+  };
+
+  PlayState.prototype.updateSpotlight = function () {
+    var c = this.game.camera;
+    this.playerSpotlight.grd = this.playerSpotlight.bmp.context.createRadialGradient(this.player.x - c.x, this.player.y - c.y, 10, this.player.x - c.x, this.player.y - c.y, 200);
+    this.playerSpotlight.grd.addColorStop(0.177, "rgba(0, 0, 0, 0)");
+    this.playerSpotlight.grd.addColorStop(0.8, "rgba(0, 0, 0, 0.7)");
+
+    this.playerSpotlight.bmp.clear();
+    this.playerSpotlight.bmp.context.fillStyle = this.playerSpotlight.grd;
+    this.playerSpotlight.bmp.context.fillRect(0, 0, 800, 600);
   };
 
   PlayState.prototype.startPhysics = function () {
@@ -41,8 +61,8 @@ define(['Map', 'PlayerSprite'], function(Map, PlayerSprite){
   };
 
 
-
-  PlayState.prototype.update = function(){
+  PlayState.prototype.update = function () {
+    this.updateSpotlight();
     this.map.collideWithSprite(this.player);
 
     // by default, player is stationary.
@@ -60,12 +80,11 @@ define(['Map', 'PlayerSprite'], function(Map, PlayerSprite){
 
   };
 
-  PlayState.prototype.render = function(){
+  PlayState.prototype.render = function () {
     this.game.debug.text('Tile X: ' + this.player.getTileX(), 32, 32, 'rgb(0,0,0)');
     this.game.debug.text('Tile Y: ' + this.player.getTileY(), 32, 64, 'rgb(0,0,0)');
 
   };
-
 
 
   return PlayState;
