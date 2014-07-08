@@ -17,6 +17,10 @@
   ],
   "dependencies": {
     "phaser": "~2.0.4",
-    "requirejs": "~2.1.14"
+    "requirejs": "~2.1.14",
+    "phaser_plugin_pathfinding": "git@github.com:meltuhamy/phaser_plugin_pathfinding.git#build"
+  },
+  "resolutions": {
+    "phaser_plugin_pathfinding": "build"
   }
 }

@@ -1,0 +1,36 @@
+{
+  "name": "phaser_plugin_pathfinding",
+  "homepage": "https://github.com/appsbu-de/phaser_plugin_pathfinding",
+  "authors": [
+    "appsbu-de"
+  ],
+  "description": "Phaser Pathfinding Plugin",
+  "keywords": [
+    "phaser",
+    "pathfinding",
+    "easystar"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src"
+  ],
+  "dependencies": {
+    "easystarjs": "git@github.com:prettymuchbryce/easystarjs.git",
+    "phaser": "~2.0.4"
+  },
+  "_release": "c6a710c923",
+  "_resolution": {
+    "type": "branch",
+    "branch": "build",
+    "commit": "c6a710c923d7811d47fa7ef045a0669cb1b2a575"
+  },
+  "_source": "git@github.com:meltuhamy/phaser_plugin_pathfinding.git",
+  "_target": "build",
+  "_originalSource": "git@github.com:meltuhamy/phaser_plugin_pathfinding.git",
+  "_direct": true
+}
