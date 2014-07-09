@@ -1,10 +1,11 @@
 define([], function () {
   function Map(game, key) {
     Phaser.Tilemap.call(this, game, key);
+    this.pathFinder = game.plugins.add(Phaser.Plugin.PathFinderPlugin);
+
     game.map = this;
 
     this.addTilesetImage('tilesheet', 'tilesheet');
-
     this.addLayers();
     this.setCollisionLayers();
 
@@ -38,7 +39,8 @@ define([], function () {
       "water": this.createLayer('water'),
       "wood": this.createLayer('wood'),
       "fire": this.createLayer('fire'),
-      "walls": this.createLayer('walls')
+      "walls": this.createLayer('walls'),
+      "collisions":  this.createLayer('collisions')
     };
   };
 
@@ -51,20 +53,21 @@ define([], function () {
   };
 
   Map.prototype.setCollisionLayers = function(){
+    this.collisionIndices = {
+      walkable: [17641],
+      blocked: [17642]
+    };
+
+    this.pathFinder.setGrid(this.layers[this.getLayer('collisions')].data, this.collisionIndices.walkable);
+
+
     if(this.layerObjects != undefined){
-      this.setCollisionByExclusion([], true, this.layerObjects.grass);
-      this.setCollisionByExclusion([], true, this.layerObjects.water);
-      this.setCollisionByExclusion([], true, this.layerObjects.fire);
-      this.setCollisionByExclusion([], true, this.layerObjects.walls);
+      this.setCollision(this.collisionIndices.blocked, true, this.layerObjects.collisions);
     }
   };
 
   Map.prototype.collideWithSprite = function(sprite){
-    for(var k in this.layerObjects){
-      if(this.layerObjects.hasOwnProperty(k)){
-        game.physics.arcade.collide(sprite, this.layerObjects[k]);
-      }
-    }
+    this.game.physics.arcade.collide(sprite, this.layerObjects.collisions);
   };
 
   Map.prototype.collideWithSprites = function(sprites){

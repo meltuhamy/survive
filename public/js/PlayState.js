@@ -42,6 +42,25 @@ define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, 
 
   PlayState.prototype.addControls = function () {
     this.cursors = game.input.keyboard.createCursorKeys();
+
+    // click to move
+    var thisRef = this;
+    this.game.input.onDown.add(function(){
+      var tileX = thisRef.map.tileFromWorldX(thisRef.map.cellMarker.x),
+          tileY = thisRef.map.tileFromWorldY(thisRef.map.cellMarker.y),
+          playerX = thisRef.player.getTileX(),
+          playerY = thisRef.player.getTileY();
+
+      if (tileX == playerX && tileY == playerY) return;
+
+      thisRef.map.pathFinder.setCallbackFunction(function(path) {
+        if (path) thisRef.player.moveTo(path);
+      });
+
+      thisRef.map.pathFinder.preparePathCalculation([playerX, playerY], [tileX, tileY]);
+      thisRef.map.pathFinder.calculatePath();
+    });
+
   };
 
 

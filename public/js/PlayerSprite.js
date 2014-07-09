@@ -1,4 +1,4 @@
-define([], function(){
+define([], function () {
   "use strict";
 
   var PlayerSprite = function (game, x, y, spriteresource) {
@@ -7,8 +7,9 @@ define([], function(){
 
 
     this.moveSpeed = 200;
-    this.direction = "down";
     this.viewRadius = 10;
+    this.tweenSpeed = this.moveSpeed / 3;
+    this.moving = false;
 
     this.anchor.setTo(0.5, 0.5);
 
@@ -42,46 +43,110 @@ define([], function(){
   PlayerSprite.prototype = Object.create(Phaser.Sprite.prototype);
   PlayerSprite.prototype.constructor = PlayerSprite;
 
-  PlayerSprite.prototype.stopMoving = function(){
+  PlayerSprite.prototype.stopMoving = function () {
     this.body.velocity.x = 0;
     this.body.velocity.y = 0;
+    this.moving = false;
+    this.playStationaryAnimation();
+  };
 
-    if(this.animations.currentAnim && this.animations.currentAnim.isFinished){
-      this.animations.play("wait"+this.direction);
+  PlayerSprite.prototype.moveUp = function () {
+    this.moving = true;
+    this.body.velocity.y = -this.moveSpeed;
+  };
+
+  PlayerSprite.prototype.moveDown = function () {
+    this.moving = true;
+    this.body.velocity.y = this.moveSpeed;
+  };
+
+  PlayerSprite.prototype.moveLeft = function () {
+    this.moving = true;
+    this.body.velocity.x = -this.moveSpeed;
+  };
+
+  PlayerSprite.prototype.moveRight = function () {
+    this.moving = true;
+    this.body.velocity.x = this.moveSpeed;
+  };
+
+  PlayerSprite.prototype.playStationaryAnimation = function () {
+    if (this.animations.currentAnim && this.animations.currentAnim.isFinished) {
+      switch (this.body.facing) {
+        case Phaser.RIGHT:
+          this.scale.x = 1;
+          this.animations.play('waitright');
+          break;
+
+        case Phaser.LEFT:
+          this.scale.x = -1;
+          this.animations.play('waitright');
+          break;
+
+        case Phaser.UP:
+          this.animations.play('waitup');
+          break;
+
+        case Phaser.DOWN:
+          this.animations.play('waitdown');
+          break;
+      }
     }
   };
 
-  PlayerSprite.prototype.moveUp = function(){
-    this.body.velocity.y = -this.moveSpeed;
-    this.animations.play('moveup');
-    this.direction = "up";
+  PlayerSprite.prototype.playMovingAnimation = function () {
+    switch (this.body.facing) {
+      case Phaser.RIGHT:
+        this.scale.x = 1;
+        this.animations.play('moveright');
+        break;
+
+      case Phaser.LEFT:
+        this.scale.x = -1;
+        this.animations.play('moveright');
+        break;
+
+      case Phaser.UP:
+        this.animations.play('moveup');
+        break;
+
+      case Phaser.DOWN:
+        this.animations.play('movedown');
+        break;
+    }
   };
 
-  PlayerSprite.prototype.moveDown = function(){
-    this.body.velocity.y = this.moveSpeed;
-    this.animations.play('movedown');
-    this.direction = "down";
+  PlayerSprite.prototype.runTween = function (tween) {
+    var stepCoo = this.path[this.currPathStep++];
+
+    return stepCoo ? this.runTween(tween.to({
+      x: stepCoo.x * 16,
+      y: stepCoo.y * 16
+    }, this.tweenSpeed, Phaser.Easing.Linear.None, true)) : tween;
   };
 
-  PlayerSprite.prototype.moveLeft = function(){
-    this.body.velocity.x = -this.moveSpeed;
-    this.scale.x = -1;
-    this.animations.play('moveright');
-    this.direction = "left";
+  PlayerSprite.prototype.moveTo = function (path) {
+    this.currPathStep = 0;
+    this.path = path;
+    this.tween = this.game.add.tween(this.body);
+
+    this.runTween(this.tween).start();
+
+    // Tween timer
+    this.tweenActive = true;
+    if (this.tweenTimer) clearTimeout(this.tweenTimer);
+    var thisRef = this;
+    this.tweenTimer = setTimeout(function () {
+      thisRef.tweenActive = false;
+    }, this.tweenSpeed * path.length);
   };
 
-  PlayerSprite.prototype.moveRight = function(){
-    this.body.velocity.x = this.moveSpeed;
-    this.scale.x = 1;
-    this.animations.play('moveright');
-    this.direction = "right";
-  };
 
-  PlayerSprite.prototype.getTileX = function(){
+  PlayerSprite.prototype.getTileX = function () {
     return game.map.layerObjects.grass.getTileX(this.x);
   };
 
-  PlayerSprite.prototype.getTileY = function(){
+  PlayerSprite.prototype.getTileY = function () {
     return game.map.layerObjects.grass.getTileY(this.y);
   };
 
@@ -89,7 +154,12 @@ define([], function(){
   /**
    * Automatically called by World.update
    */
-  PlayerSprite.prototype.update = function() {
+  PlayerSprite.prototype.update = function () {
+    this.playStationaryAnimation();
+
+    if(this.moving || this.tweenActive){
+      this.playMovingAnimation();
+    }
   };
 
   return PlayerSprite;
