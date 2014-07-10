@@ -9,9 +9,6 @@ define([], function () {
     this.addLayers();
     this.setCollisionLayers();
 
-    this.cellMarker = this.game.add.graphics();
-    this.cellMarker.lineStyle(1, 0xffffff, 1);
-    this.cellMarker.drawRect(0, 0, 30, 30);
   }
 
   Map.prototype = Object.create(Phaser.Tilemap.prototype);
@@ -19,8 +16,6 @@ define([], function () {
 
 
   Map.prototype.update = function(){
-    this.cellMarker.x = this.tileFromWorldX(this.game.input.activePointer.worldX) * 16;
-    this.cellMarker.y = this.tileFromWorldY(this.game.input.activePointer.worldY) * 16;
   };
 
   Map.prototype.tileFromWorldX = function(x){

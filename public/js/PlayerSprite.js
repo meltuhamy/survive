@@ -11,6 +11,10 @@ define([], function () {
     this.tweenSpeed = this.moveSpeed / 3;
     this.moving = false;
 
+    this.moveMarker = game.add.graphics();
+    this.moveMarker.lineStyle(1, 0xffffff, 1);
+    this.moveMarker.drawRect(0, 0, 32, 32);
+
     this.anchor.setTo(0.5, 0.5);
 
     game.physics.enable(this);
@@ -126,19 +130,26 @@ define([], function () {
   };
 
   PlayerSprite.prototype.moveTo = function (path) {
+    var thisRef = this;
+
     this.currPathStep = 0;
     this.path = path;
     this.tween = this.game.add.tween(this.body);
-
     this.runTween(this.tween).start();
 
     // Tween timer
     this.tweenActive = true;
     if (this.tweenTimer) clearTimeout(this.tweenTimer);
-    var thisRef = this;
+
     this.tweenTimer = setTimeout(function () {
       thisRef.tweenActive = false;
+      thisRef.moveMarker.alpha = 0;
     }, this.tweenSpeed * path.length);
+
+    // draw the moveto tile
+    this.moveMarker.x = this.game.map.tileFromWorldX(this.game.input.activePointer.worldX) * 16 - 8;
+    this.moveMarker.y = this.game.map.tileFromWorldY(this.game.input.activePointer.worldY) * 16 - 8;
+    this.moveMarker.alpha = 1;
   };
 
 

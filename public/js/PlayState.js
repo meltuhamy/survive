@@ -46,8 +46,8 @@ define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, 
     // click to move
     var thisRef = this;
     this.game.input.onDown.add(function(){
-      var tileX = thisRef.map.tileFromWorldX(thisRef.map.cellMarker.x),
-          tileY = thisRef.map.tileFromWorldY(thisRef.map.cellMarker.y),
+      var tileX = thisRef.map.tileFromWorldX(thisRef.game.input.activePointer.worldX),
+          tileY = thisRef.map.tileFromWorldY(thisRef.game.input.activePointer.worldY),
           playerX = thisRef.player.getTileX(),
           playerY = thisRef.player.getTileY();
 
