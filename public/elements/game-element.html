@@ -1,0 +1,31 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="ui-bar.html"/>
+<script src="../bower_components/phaser/phaser.js"></script>
+<script src="../bower_components/phaser_plugin_pathfinding/bin/phaser_pathfinding-0.2.0.js"></script>
+
+<polymer-element name="game-element" attributes="width height">
+    <template>
+        <div style="width: {{width}}px; height: {{height}}px"  >
+            <content select="canvas"></content>
+            <ui-bar></ui-bar>
+        </div>
+    </template>
+
+    <script>
+
+        Polymer('game-element', {
+            width: 800,
+            height: 600,
+
+            ready: function () {
+                var me = this;
+                window.gameElement = me;
+                require(['Game'], function (Game) {
+                    console.log(me.width);
+                    console.log(me.height);
+                    window.game = new Game(me, me.width, me.height);
+                });
+            }
+        });
+    </script>
+</polymer-element>

@@ -1,0 +1,13 @@
+{
+  "name": "easystarjs",
+  "homepage": "https://github.com/prettymuchbryce/easystarjs",
+  "_release": "1d5784236c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "1d5784236cf27b506587e08856e87e030b6966be"
+  },
+  "_source": "git@github.com:prettymuchbryce/easystarjs.git",
+  "_target": "*",
+  "_originalSource": "git@github.com:prettymuchbryce/easystarjs.git"
+}

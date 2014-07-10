@@ -18,9 +18,7 @@
   "dependencies": {
     "phaser": "~2.0.4",
     "requirejs": "~2.1.14",
-    "phaser_plugin_pathfinding": "git@github.com:meltuhamy/phaser_plugin_pathfinding.git#build"
-  },
-  "resolutions": {
-    "phaser_plugin_pathfinding": "build"
+    "phaser_plugin_pathfinding": "git@github.com:appsbu-de/phaser_plugin_pathfinding.git#~0.2.0",
+    "polymer": "Polymer/polymer#~0.3.3"
   }
 }

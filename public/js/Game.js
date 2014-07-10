@@ -1,7 +1,7 @@
 define(['BootState', 'PreloaderState', 'MainMenuState', 'PlayState'],
     function(BootState, PreloaderState, MainMenuState, PlayState){
-  function Game(){
-    Phaser.Game.call(this, 800, 600, Phaser.CANVAS, 'survive-conquer', null);
+  function Game(element, width, height){
+    Phaser.Game.call(this, width, height, Phaser.CANVAS, element, null);
 
     this.state.add('BootState', BootState, false);
     this.state.add('PreloaderState', PreloaderState, false);
