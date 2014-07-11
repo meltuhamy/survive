@@ -1,11 +1,18 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="status-bar.html">
+
 <polymer-element name="ui-bar">
     <template>
+        <style>
+            * {
+                font-family: Arial;
+            }
+        </style>
         <div horizontal layout>
-            <div>Health Bar</div>
-            <div>Water Bar</div>
-            <div>Food Bar</div>
-            <div>Stamina Bar</div>
+            <status-bar property="health">Health</status-bar>
+            <status-bar property="water">Water</status-bar>
+            <status-bar property="food">Food</status-bar>
+            <status-bar property="stamina">Stamina</status-bar>
             <div flex>Status Messages and Chats</div>
             <div>Options</div>
         </div>

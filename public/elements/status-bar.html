@@ -1,0 +1,56 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<polymer-element name="status-bar">
+    <template>
+        <style>
+            :host{
+                display: block;
+                width: 100px;
+                position:relative;
+                border: 1px solid black;
+            }
+
+            #fill {
+                width: {{percent}}%;
+                height: 20px;
+                background-color: red;
+                transition: width 0.4s;
+
+            }
+
+            #title {
+                position: absolute;
+                top: 0;
+                right:0;
+                font-size: small;
+                margin-right: 2px;
+            }
+
+
+        </style>
+
+        <div id="fill"></div>
+        <span id="title"><content></content></span>
+    </template>
+
+    <script>
+
+        Polymer('status-bar', {
+            percent: 100,
+            increase: function (amount) {
+                this.percent += amount;
+                if(this.percent < 0){
+                    this.percent = 0;
+                } else if(this.percent > 100){
+                    this.percent = 100;
+                }
+            },
+
+            decrease: function (amount) {
+                this.increase(-amount);
+            },
+
+            ready: function () {
+            }
+        });
+    </script>
+</polymer-element>
