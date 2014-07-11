@@ -1,16 +1,27 @@
 {
-  "name": "surviveconquer",
-  "subdomain": "survive-conquer-beta",
+  "name": "survive-conquer",
+  "version": "2.0.0",
+  "description": "An online multiplayer survival game",
+  "main": "server.js",
   "scripts": {
-    "start": "server.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "version": "0.9.1-3",
-  "engines": {
-    "node": "0.6.x"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/meltuhamy/survive-conquer.git"
+  },
+  "keywords": [
+    "survive",
+    "conquer"
+  ],
+  "author": "Mohamed Eltuhamy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/meltuhamy/survive-conquer/issues"
   },
   "dependencies": {
-    "mongojs": "0.4.3",
-    "socket.io": "0.9.6",
-    "express": "2.5.9"
+    "express": "~4.5.1",
+    "socket.io": "~1.0.6"
   }
 }
