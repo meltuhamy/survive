@@ -3,6 +3,8 @@ define(['BootState', 'PreloaderState', 'MainMenuState', 'PlayState'],
   function Game(element, width, height){
     Phaser.Game.call(this, width, height, Phaser.CANVAS, element, null);
 
+    this.ui = element.$.ui;
+
     this.state.add('BootState', BootState, false);
     this.state.add('PreloaderState', PreloaderState, false);
     this.state.add('MainMenuState', MainMenuState, false);

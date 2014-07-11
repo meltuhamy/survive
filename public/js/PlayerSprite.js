@@ -6,6 +6,15 @@ define([], function () {
     Phaser.Sprite.call(this, game, x, y, spriteresource);
 
 
+    this.levels = {
+      stamina: 100,
+      health: 100,
+      water: 100,
+      food: 100
+    };
+
+    this.levelsSignal = new Phaser.Signal();
+
     this.moveSpeed = 200;
     this.viewRadius = 10;
     this.tweenSpeed = this.moveSpeed / 3;
@@ -44,8 +53,35 @@ define([], function () {
     game.add.existing(this);
   };
 
+
   PlayerSprite.prototype = Object.create(Phaser.Sprite.prototype);
   PlayerSprite.prototype.constructor = PlayerSprite;
+
+  PlayerSprite.prototype.increase = function(property, value){
+    this.levels[property] += value;
+    if(this.levels[property] < 0){
+      this.levels[property] = 0;
+    } else if(this.levels[property] > 100){
+      this.levels[property] = 100;
+    }
+
+    this.levelsSignal.dispatch(property, this.levels[property]);
+
+    return this.levels[property];
+  };
+
+  PlayerSprite.prototype.decrease = function (property, value) {
+    return this.increase(property, -value)
+  };
+
+  PlayerSprite.prototype.setLevel = function (property, value){
+    if(value >= 0 && value <= 100){
+      this.levels[property] = value;
+    }
+    this.levelsSignal.dispatch(property, value);
+
+    return this[property];
+  };
 
   PlayerSprite.prototype.stopMoving = function () {
     this.body.velocity.x = 0;

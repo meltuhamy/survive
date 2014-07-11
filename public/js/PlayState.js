@@ -37,6 +37,12 @@ define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, 
 
     this.spotlight = new PlayerSpotlight(this.game, this.player);
 
+    // register player signals
+    var thisRef = this;
+    this.player.levelsSignal.add(function(property, value){
+      thisRef.game.ui.$[property].percent = value;
+    });
+
   };
 
 
@@ -80,6 +86,7 @@ define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, 
     } else if (this.cursors.right.isDown) {
       this.player.moveRight();
     }
+
 
   };
 

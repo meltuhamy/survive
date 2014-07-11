@@ -7,7 +7,7 @@
     <template>
         <div style="width: {{width}}px; height: {{height}}px"  >
             <content select="canvas"></content>
-            <ui-bar></ui-bar>
+            <ui-bar id="ui"></ui-bar>
         </div>
     </template>
 
@@ -21,8 +21,6 @@
                 var me = this;
                 window.gameElement = me;
                 require(['Game'], function (Game) {
-                    console.log(me.width);
-                    console.log(me.height);
                     window.game = new Game(me, me.width, me.height);
                 });
             }
