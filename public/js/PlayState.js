@@ -1,4 +1,4 @@
-define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, PlayerSpotlight) {
+define(['Map', 'PlayerSprite', 'PlayerSpotlight', 'Item'], function (Map, PlayerSprite, PlayerSpotlight, Item) {
   "use strict";
 
   function PlayState() {
@@ -32,6 +32,9 @@ define(['Map', 'PlayerSprite', 'PlayerSpotlight'], function (Map, PlayerSprite, 
 
   PlayState.prototype.addPlayer = function () {
     this.player = new PlayerSprite(this.game, 450, 80, 'clotharmor');
+    this.item = new Item(this.game, 'healthLarge');
+    this.item.addToMap(this.player.getTileX()+3, this.player.getTileY());
+    window.item = this.item;
     this.camera.follow(this.player);
     window.player = this.player;
 

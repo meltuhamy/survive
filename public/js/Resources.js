@@ -14,9 +14,18 @@ define([], function(){
       method: "image",
       resource: ['tilesheet', 'assets/img/tilesheet.png']
     },
+
+      // sprites
     {
       method: "spritesheet",
       resource: ['clotharmor', 'assets/img/clotharmor.png', 96, 96]
+    },
+
+
+      // item sprites
+    {
+      method: "spritesheet",
+      resource: ['items', 'assets/img/7Soul1.png', 34, 34]
     }
   ];
 
