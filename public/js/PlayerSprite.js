@@ -19,6 +19,7 @@ define([], function () {
     this.viewRadius = 10;
     this.tweenSpeed = this.moveSpeed / 3;
     this.moving = false;
+    this.movingToPath = false;
 
     this.moveMarker = game.add.graphics();
     this.moveMarker.lineStyle(1, 0xffffff, 1);
@@ -90,23 +91,37 @@ define([], function () {
     this.playStationaryAnimation();
   };
 
-  PlayerSprite.prototype.moveUp = function () {
+  PlayerSprite.prototype.stopMovingToPath = function(){
+    if(this.tween){
+      this.tween.runningTween.stop();
+      this.tween.stop();
+      this.moveMarker.alpha = 0;
+      this.movingToPath = false;
+    }
+  };
+
+  PlayerSprite.prototype.setMoveFlags = function(){
+    this.stopMovingToPath();
     this.moving = true;
+  };
+
+  PlayerSprite.prototype.moveUp = function () {
+    this.setMoveFlags();
     this.body.velocity.y = -this.moveSpeed;
   };
 
   PlayerSprite.prototype.moveDown = function () {
-    this.moving = true;
+    this.setMoveFlags();
     this.body.velocity.y = this.moveSpeed;
   };
 
   PlayerSprite.prototype.moveLeft = function () {
-    this.moving = true;
+    this.setMoveFlags();
     this.body.velocity.x = -this.moveSpeed;
   };
 
   PlayerSprite.prototype.moveRight = function () {
-    this.moving = true;
+    this.setMoveFlags();
     this.body.velocity.x = this.moveSpeed;
   };
 
@@ -156,36 +171,59 @@ define([], function () {
     }
   };
 
-  PlayerSprite.prototype.runTween = function (tween) {
-    var stepCoo = this.path[this.currPathStep++];
+  PlayerSprite.prototype.pathToTween = function (path) {
+    var sprite = this;
+    var tween = game.add.tween(this.body);
+    tween.onStart.add(function(){
+      tween.runningTween = tween;
+    });
 
-    return stepCoo ? this.runTween(tween.to({
-      x: stepCoo.x * 16,
-      y: stepCoo.y * 16
-    }, this.tweenSpeed, Phaser.Easing.Linear.None, true)) : tween;
+    for(var i = 0; i < path.length; i++){
+      var coords = {x: path[i].x * 16, y: path[i].y * 16};
+      tween.to(coords, this.tweenSpeed);
+    }
+
+    tween.chained = [];
+    var getChainedTweens = function(t){
+      if(t._chainedTweens && t._chainedTweens.length > 0){
+        tween.chained.push(t._chainedTweens[0]);
+        t.onStart.add(function(){
+          tween.runningTween = t;
+          sprite.movingToPath = true;
+        });
+        return getChainedTweens(t._chainedTweens[0]);
+      } else {
+        return t;
+      }
+    };
+
+    getChainedTweens(tween);
+
+    tween.lastTween = tween.chained[tween.chained.length-1];
+    return tween;
   };
 
   PlayerSprite.prototype.moveTo = function (path) {
-    var thisRef = this;
+    // stop any previous tweens, THEN start tween.
+    if(this.tween){
+      this.tween.runningTween.stop();
+    }
 
-    this.currPathStep = 0;
-    this.path = path;
-    this.tween = this.game.add.tween(this.body);
-    this.runTween(this.tween).start();
+    this.tween = this.pathToTween(path);
+    var sprite = this;
+    this.tween.onStart.add(function(){
+      sprite.moveMarker.x = sprite.game.map.tileFromWorldX(sprite.game.input.activePointer.worldX) * 16 - 8;
+      sprite.moveMarker.y = sprite.game.map.tileFromWorldY(sprite.game.input.activePointer.worldY) * 16 - 8;
+      sprite.moveMarker.alpha = 1;
+      sprite.movingToPath = true;
+    });
 
-    // Tween timer
-    this.tweenActive = true;
-    if (this.tweenTimer) clearTimeout(this.tweenTimer);
+    this.tween.lastTween.onComplete.add(function(){
+      sprite.moveMarker.alpha = 0;
+      sprite.movingToPath = false;
+    });
 
-    this.tweenTimer = setTimeout(function () {
-      thisRef.tweenActive = false;
-      thisRef.moveMarker.alpha = 0;
-    }, this.tweenSpeed * path.length);
-
-    // draw the moveto tile
-    this.moveMarker.x = this.game.map.tileFromWorldX(this.game.input.activePointer.worldX) * 16 - 8;
-    this.moveMarker.y = this.game.map.tileFromWorldY(this.game.input.activePointer.worldY) * 16 - 8;
-    this.moveMarker.alpha = 1;
+    this.tween.start();
   };
 
 
@@ -202,10 +240,10 @@ define([], function () {
    * Automatically called by World.update
    */
   PlayerSprite.prototype.update = function () {
-    this.playStationaryAnimation();
-
-    if(this.moving || this.tweenActive){
+    if(this.moving || this.movingToPath){
       this.playMovingAnimation();
+    } else {
+      this.playStationaryAnimation();
     }
   };
 
