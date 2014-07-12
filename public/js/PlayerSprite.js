@@ -15,9 +15,9 @@ define([], function () {
 
     this.levelsSignal = new Phaser.Signal();
 
-    this.moveSpeed = 200;
+    this.moveSpeed = 200; //px per second
     this.viewRadius = 10;
-    this.tweenSpeed = this.moveSpeed / 3;
+    this.tweenSpeed = (1/this.moveSpeed)*1000*16; // milliseconds per tile.
     this.moving = false;
     this.movingToPath = false;
 
