@@ -3,3 +3,4 @@ nbproject/*
 server.js
 lib/*.js
 node_modules/*
+.idea
