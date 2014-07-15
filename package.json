@@ -4,7 +4,7 @@
   "description": "An online multiplayer survival game",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/jasmine-node test/nodejs",
     "start": "node server.js"
   },
   "repository": {
@@ -23,5 +23,13 @@
   "dependencies": {
     "express": "~4.5.1",
     "socket.io": "~1.0.6"
+  },
+  "devDependencies": {
+    "karma-jasmine": "~0.2.0",
+    "requirejs": "~2.1.14",
+    "karma": "~0.12.17",
+    "karma-requirejs": "~0.2.2",
+    "karma-chrome-launcher": "~0.1.4",
+    "jasmine-node": "~2.0.0"
   }
 }

@@ -1,6 +1,4 @@
 nbproject/*
 *.sublime*
-server.js
-lib/*.js
 node_modules/*
 .idea
